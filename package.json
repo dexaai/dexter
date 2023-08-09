@@ -1,0 +1,28 @@
+{
+  "name": "llm-tools",
+  "type": "module",
+  "private": true,
+  "version": "0.0.0",
+  "description": "",
+  "repository": "dexaai/llm-tools",
+  "scripts": {
+    "build": "turbo run build",
+    "clean": "turbo run clean && rm -rf node_modules",
+    "dev": "turbo run dev --parallel",
+    "format": "prettier --write \"**/*.{ts,tsx}\"",
+    "lint": "turbo run lint",
+    "test": "turbo run test",
+    "typecheck": "turbo run typecheck"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@changesets/cli": "^2.26.1",
+    "prettier": "^2.8.8",
+    "tsx": "^3.12.7",
+    "turbo": "^1.10.5"
+  },
+  "packageManager": "pnpm@7.25.0",
+  "engines": {
+    "node": ">= 18"
+  }
+}

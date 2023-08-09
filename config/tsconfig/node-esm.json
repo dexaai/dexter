@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "Node ESM",
+  "compilerOptions": {
+    "moduleResolution": "node16",
+    "module": "node16",
+    "lib": ["ESNext", "DOM"],
+    "jsx": "preserve",
+    "outDir": "dist",
+    "allowJs": true,
+    "importHelpers": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "declaration": true,
+    "sourceMap": true,
+    "checkJs": true,
+    "noEmit": false,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
+    "incremental": false,
+    "skipDefaultLibCheck": true
+  },
+  "exclude": ["**/node_modules", "**/.*/"]
+}
