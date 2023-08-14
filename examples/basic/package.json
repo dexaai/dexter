@@ -11,6 +11,7 @@
   "dependencies": {
     "@dexaai/agent": "workspace:*",
     "@dexaai/datastore": "workspace:*",
+    "@dexaai/functions": "workspace:*",
     "@dexaai/model": "workspace:*",
     "tslib": "^2.5.3",
     "workgpt": "^0.1.1",
