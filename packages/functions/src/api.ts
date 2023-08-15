@@ -14,8 +14,8 @@ export class Api<Schema extends z.ZodObject<any>> {
     public readonly description?: string
   ) {}
 
-  /** Get the JSON schema for this API. */
-  public get jsonSchema(): {
+  /** Get the OpenAPI schema for this API. */
+  public get openApiSchema(): {
     name: string;
     description?: string;
     parameters: Record<string, unknown>;
@@ -28,7 +28,7 @@ export class Api<Schema extends z.ZodObject<any>> {
   }
 
   /**
-   * Parse the arguments string from `function_call`
+   * Parse the arguments string from `function_call.arguments`
    * Returns either the parsed arguments or an error message.
    */
   parseArgs(args: string | undefined):
