@@ -1,5 +1,11 @@
 # @dexaai/model
 
+## 0.3.0
+
+### Minor Changes
+
+- Fix OpenAI client caching & export factory func
+
 ## 0.2.0
 
 ### Minor Changes
