@@ -15,7 +15,8 @@ export function createOpenAIClient(
   if (opts === undefined && cachedClient && !forceNew) {
     return cachedClient;
   }
-  return new OpenAIClient(opts);
+  cachedClient = new OpenAIClient(opts);
+  return cachedClient;
 }
 
 export { OpenAIApiError, OpenAIClient } from 'openai-fetch';

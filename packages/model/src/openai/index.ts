@@ -18,6 +18,7 @@ export type {
 } from './embedding.js';
 
 export { OChatModel as ChatModel } from './chat.js';
+export { createOpenAIClient } from './client.js';
 export { OCompletionModel as CompletionModel } from './completion.js';
 export { OEmbeddingModel as EmbeddingModel } from './embedding.js';
 export { createTokenizer } from './tokenizer.js';
