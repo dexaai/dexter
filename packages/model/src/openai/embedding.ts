@@ -35,7 +35,7 @@ interface RetryOptions {
   initialDelay: number;
   exponentialBase: number;
 }
-interface OEmbeddingConfig
+export interface OEmbeddingConfig
   extends EmbeddingConfig,
     Omit<OpenAIEmbeddingParams, 'input' | 'user'> {
   model: OpenAIEmbeddingModel;

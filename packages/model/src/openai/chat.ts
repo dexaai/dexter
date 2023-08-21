@@ -19,7 +19,7 @@ import type {
   OpenAIClient,
 } from './client.js';
 
-interface OChatConfig
+export interface OChatConfig
   extends ChatConfig,
     Omit<OpenAIChatParams, 'messages' | 'user'> {
   /** Handle new chunks from streaming requests. */

@@ -15,11 +15,11 @@ import type {
 } from './client.js';
 import { createOpenAIClient, extractTokens } from './client.js';
 
-interface OCompletionConfig
+export interface OCompletionConfig
   extends CompletionConfig,
     Omit<OpenAICompletionParams, 'prompt' | 'user'> {}
 
-interface OCompletionsResponse extends CompletionResponse {
+export interface OCompletionsResponse extends CompletionResponse {
   completions: {
     completion: string;
     logprobs?: OpenAICompletionResponse['choices'][0]['logprobs'];
