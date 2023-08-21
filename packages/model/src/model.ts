@@ -83,6 +83,15 @@ export abstract class AbstractModel<
     return this;
   }
 
+  /**
+   * Add context to the model.
+   * New context is merged with existing context, overwriting any existing keys.
+   */
+  addContext(context: Ctx): this {
+    this.context = { ...this.context, ...context };
+    return this;
+  }
+
   async run(
     params: Prettify<MRun & Partial<MConfig>>,
     context?: Ctx
