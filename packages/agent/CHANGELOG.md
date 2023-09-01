@@ -1,5 +1,16 @@
 # @dexaai/agent
 
+## 0.2.0
+
+### Minor Changes
+
+- Make model constructors more configurable and less reliant on environment variables
+
+### Patch Changes
+
+- Updated dependencies
+  - @dexaai/model@0.4.0
+
 ## 0.1.3
 
 ### Patch Changes
