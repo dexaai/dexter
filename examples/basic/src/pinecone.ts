@@ -6,7 +6,17 @@ import { SpladeModel } from '@dexaai/model/custom';
 // Base Datastore
 (async () => {
   const embeddingModel = new EmbeddingModel({
-    params: { model: 'text-embedding-ada-002' },
+    params: {
+      model: 'text-embedding-ada-002',
+      batch: {
+        maxBatchSize: 30,
+        maxTokensPerBatch: 10000,
+      },
+      throttle: {
+        maxConcurrentRequests: 1,
+        maxRequestsPerMin: 1000,
+      },
+    },
     context: { test: 'test' },
     debug: true,
   });
