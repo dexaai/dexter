@@ -10,7 +10,7 @@ export function createOpenAIClient(
   opts?: ConstructorParameters<typeof OpenAIClient>[0],
   /** Force a new client to be created. */
   forceNew = false
-) {
+): OpenAIClient {
   // Only use a cached client if no options are passed.
   if (opts === undefined && cachedClient && !forceNew) {
     return cachedClient;
