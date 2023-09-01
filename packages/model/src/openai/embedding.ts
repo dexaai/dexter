@@ -9,6 +9,7 @@ import type {
   IEmbeddingModel,
   ITokenizer,
   TokenCounts,
+  Prettify,
 } from '../types.js';
 import type { ModelArgs } from '../model.js';
 import { AbstractModel } from '../model.js';
@@ -85,11 +86,15 @@ export class OEmbeddingModel
 
   /** Doesn't accept OpenAIClient because retry needs to be handled at the model level. */
   constructor(
-    args: ModelArgs<OEmbeddingConfig, EmbeddingRun, EmbeddingResponse>
+    args: Prettify<
+      ModelArgs<OEmbeddingConfig, EmbeddingRun, EmbeddingResponse> & {
+        openaiClient?: OpenAIClient;
+      }
+    >
   ) {
-    const { params, ...rest } = args;
+    const { openaiClient, params, ...rest } = args;
     super({ params, ...rest });
-    this.openaiClient = createOpenAIClient();
+    this.openaiClient = openaiClient || createOpenAIClient();
     this.tokenizer = createTokenizer(params.model);
     const interval = DEFAULTS.throttleInterval;
     const limit =
