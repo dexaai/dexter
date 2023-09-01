@@ -4,11 +4,13 @@ import pMap from 'p-map';
 import type {
   Ctx,
   ISparseModel,
+  Prettify,
   SparseConfig,
   SparseResponse,
   SparseRun,
   SparseValues,
 } from '../types.js';
+import type { ModelArgs } from '../model.js';
 import { AbstractModel } from '../model.js';
 
 const SPLADE_MODELS = ['naver/splade-cocondenser-ensembledistil'] as const;
@@ -36,6 +38,23 @@ export class SpladeModel
 {
   modelType = 'sparse-vector' as const;
   modelProvider = 'custom' as const;
+  serviceUrl: string;
+
+  constructor(
+    args: Prettify<
+      ModelArgs<CMultiSparseConfig, SparseRun, SparseResponse> & {
+        serviceUrl?: string;
+      }
+    >
+  ) {
+    const { serviceUrl, ...rest } = args;
+    super(rest);
+    const tempServiceUrl = serviceUrl || process.env['SPLADE_SERVICE_URL'];
+    if (!tempServiceUrl) {
+      throw new Error('Missing process.env.SPLADE_SERVICE_URL');
+    }
+    this.serviceUrl = tempServiceUrl;
+  }
 
   protected async runModel(
     params: SparseRun & CMultiSparseConfig,
@@ -69,7 +88,7 @@ export class SpladeModel
     context: Ctx
   ) {
     const start = Date.now();
-    const vector = await createSpladeVector(params);
+    const vector = await createSpladeVector(params, this.serviceUrl);
     const latency = Date.now() - start;
 
     // Don't need tokens for this model
@@ -89,17 +108,16 @@ export class SpladeModel
   }
 }
 
-async function createSpladeVector(params: {
-  input: string;
-  model: SpladeModelName;
-}): Promise<SparseValues> {
+async function createSpladeVector(
+  params: {
+    input: string;
+    model: SpladeModelName;
+  },
+  serviceUrl: string
+): Promise<SparseValues> {
   try {
-    const SERVICE_URL = process.env['SPLADE_SERVICE_URL'];
-    if (!SERVICE_URL) {
-      throw new Error('Missing process.env.SPLADE_SERVICE_URL');
-    }
     const sparseValues = await ky
-      .post(SERVICE_URL, {
+      .post(serviceUrl, {
         timeout: 1000 * 60,
         json: { text: params.input },
       })
