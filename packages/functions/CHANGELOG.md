@@ -1,5 +1,11 @@
 # @dexaai/functions
 
+## 0.3.0
+
+### Minor Changes
+
+- Support an additional validation function and custom system prompt
+
 ## 0.2.0
 
 ### Minor Changes
