@@ -13,6 +13,7 @@ import { Api } from './api.js';
 export class ExtractFunction<Schema extends z.ZodObject<any>> {
   private readonly api: Api<Schema>;
   private readonly model: ChatModel;
+  private readonly systemPrompt?: string;
   private readonly validate?: (args: z.infer<Schema>) => void;
 
   constructor(params: {
@@ -22,6 +23,8 @@ export class ExtractFunction<Schema extends z.ZodObject<any>> {
     schema: Schema;
     /** A description of what the function does */
     description?: string;
+    /** A system prompt to use for the API request */
+    systemPrompt?: string;
     /** A ChatModel instance to use for making the API request */
     model?: ChatModel;
     /**
@@ -30,14 +33,18 @@ export class ExtractFunction<Schema extends z.ZodObject<any>> {
      */
     validate?: (args: z.infer<Schema>) => void;
   }) {
-    this.model = params.model || new ChatModel({ params: { model: 'gpt-4' } });
     this.api = new Api(params.name, params.schema, params.description);
+    this.model = params.model || new ChatModel({ params: { model: 'gpt-4' } });
+    this.systemPrompt = params.systemPrompt;
     this.validate = params.validate;
   }
 
   async run(input: string): Promise<z.infer<Schema>> {
     // Make a call to the model
     const messages: ChatMessage[] = [{ role: 'user', content: input }];
+    if (this.systemPrompt) {
+      messages.unshift({ role: 'system', content: this.systemPrompt });
+    }
     const { message } = await this.model.run({
       functions: [this.api.openApiSchema],
       function_call: { name: this.api.name },
