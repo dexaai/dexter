@@ -1,5 +1,11 @@
 # @dexaai/datastore
 
+## 0.3.0
+
+### Minor Changes
+
+- Support fully or partially embedded upserts
+
 ## 0.2.0
 
 ### Minor Changes
