@@ -13,8 +13,11 @@
       "dependsOn": [],
       "outputs": ["node_modules/.cache/eslint/**"]
     },
+    "topo": {
+      "dependsOn": ["^topo"]
+    },
     "typecheck": {
-      "dependsOn": []
+      "dependsOn": ["topo"]
     },
     "dev": {
       "cache": false
