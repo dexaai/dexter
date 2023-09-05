@@ -1,3 +1,4 @@
+import type { SparseValues } from '@dexaai/model';
 import { BaseDatastore, BaseHybridDatastore } from '../datastore.js';
 import type {
   BaseMeta,
@@ -93,22 +94,47 @@ export class Datastore<DocMeta extends BaseMeta>
   async upsert(docs: Doc<DocMeta>[], context?: Ctx): Promise<void> {
     const mergedContext = { ...this.context, ...context };
     try {
-      // Get the text content from the docs
-      const texts = docs.map((doc) => doc.metadata.content);
+      // Get the text from the docs that are missing an embedding
+      const textsToEmbed = docs
+        .filter((doc) => doc.embedding == null)
+        .map((doc) => doc.metadata.content);
 
-      // Create the embeddings for the docs
+      if (textsToEmbed.length === 0) {
+        return this.pinecone.upsert({
+          vectors: docs.map((doc, i) => ({
+            id: doc.id,
+            values: docs[i].embedding as number[],
+            metadata: doc.metadata,
+          })),
+        });
+      }
+
+      // Create the embedding for docs that are missing one
       // This relies on the classes to handle batching and throttling
       const embeddingRes = await this.embeddingModel.run(
-        { input: texts },
+        { input: textsToEmbed },
         mergedContext
       );
+
+      // Merge the existing embeddings and sparse vectors with the generated ones
+      const docsWithEmbeddings = docs.map((doc) => {
+        let embedding = doc.embedding;
+        // If the doc was missing an embedding, use the generated one
+        if (embedding == null) {
+          embedding = embeddingRes.embeddings.shift();
+          if (embedding == null) {
+            throw new Error('Unexpected missing embedding');
+          }
+        }
+        return { ...doc, embedding };
+      });
 
       // Combine the results into Pinecones vector format and upsert
       // The Pinecone client will handle batching and throttling
       return this.pinecone.upsert({
         vectors: docs.map((doc, i) => ({
           id: doc.id,
-          values: embeddingRes.embeddings[i],
+          values: docsWithEmbeddings[i].embedding,
           metadata: doc.metadata,
         })),
       });
@@ -229,22 +255,54 @@ export class HybridDatastore<DocMeta extends BaseMeta>
   async upsert(docs: Doc<DocMeta>[], context?: Ctx): Promise<void> {
     const mergedContext = { ...this.context, ...context };
     try {
-      // Get the text content from the docs
-      const texts = docs.map((doc) => doc.metadata.content);
+      // Get the text from the docs that are missing embeddings or sparse vectors
+      const textsToEmbed = docs
+        .filter((doc) => doc.embedding == null || doc.sparseVector == null)
+        .map((doc) => doc.metadata.content);
+
+      if (textsToEmbed.length === 0) {
+        return this.pinecone.upsert({
+          vectors: docs.map((doc, i) => ({
+            id: doc.id,
+            values: docs[i].embedding as number[],
+            sparseValues: docs[i].sparseVector as SparseValues,
+            metadata: doc.metadata,
+          })),
+        });
+      }
 
       // Create the embeddings and sparse vectors
       // This relies on the classes to handle batching and throttling
       const [embeddingRes, spladeRes] = await Promise.all([
-        this.embeddingModel.run({ input: texts }),
-        this.spladeModel.run({ input: texts }),
+        this.embeddingModel.run({ input: textsToEmbed }, mergedContext),
+        this.spladeModel.run({ input: textsToEmbed }, mergedContext),
       ]);
+
+      // Merge the existing embeddings and sparse vectors with the generated ones
+      const docsWithEmbeddings = docs.map((doc) => {
+        let embedding = doc.embedding;
+        let sparseVector = doc.sparseVector;
+        // If the doc was missing an embedding or sparse vector, use the generated values
+        if (embedding == null || sparseVector == null) {
+          embedding = embeddingRes.embeddings.shift();
+          sparseVector = spladeRes.vectors.shift();
+          if (embedding == null || sparseVector == null) {
+            throw new Error('Unexpected missing embedding or sparse vector');
+          }
+        }
+        return {
+          ...doc,
+          embedding,
+          sparseVector,
+        };
+      });
 
       // Combine the results into Pinecones vector format and upsert
       return this.pinecone.upsert({
         vectors: docs.map((doc, i) => ({
           id: doc.id,
-          values: embeddingRes.embeddings[i],
-          sparseValues: spladeRes.vectors[i],
+          values: docsWithEmbeddings[i].embedding,
+          sparseValues: docsWithEmbeddings[i].sparseVector,
           metadata: doc.metadata,
         })),
       });
