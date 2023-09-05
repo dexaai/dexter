@@ -1,5 +1,11 @@
 # @dexaai/datastore
 
+## 0.3.2
+
+### Patch Changes
+
+- Make metadata key that's embedded dynamic
+
 ## 0.3.1
 
 ### Patch Changes
