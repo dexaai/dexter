@@ -7,7 +7,7 @@ import type {
 export type DatastoreType = 'embedding' | 'hybrid';
 export type DatastoreProvider = 'pinecone' | 'custom';
 
-export type BaseMeta = { content: string };
+export type BaseMeta = {};
 
 /** Generic metadata object. */
 export type Ctx = { [key: string]: any };
@@ -64,6 +64,11 @@ export interface IDatastore<DocMeta extends BaseMeta> {
  * Options for creating a Datastore instance.
  */
 export interface DatastoreOpts<DocMeta extends BaseMeta> {
+  /**
+   * The metadata key of the content that is embedded.
+   * The value associated with the key must be a string.
+   */
+  contentKey: keyof DocMeta;
   namespace: string;
   embeddingModel: IEmbeddingModel;
   cache?: QueryCache<DocMeta>;

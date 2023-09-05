@@ -55,6 +55,7 @@ describe('Datastore', () => {
     client = new PineconeClient({ apiKey: '', baseUrl: '' });
     datastore = new Datastore<Meta>({
       namespace: 'test',
+      contentKey: 'content',
       embeddingModel,
       pinecone: client,
     });
@@ -181,6 +182,7 @@ describe('HybridDatastore', () => {
     pineconeClient = new PineconeClient({ apiKey: '', baseUrl: '' });
     datastore = new HybridDatastore<Meta>({
       namespace: 'test',
+      contentKey: 'content',
       embeddingModel,
       spladeModel,
       pinecone: pineconeClient,

@@ -31,6 +31,7 @@ export abstract class BaseDatastore<DocMeta extends BaseMeta>
   abstract datastoreProvider: DatastoreProvider;
 
   protected namespace: string;
+  protected contentKey: keyof DocMeta;
   protected embeddingModel: IEmbeddingModel;
   protected cache?: QueryCache<DocMeta>;
   protected hooks: Hooks<DocMeta>;
@@ -38,6 +39,7 @@ export abstract class BaseDatastore<DocMeta extends BaseMeta>
 
   constructor(args: DatastoreOpts<DocMeta>) {
     this.namespace = args.namespace;
+    this.contentKey = args.contentKey;
     this.embeddingModel = args.embeddingModel;
     this.cache = args.cache;
     this.context = args.context ?? {};

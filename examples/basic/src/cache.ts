@@ -17,6 +17,7 @@ import { EmbeddingModel } from '@dexaai/model/openai';
   // Datastore with cache
   const store = new Datastore({
     namespace: 'test',
+    contentKey: 'content',
     embeddingModel,
     debug: true,
   }).addCache();

@@ -23,6 +23,7 @@ import { SpladeModel } from '@dexaai/model/custom';
 
   const store = new Datastore({
     namespace: 'test',
+    contentKey: 'content',
     embeddingModel,
     debug: true,
   });
@@ -61,6 +62,7 @@ import { SpladeModel } from '@dexaai/model/custom';
 
   const hStore = new HybridDatastore({
     namespace: 'test-hybrid',
+    contentKey: 'content',
     embeddingModel,
     spladeModel,
     context: { baz: 'qux' },

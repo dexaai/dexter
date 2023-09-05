@@ -97,7 +97,17 @@ export class Datastore<DocMeta extends BaseMeta>
       // Get the text from the docs that are missing an embedding
       const textsToEmbed = docs
         .filter((doc) => doc.embedding == null)
-        .map((doc) => doc.metadata.content);
+        .map((doc) => {
+          const content = doc.metadata[this.contentKey];
+          if (typeof content !== 'string') {
+            throw new Error(
+              `The value of the contentKey (${String(
+                this.contentKey
+              )}) must be a string`
+            );
+          }
+          return content;
+        });
 
       if (textsToEmbed.length === 0) {
         return this.pinecone.upsert({
@@ -258,7 +268,17 @@ export class HybridDatastore<DocMeta extends BaseMeta>
       // Get the text from the docs that are missing embeddings or sparse vectors
       const textsToEmbed = docs
         .filter((doc) => doc.embedding == null || doc.sparseVector == null)
-        .map((doc) => doc.metadata.content);
+        .map((doc) => {
+          const content = doc.metadata[this.contentKey];
+          if (typeof content !== 'string') {
+            throw new Error(
+              `The value of the contentKey (${String(
+                this.contentKey
+              )}) must be a string`
+            );
+          }
+          return content;
+        });
 
       if (textsToEmbed.length === 0) {
         return this.pinecone.upsert({
