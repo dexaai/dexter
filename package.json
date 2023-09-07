@@ -14,12 +14,11 @@
     "test": "turbo run test",
     "typecheck": "turbo run typecheck"
   },
-  "dependencies": {},
   "devDependencies": {
     "@changesets/cli": "^2.26.1",
     "prettier": "^2.8.8",
-    "tsx": "^3.12.7",
-    "turbo": "^1.10.5"
+    "tsx": "^3.12.8",
+    "turbo": "^1.10.13"
   },
   "packageManager": "pnpm@7.25.0",
   "engines": {
