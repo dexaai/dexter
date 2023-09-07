@@ -1,5 +1,13 @@
 # @dexaai/datastore
 
+## 0.3.3
+
+### Patch Changes
+
+- Upgrade Tiktoken and dev deps
+- Updated dependencies
+  - @dexaai/model@0.4.1
+
 ## 0.3.2
 
 ### Patch Changes

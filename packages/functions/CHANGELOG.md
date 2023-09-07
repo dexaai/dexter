@@ -1,5 +1,13 @@
 # @dexaai/functions
 
+## 0.3.1
+
+### Patch Changes
+
+- Upgrade Tiktoken and dev deps
+- Updated dependencies
+  - @dexaai/model@0.4.1
+
 ## 0.3.0
 
 ### Minor Changes

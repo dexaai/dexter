@@ -1,5 +1,13 @@
 # @dexaai/agent
 
+## 0.2.1
+
+### Patch Changes
+
+- Upgrade Tiktoken and dev deps
+- Updated dependencies
+  - @dexaai/model@0.4.1
+
 ## 0.2.0
 
 ### Minor Changes

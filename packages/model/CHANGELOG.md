@@ -1,5 +1,11 @@
 # @dexaai/model
 
+## 0.4.1
+
+### Patch Changes
+
+- Upgrade Tiktoken and dev deps
+
 ## 0.4.0
 
 ### Minor Changes
