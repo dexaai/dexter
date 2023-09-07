@@ -54,7 +54,6 @@
     }
   },
   "dependencies": {
-    "@dqbd/tiktoken": "^1.0.7",
     "froebel": "^0.23.2",
     "keyv": "^4.5.2",
     "ky": "^0.33.3",
@@ -63,6 +62,7 @@
     "p-retry": "^5.1.2",
     "p-throttle": "^5.1.0",
     "parse-json": "^7.0.0",
+    "tiktoken": "^1.0.10",
     "tkv-cache": "^0.1.2",
     "ts-extras": "^0.11.0",
     "uuid": "^9.0.0",

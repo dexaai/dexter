@@ -1,5 +1,5 @@
-import { encoding_for_model } from '@dqbd/tiktoken';
-import type { Tiktoken, TiktokenModel } from '@dqbd/tiktoken';
+import { encoding_for_model } from 'tiktoken';
+import type { Tiktoken, TiktokenModel } from 'tiktoken';
 import type { ChatMessage } from 'openai-fetch';
 import type { ITokenizer, CreateTokenizer } from '../types.js';
 
