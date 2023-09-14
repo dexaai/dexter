@@ -1,6 +1,5 @@
 import type { z } from 'zod';
-import { fromZodError } from 'zod-validation-error';
-import { extractJsonObject } from './extract-json.js';
+import { extractZodObject } from './extract-zod-object.js';
 import { zodToFunctionParameters } from './zod-fns.js';
 
 /**
@@ -43,13 +42,10 @@ export class Api<Schema extends z.ZodObject<any>> {
     if (!args) {
       return { args: null, error: 'Missing expected function_call arguments' };
     }
-    const json = extractJsonObject(args);
-    try {
-      const parsed: z.infer<Schema> = this.schema.parse(json);
-      return { args: parsed, error: null };
-    } catch (error) {
-      const { message } = fromZodError(error as z.ZodError);
-      return { args: null, error: message };
+    const data = extractZodObject({ json: args, schema: this.schema });
+    if (typeof data === 'string') {
+      return { args: null, error: data };
     }
+    return { args: data, error: null };
   }
 }
