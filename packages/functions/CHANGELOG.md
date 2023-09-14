@@ -1,5 +1,11 @@
 # @dexaai/functions
 
+## 0.4.0
+
+### Minor Changes
+
+- Add util function to extract and validate a zod object from a JSON string
+
 ## 0.3.1
 
 ### Patch Changes
