@@ -1,5 +1,5 @@
 import type { z } from 'zod';
-import { extractZodObject } from './extract-zod-object.js';
+import { extractZodObject } from '@dexaai/model/utils';
 import { zodToFunctionParameters } from './zod-fns.js';
 
 /**

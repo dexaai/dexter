@@ -1,3 +1,4 @@
+import type { z } from 'zod';
 import type {
   ChatConfig,
   ChatResponse,
@@ -18,6 +19,8 @@ import type {
   OpenAIChatResponse,
   OpenAIClient,
 } from './client.js';
+import { extractZodObject } from '../utils/extract-zod-object.js';
+import { getErrorMessage } from '../utils/get-error-message.js';
 
 export interface OChatConfig
   extends ChatConfig,
@@ -47,6 +50,53 @@ export class OChatModel
     const { openaiClient, ...rest } = args;
     super(rest);
     this.openaiClient = openaiClient || createOpenAIClient();
+  }
+
+  /**
+   * Run the model and validate the response against a Zod schema.
+   * Retries the request by passing the error message back into the model.
+   */
+  async runWithValidation<Schema extends z.ZodObject<any>>(
+    schema: Schema,
+    params: ChatRun & OChatConfig,
+    context?: Ctx
+  ): Promise<z.infer<Schema>> {
+    const { message } = await this.run(params, context);
+    if (!message.content) {
+      throw new Error(`OpenAI returned a message with no content`);
+    }
+    try {
+      return extractZodObject({ json: message.content, schema });
+    } catch (error) {
+      // Get the error message from the failed validation
+      const errorMessage = getErrorMessage(error);
+
+      // Add a message to the conversation with the error message and instruct
+      // the model to try again.
+      const appendedMessages: ChatMessage[] = [
+        ...params.messages,
+        message,
+        {
+          role: 'user',
+          content: `There was an error parsing your response. Please read the error message and try again.\n\nError message: ${errorMessage}`,
+        },
+      ];
+      const { message: message2 } = await this.run(
+        {
+          ...params,
+          messages: appendedMessages,
+        },
+        {
+          ...context,
+          validationRetry: true,
+        }
+      );
+      if (!message2.content) {
+        throw new Error(`OpenAI returned a message with no content`);
+      }
+
+      return extractZodObject({ json: message2.content, schema });
+    }
   }
 
   async runModel(

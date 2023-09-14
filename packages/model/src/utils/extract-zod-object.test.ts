@@ -16,21 +16,21 @@ describe('extractZodObject()', () => {
   });
   it('returns error message for invalid JSON', () => {
     const schema = z.object({ names: z.array(z.string()) });
-    expect(
+    expect(() =>
       extractZodObject({
         json: `{ "names": ["Alice",`,
         schema,
       })
-    ).toEqual('Unexpected end of JSON input while parsing empty string');
+    ).toThrow('Unexpected end of JSON input while parsing empty string');
   });
   it('returns error message when zod validation fails', () => {
     const schema = z.object({ names: z.array(z.string()) });
-    expect(
+    expect(() =>
       extractZodObject({
         json: `{ "names": [1] }`,
         schema,
       })
-    ).toEqual(
+    ).toThrow(
       'Validation error: Expected string, received number at "names[0]"'
     );
   });
