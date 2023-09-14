@@ -1,5 +1,12 @@
 # @dexaai/datastore
 
+## 0.3.4
+
+### Patch Changes
+
+- Updated dependencies
+  - @dexaai/model@0.5.0
+
 ## 0.3.3
 
 ### Patch Changes

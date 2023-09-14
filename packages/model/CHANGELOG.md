@@ -1,5 +1,11 @@
 # @dexaai/model
 
+## 0.5.0
+
+### Minor Changes
+
+- Add runWithValidation() to OpenAI ChatModel
+
 ## 0.4.1
 
 ### Patch Changes
