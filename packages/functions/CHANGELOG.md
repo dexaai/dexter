@@ -1,5 +1,16 @@
 # @dexaai/functions
 
+## 0.6.0
+
+### Minor Changes
+
+- Adds cost to hooks and improved debug logging
+
+### Patch Changes
+
+- Updated dependencies
+  - @dexaai/model@0.6.0
+
 ## 0.5.0
 
 ### Minor Changes
