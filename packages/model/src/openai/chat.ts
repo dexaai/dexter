@@ -105,6 +105,9 @@ export class OChatModel
     context: Ctx
   ): Promise<ChatResponse> {
     const { handleUpdate, ...restParams } = params;
+    if (this.debug) {
+      logMessages({ messages: params.messages, type: 'req' });
+    }
     // Use non-streaming API if no handler is provided
     if (!handleUpdate) {
       const start = Date.now();
@@ -126,6 +129,15 @@ export class OChatModel
         context,
         latency,
       });
+      if (this.debug) {
+        logMessages({
+          cost: calculateCost({ model: params.model, tokens }),
+          messages: [message],
+          type: 'res',
+          tokens,
+          latency,
+        });
+      }
       return { message, tokens };
     } else {
       const start = Date.now();
@@ -208,7 +220,68 @@ export class OChatModel
         context,
         latency,
       });
+      if (this.debug) {
+        logMessages({
+          cost: calculateCost({ model: params.model, tokens }),
+          messages: [message],
+          type: 'res',
+          tokens,
+          latency,
+        });
+      }
       return { message, tokens };
     }
   }
+}
+
+/**
+ * Pretty-print a list of messages to the console for debugging.
+ */
+function logMessages(args: {
+  messages: ChatMessage[];
+  type: 'req' | 'res';
+  tokens?: TokenCounts;
+  latency?: number;
+  cost?: number;
+}) {
+  const tokens = args.tokens
+    ? `[Tokens: ${args.tokens.prompt} + ${args.tokens.completion} = ${args.tokens.total}]`
+    : null;
+  const latency = args.latency ? `[Latency: ${args.latency}ms]` : null;
+  const cost = args.cost ? `[Cost: $${(args.cost / 100).toFixed(5)}]` : null;
+  const meta = [latency, cost, tokens].filter(Boolean).join('---');
+  if (args.type === 'req') {
+    console.info(`-----> [Request] ----->`);
+  } else {
+    console.info(`<===== [Response] <===== ${meta}`);
+  }
+  console.debug();
+  args.messages.forEach(logMessage);
+}
+
+function logMessage(message: ChatMessage, index: number) {
+  console.debug(
+    `[${index}] ${message.role.toUpperCase()}:${
+      message.name ? ` (${message.name}) ` : ''
+    }`
+  );
+  if (message.content) {
+    console.debug(message.content);
+  }
+  if (message.function_call) {
+    console.debug(`Function call: ${message.function_call.name}`);
+    if (message.function_call.arguments) {
+      try {
+        const formatted = JSON.stringify(
+          JSON.parse(message.function_call.arguments),
+          null,
+          2
+        );
+        console.debug(formatted);
+      } catch (err) {
+        console.debug(message.function_call.arguments);
+      }
+    }
+  }
+  console.debug();
 }

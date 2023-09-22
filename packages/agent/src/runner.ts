@@ -14,9 +14,10 @@ export function createRunner(
   const model =
     chatModel ??
     new ChatModel({
+      debug: verbose,
       params: { model: 'gpt-3.5-turbo-0613' },
     });
-  const agent = new LlmChatAgent(model, verbose);
+  const agent = new LlmChatAgent(model);
   return new WorkGptRunner({ apis, agent });
 }
 
@@ -24,11 +25,8 @@ export function createRunner(
 class LlmChatAgent extends ChatAgent {
   private readonly chatModel: ChatModel;
 
-  constructor(chatModel: ChatModel, verbose: boolean = false) {
-    super({ verbose });
-    if (verbose) {
-      chatModel.addHooks({ afterApiResponse: agentLogger });
-    }
+  constructor(chatModel: ChatModel) {
+    super();
     this.chatModel = chatModel;
   }
 
@@ -39,20 +37,4 @@ class LlmChatAgent extends ChatAgent {
     });
     return message as ChatResponse;
   }
-}
-
-/** Logging function for hooks to debug agents */
-function agentLogger(evt: any) {
-  const { choices } = evt.response as {
-    choices: { message: ChatMessage }[];
-  };
-  const req = evt.params.messages[evt.params.messages.length - 1];
-  const name = req.name ? ` (${req.name})` : '';
-  const message = choices[0].message;
-  console.log(
-    `>> ${req.role}: ${name} ${
-      req.content || JSON.stringify(req.function_call || '')
-    }`
-  );
-  console.log(`<< ${message.role}: ${message.content}`, message.function_call);
 }

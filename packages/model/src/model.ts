@@ -41,21 +41,16 @@ export abstract class AbstractModel<
   abstract modelProvider: ModelProvider;
   protected cache?: ModelCache<MRun & MConfig, MResponse>;
   protected context: Ctx;
+  protected debug: boolean;
   protected params: MConfig & Partial<MRun>;
   protected hooks: Hooks<MRun & MConfig, MResponse, AResponse>;
 
   constructor(args: ModelArgs<MConfig, MRun, MResponse>) {
     this.cache = args.cache;
     this.context = args.context ?? {};
+    this.debug = args.debug ?? false;
     this.params = args.params;
-    this.hooks = args.debug
-      ? {
-          afterApiResponse: console.log,
-          afterCacheHit: console.log,
-          beforeError: console.error,
-          ...args.hooks,
-        }
-      : args.hooks || {};
+    this.hooks = args.hooks || {};
   }
 
   /**
