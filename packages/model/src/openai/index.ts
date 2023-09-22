@@ -22,3 +22,4 @@ export { createOpenAIClient } from './client.js';
 export { OCompletionModel as CompletionModel } from './completion.js';
 export { OEmbeddingModel as EmbeddingModel } from './embedding.js';
 export { createTokenizer } from './tokenizer.js';
+export { calculateCost } from './costs.js';

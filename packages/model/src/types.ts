@@ -134,6 +134,8 @@ export interface Hooks<
     response: AResponse;
     tokens: TokenCounts;
     latency: number;
+    /** The cost of the API call in cents */
+    cost?: number;
     context: Ctx;
   }) => void | Promise<void>;
   afterCacheHit?: (event: {

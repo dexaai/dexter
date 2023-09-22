@@ -14,6 +14,7 @@ import type {
   OpenAICompletionResponse,
 } from './client.js';
 import { createOpenAIClient, extractTokens } from './client.js';
+import { calculateCost } from './costs.js';
 
 export interface OCompletionConfig
   extends CompletionConfig,
@@ -71,6 +72,7 @@ export class OCompletionModel
     const latency = Date.now() - start;
     const tokens = extractTokens(apiResponse.usage);
     await this.hooks.afterApiResponse?.({
+      cost: calculateCost({ model: params.model, tokens }),
       timestamp: new Date().toISOString(),
       modelType: this.modelType,
       modelProvider: this.modelProvider,

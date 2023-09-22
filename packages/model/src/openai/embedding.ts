@@ -21,6 +21,7 @@ import type {
   OpenAIEmbeddingResponse,
 } from './client.js';
 import { createTokenizer } from './tokenizer.js';
+import { calculateCost } from './costs.js';
 
 interface BatchOptions {
   maxTokensPerBatch: number;
@@ -113,6 +114,7 @@ export class OEmbeddingModel
           const latency = Date.now() - start;
           const tokens = extractTokens(response.usage);
           await this.hooks.afterApiResponse?.({
+            cost: calculateCost({ model: params.model, tokens }),
             timestamp: new Date().toISOString(),
             modelType: this.modelType,
             modelProvider: this.modelProvider,

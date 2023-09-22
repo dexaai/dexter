@@ -21,6 +21,7 @@ import type {
 } from './client.js';
 import { extractZodObject } from '../utils/extract-zod-object.js';
 import { getErrorMessage } from '../utils/get-error-message.js';
+import { calculateCost } from './costs.js';
 
 export interface OChatConfig
   extends ChatConfig,
@@ -115,6 +116,7 @@ export class OChatModel
       const latency = Date.now() - start;
       const tokens = extractTokens(response.usage);
       await this.hooks.afterApiResponse?.({
+        cost: calculateCost({ model: params.model, tokens }),
         timestamp: new Date().toISOString(),
         modelType: this.modelType,
         modelProvider: this.modelProvider,
@@ -196,6 +198,7 @@ export class OChatModel
       response = { ...response, usage: responseUsage };
 
       await this.hooks.afterApiResponse?.({
+        cost: calculateCost({ model: params.model, tokens }),
         timestamp: new Date().toISOString(),
         modelType: this.modelType,
         modelProvider: this.modelProvider,
