@@ -28,15 +28,8 @@ import { ChatModel } from '@dexaai/model/openai';
     // Optionally pass in a model to use.
     model: new ChatModel({
       params: { model: 'gpt-3.5-turbo' },
-      hooks: {
-        // Log the conversation to the console.
-        afterApiResponse: ({ params, response }) => {
-          const requestMsg = params.messages[params.messages.length - 1];
-          const responseMsg = response.choices[0].message;
-          console.log(`>> ${requestMsg.content}`);
-          console.log(`<< `, responseMsg.content || responseMsg.function_call);
-        },
-      },
+      hooks: { afterApiResponse: console.log },
+      debug: true,
     }),
   });
 

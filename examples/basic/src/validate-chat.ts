@@ -9,16 +9,9 @@ import { ChatModel } from '@dexaai/model/openai';
 (async () => {
   // Create a ChatModel with aggressive logging
   const chatModel = new ChatModel({
+    debug: true,
     params: { model: 'gpt-3.5-turbo' },
-    hooks: {
-      // Log the conversation to the console.
-      afterApiResponse: ({ params, response }) => {
-        const requestMsg = params.messages[params.messages.length - 1];
-        const responseMsg = response.choices[0].message;
-        console.log(`>> ${requestMsg.content}`);
-        console.log(`<< `, responseMsg.content);
-      },
-    },
+    hooks: { afterApiResponse: console.log },
   });
 
   // A schema that the initial response is likely to fail
@@ -41,6 +34,5 @@ You help users identify states and always respond with only JSON in this shape:
       },
     ],
   });
-
   console.log('State:', state);
 })();

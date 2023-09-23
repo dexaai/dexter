@@ -8,7 +8,7 @@ import { EmbeddingModel } from '@dexaai/model/openai';
   const embeddingModel = new EmbeddingModel({
     params: { model: 'text-embedding-ada-002' },
     context: { test: 'test' },
-    debug: true,
+    hooks: { afterApiResponse: console.log },
   }).addCache();
   await embeddingModel.run({ input: ['cat'] });
   // This should be cached
@@ -19,7 +19,7 @@ import { EmbeddingModel } from '@dexaai/model/openai';
     namespace: 'test',
     contentKey: 'content',
     embeddingModel,
-    debug: true,
+    hooks: { afterApiResponse: console.log },
   }).addCache();
   await store.upsert([
     { id: '1', metadata: { content: 'cat' } },
