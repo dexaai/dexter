@@ -1,7 +1,7 @@
 {
   "name": "@dexaai/datastore",
   "type": "module",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "",
   "repository": "dexaai/llm-tools",
   "scripts": {

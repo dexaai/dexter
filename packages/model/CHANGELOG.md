@@ -1,5 +1,11 @@
 # @dexaai/model
 
+## 0.6.1
+
+### Patch Changes
+
+- Fix response logging for streamed chat requests
+
 ## 0.6.0
 
 ### Minor Changes
