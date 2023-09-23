@@ -149,7 +149,7 @@ export class OChatModel
       // Keep track of the stream's output
       let text = '';
       let role = '';
-      let response = {};
+      let response = {} as OpenAIChatResponse;
 
       // Get a reader from the stream
       const reader = stream.getReader();
@@ -207,7 +207,18 @@ export class OChatModel
         completion_tokens: tokens.completion,
         total_tokens: tokens.total,
       };
-      response = { ...response, usage: responseUsage };
+
+      // Add final message content and token usage now that the stream is done
+      response = {
+        ...response,
+        usage: responseUsage,
+        choices: [
+          {
+            ...response.choices[0],
+            message,
+          },
+        ],
+      };
 
       await this.hooks.afterApiResponse?.({
         cost: calculateCost({ model: params.model, tokens }),
@@ -215,7 +226,7 @@ export class OChatModel
         modelType: this.modelType,
         modelProvider: this.modelProvider,
         params: restParams,
-        response: response as OpenAIChatResponse,
+        response,
         tokens,
         context,
         latency,
