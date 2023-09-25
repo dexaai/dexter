@@ -1,6 +1,7 @@
 import type { z } from 'zod';
 import { extractZodObject } from '@dexaai/model/utils';
 import { zodToFunctionParameters } from './zod-fns.js';
+import { getErrorMessage } from './get-error-message.js';
 
 /**
  * An API or function used for OpenAI function calling.
@@ -42,10 +43,12 @@ export class Api<Schema extends z.ZodObject<any>> {
     if (!args) {
       return { args: null, error: 'Missing expected function_call arguments' };
     }
-    const data = extractZodObject({ json: args, schema: this.schema });
-    if (typeof data === 'string') {
-      return { args: null, error: data };
+    try {
+      const data = extractZodObject({ json: args, schema: this.schema });
+      return { args: data, error: null };
+    } catch (e) {
+      const message = getErrorMessage(e);
+      return { args: null, error: message };
     }
-    return { args: data, error: null };
   }
 }
