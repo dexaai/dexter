@@ -1,5 +1,11 @@
 # @dexaai/functions
 
+## 0.6.2
+
+### Patch Changes
+
+- Fix OpenAI function calling argument validation
+
 ## 0.6.1
 
 ### Patch Changes
