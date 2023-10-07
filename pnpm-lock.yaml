@@ -158,7 +158,7 @@ importers:
       jsonrepair: ^3.2.0
       keyv: ^4.5.2
       ky: ^0.33.3
-      openai-fetch: ^1.6.3
+      openai-fetch: ^1.6.4
       p-map: ^6.0.0
       p-retry: ^5.1.2
       p-throttle: ^5.1.0
@@ -180,7 +180,7 @@ importers:
       jsonrepair: 3.2.0
       keyv: 4.5.3
       ky: 0.33.3
-      openai-fetch: 1.6.3
+      openai-fetch: 1.6.4
       p-map: 6.0.0
       p-retry: 5.1.2
       p-throttle: 5.1.0
@@ -3602,11 +3602,11 @@ packages:
       mimic-fn: 2.1.0
     dev: true
 
-  /openai-fetch/1.6.3:
-    resolution: {integrity: sha512-IM8bygs5qDOZ/WWB5nEPfm/JOqIj1BIO6R3gAW9vlL1oHtqO9D8ODQvkUNwMWRvW9xqqjlw4AnHYdhQ0o3NabA==}
+  /openai-fetch/1.6.4:
+    resolution: {integrity: sha512-Bfm4YrlVkwh75ZgOyyg2KF9e2jaRNk+LLh36a46WBHoUYlKXUVqCBjHkrkhmOapwaINuYqJYDQy+KXjjK9QX0A==}
     dependencies:
       ky: 0.33.3
-      zod: 3.21.4
+      zod: 3.22.4
     dev: false
 
   /optionator/0.9.3:
@@ -5115,4 +5115,8 @@ packages:
 
   /zod/3.21.4:
     resolution: {integrity: sha512-m46AKbrzKVzOzs/DZgVnG5H55N1sv1M8qZU3A8RIKbs3mrACDNeIOeilDymVb2HdmP8uwshOCF4uJ8uM9rCqJw==}
+    dev: false
+
+  /zod/3.22.4:
+    resolution: {integrity: sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==}
     dev: false
