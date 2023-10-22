@@ -12,6 +12,8 @@ export type {
 
 export { createOpenAIClient } from './client/openai-client.js';
 
+export { createOpenAITokenizer } from './tokenizer/openai-tokenizer.js';
+
 export { calculateOpenAICost } from './utils/openai-cost.js';
 export { extractJsonObject } from './utils/extract-json.js';
 export { extractZodObject } from './utils/extract-zod-object.js';

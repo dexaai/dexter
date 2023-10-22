@@ -1,3 +1,5 @@
+import type { ChatMessage } from 'openai-fetch';
+
 /**
  * Generic interface for a model tokenizer
  */

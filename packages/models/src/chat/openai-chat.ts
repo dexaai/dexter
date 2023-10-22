@@ -11,7 +11,7 @@ import type {
 } from './types.js';
 import { calculateOpenAICost } from '../utils/openai-cost.js';
 import type { ITokenizer } from '../tokenizer/types.js';
-import { createTokenizer } from '../tokenizer/openai-tokenizer.js';
+import { createOpenAITokenizer } from '../tokenizer/openai-tokenizer.js';
 
 const deepmerge = deepmergeInit();
 type InnerType<T> = T extends ReadableStream<infer U> ? U : never;
@@ -30,7 +30,7 @@ export class OpenAIChatModel implements IChatModel {
     this.context = params.context || {};
     this.params = params.params || { model: 'gpt-3.5-turbo' };
     this.hooks = params.hooks || {};
-    this.tokenizer = createTokenizer(this.params.model);
+    this.tokenizer = createOpenAITokenizer(this.params.model);
   }
 
   /** Set the cache to a new cache. */
@@ -58,14 +58,14 @@ export class OpenAIChatModel implements IChatModel {
     const modelChanged = params.model && params.model !== this.params.model;
     this.params = this.mergeParams(this.params, params);
     if (modelChanged) {
-      this.tokenizer = createTokenizer(this.params.model);
+      this.tokenizer = createOpenAITokenizer(this.params.model);
     }
   }
 
   /** Set the params to a new params. Removes all existing values. */
   setParams(params: ModelParams): void {
     this.params = params;
-    this.tokenizer = createTokenizer(this.params.model);
+    this.tokenizer = createOpenAITokenizer(this.params.model);
   }
 
   /** Add hooks to the model. */

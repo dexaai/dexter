@@ -7,7 +7,7 @@ import type { ITokenizer, CreateTokenizer } from './types.js';
 const tokenizerCache = new Map<string, Tokenizer>();
 
 /** Create a tokenizer for a specific model */
-export const createTokenizer: CreateTokenizer = (model: string) => {
+export const createOpenAITokenizer: CreateTokenizer = (model: string) => {
   if (tokenizerCache.has(model)) {
     return tokenizerCache.get(model)!;
   } else {
