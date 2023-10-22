@@ -1,14 +1,7 @@
 export { MemoryCache } from './chat/memory-cache.js';
+export { Msg } from './chat/message-utils.js';
 export { OpenAIChatModel } from './chat/openai-chat.js';
-export type {
-  IChatModel,
-  ChatModelProperties,
-  ChatModelHooks,
-  ChatCache,
-  EnrichedChatResponse,
-  GenerateParams,
-  ModelParams,
-} from './chat/types.js';
+export type { ChatModel } from './chat/types.js';
 
 export { createOpenAIClient } from './client/openai-client.js';
 

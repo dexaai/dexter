@@ -1,6 +1,6 @@
 import type { ChatMessage } from 'openai-fetch';
 import { OpenAIClient } from 'openai-fetch';
-import type { TokenCounts } from '../types.js';
+import type { Models } from '../types.js';
 
 /** Cached OpenAI clients. */
 const cachedClients = new Map<string, OpenAIClient>();
@@ -27,7 +27,7 @@ export function createOpenAIClient(
 export function extractTokens(
   usage: Record<string, number | undefined> | undefined
 ) {
-  const tokens: TokenCounts = {
+  const tokens: Models.TokenCounts = {
     prompt: usage?.['prompt_tokens'] ?? 0,
     completion: usage?.['completion_tokens'] ?? 0,
     total: usage?.['total_tokens'] ?? 0,

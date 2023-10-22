@@ -1,4 +1,4 @@
-import type { ChatMessage } from 'openai-fetch';
+import type { ChatModel } from '../chat/types.js';
 
 /**
  * Generic interface for a model tokenizer
@@ -13,7 +13,7 @@ export interface ITokenizer {
    * A single ChatMessage is counted as a completion and an array as a prompt.
    * Strings are counted as is.
    */
-  countTokens(input?: string | ChatMessage | ChatMessage[]): number;
+  countTokens(input?: string | ChatModel.Message | ChatModel.Message[]): number;
   /** Truncate a string to a maximum number of tokens */
   truncate(args: {
     /** Text to truncate */
