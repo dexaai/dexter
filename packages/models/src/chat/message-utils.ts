@@ -1,3 +1,4 @@
+import dedent from 'dedent';
 import type { ChatModel } from './types.js';
 
 /** Narrowed ChatModel.Message types. */
@@ -36,32 +37,93 @@ export namespace Msg {
   export type ChatMessage = ChatModel.Message;
 }
 
+/**
+ * Clean a string by removing extra newlines and indentation.
+ * @see: https://github.com/dmnd/dedent
+ */
+function cleanString(text: string): string {
+  const dedenter = dedent.withOptions({ escapeSpecialCharacters: true });
+  return dedenter(text);
+}
+
 /** Utility class for creating and checking message types. */
 export class Msg {
-  /** Create a system message. */
-  static system(content: string, name?: string): Msg.System {
-    return { role: 'system', content, ...(name ? { name } : {}) };
+  /** Create a system message. Cleans indentation and newlines by default. */
+  static system(
+    content: string,
+    opts?: {
+      /** Custom name for the message. */
+      name?: string;
+      /** Whether to clean extra newlines and indentation. Defaults to true. */
+      cleanContent?: boolean;
+    }
+  ): Msg.System {
+    const { name, cleanContent = true } = opts ?? {};
+    return {
+      role: 'system',
+      content: cleanContent ? cleanString(content) : content,
+      ...(name ? { name } : {}),
+    };
   }
-  /** Create a user message. */
-  static user(content: string, name?: string): Msg.User {
-    return { role: 'user', content, ...(name ? { name } : {}) };
+
+  /** Create a user message. Cleans indentation and newlines by default. */
+  static user(
+    content: string,
+    opts?: {
+      /** Custom name for the message. */
+      name?: string;
+      /** Whether to clean extra newlines and indentation. Defaults to true. */
+      cleanContent?: boolean;
+    }
+  ): Msg.User {
+    const { name, cleanContent = true } = opts ?? {};
+    return {
+      role: 'user',
+      content: cleanContent ? cleanString(content) : content,
+      ...(name ? { name } : {}),
+    };
   }
-  /** Create an assistant message. */
-  static assistant(content: string, name?: string): Msg.Assistant {
-    return { role: 'assistant', content, ...(name ? { name } : {}) };
+
+  /** Create an assistant message. Cleans indentation and newlines by default. */
+  static assistant(
+    content: string,
+    opts?: {
+      /** Custom name for the message. */
+      name?: string;
+      /** Whether to clean extra newlines and indentation. Defaults to true. */
+      cleanContent?: boolean;
+    }
+  ): Msg.Assistant {
+    const { name, cleanContent = true } = opts ?? {};
+    return {
+      role: 'assistant',
+      content: cleanContent ? cleanString(content) : content,
+      ...(name ? { name } : {}),
+    };
   }
+
   /** Create a function call message with argumets. */
   static funcCall(
-    function_call: { name: string; arguments: string },
-    name?: string
+    function_call: {
+      /** Name of the function to call. */
+      name: string;
+      /** Arguments to pass to the function. */
+      arguments: string;
+    },
+    opts?: {
+      /** The name descriptor for the message.(message.name) */
+      name?: string;
+    }
   ): Msg.FuncCall {
+    const { name: msgName } = opts ?? {};
     return {
       role: 'assistant',
       content: null,
       function_call,
-      ...(name ? { name } : {}),
+      ...(msgName ? { name: msgName } : {}),
     };
   }
+
   /** Create a function result message. */
   static funcResult(content: string, name: string): Msg.FuncResult {
     return { role: 'function', content, name };
@@ -82,7 +144,7 @@ export class Msg {
     if (msg.content === null && msg.function_call != null) {
       return Msg.funcCall(msg.function_call);
     } else if (msg.content !== null) {
-      return Msg.assistant(msg.content, msg.name);
+      return Msg.assistant(msg.content);
     } else {
       // @TODO: probably don't want to error here
       console.log('Invalid message', msg);
