@@ -9,7 +9,7 @@ import { createOpenAITokenizer } from '../tokenizer/openai-tokenizer.js';
 const deepmerge = deepmergeInit();
 type InnerType<T> = T extends ReadableStream<infer U> ? U : never;
 
-export class OpenAIChatModel implements ChatModel.Class {
+export class OpenAIChatModel implements ChatModel {
   private cache?: ChatModel.Properties['cache'];
   private client: ChatModel.Properties['client'];
   private context: ChatModel.Properties['context'];
@@ -27,48 +27,56 @@ export class OpenAIChatModel implements ChatModel.Class {
   }
 
   /** Set the cache to a new cache. */
-  setCache(cache: ChatModel.Cache): void {
+  setCache(cache: ChatModel.Cache): this {
     this.cache = cache;
+    return this;
   }
 
   /** Set the client to a new OpenAI API client. */
-  setClient(client: ChatModel.Properties['client']): void {
+  setClient(client: ChatModel.Properties['client']): this {
     this.client = client;
+    return this;
   }
 
   /** Add the context. Overrides existing keys. */
-  updateContext(context: ChatModel.Context): void {
+  updateContext(context: ChatModel.Context): this {
     this.context = this.mergeContext(this.context, context);
+    return this;
   }
 
   /** Set the context to a new context. Removes all existing values. */
-  setContext(context: ChatModel.Context): void {
+  setContext(context: ChatModel.Context): this {
     this.context = context;
+    return this;
   }
 
   /** Add the params. Overrides existing keys. */
-  addParams(params: ChatModel.GenerateParams): void {
+  addParams(params: Omit<ChatModel.GenerateParams, 'messages'>): this {
     const modelChanged = params.model && params.model !== this.params.model;
     this.params = this.mergeParams(this.params, params);
     if (modelChanged) {
       this.tokenizer = createOpenAITokenizer(this.params.model);
     }
+    return this;
   }
 
   /** Set the params to a new params. Removes all existing values. */
-  setParams(params: ChatModel.Params): void {
+  setParams(params: Omit<ChatModel.Params, 'messages'>): this {
     this.params = params;
     this.tokenizer = createOpenAITokenizer(this.params.model);
+    return this;
   }
 
   /** Add hooks to the model. */
-  addHooks(hooks: ChatModel.Hooks): void {
+  addHooks(hooks: ChatModel.Hooks): this {
     this.hooks = this.mergeHooks(this.hooks, hooks);
+    return this;
   }
 
   /** Set the hooks to a new set of hooks. Removes all existing hooks. */
-  setHooks(hooks: ChatModel.Hooks): void {
+  setHooks(hooks: ChatModel.Hooks): this {
     this.hooks = hooks;
+    return this;
   }
 
   /** Clone the model and merge/orverride the given properties. */

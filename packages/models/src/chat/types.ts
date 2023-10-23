@@ -2,6 +2,17 @@ import type { ChatMessage, ChatParams, ChatResponse } from 'openai-fetch';
 import type { OpenAIClient } from 'openai-fetch';
 import type { Models } from '../types.js';
 
+export interface ChatModel {
+  generate(
+    params: ChatModel.GenerateParams,
+    context?: ChatModel.Context
+  ): Promise<ChatModel.EnrichedResponse>;
+  clone(
+    params?: Partial<ChatModel.Properties>,
+    context?: ChatModel.Context
+  ): ChatModel;
+}
+
 export namespace ChatModel {
   export type Message = ChatMessage;
   export type Context = Models.Context;
@@ -75,12 +86,4 @@ export namespace ChatModel {
     params: Omit<Params, 'messages'>;
     hooks: Hooks;
   };
-
-  export interface Class {
-    generate(
-      params: GenerateParams,
-      context?: Context
-    ): Promise<EnrichedResponse>;
-    clone(params?: Partial<Properties>, context?: Context): Class;
-  }
 }

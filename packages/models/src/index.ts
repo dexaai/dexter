@@ -5,6 +5,8 @@ export type { ChatModel } from './chat/types.js';
 
 export { createOpenAIClient } from './client/openai-client.js';
 
+export type { Prompt } from './prompt/types.js';
+
 export { createOpenAITokenizer } from './tokenizer/openai-tokenizer.js';
 
 export { calculateOpenAICost } from './utils/openai-cost.js';
