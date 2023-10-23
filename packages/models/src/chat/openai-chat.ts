@@ -314,7 +314,7 @@ export class OpenAIChatModel implements ChatModel {
 
   private mergeParams(
     classParams: ChatModel.Properties['params'],
-    newParams: ChatModel.GenerateParams
+    newParams: Omit<ChatModel.GenerateParams, 'messages'>
   ): ChatModel.Params {
     return deepmerge(classParams, newParams) as ChatModel.Params;
   }
