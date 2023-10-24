@@ -1,20 +1,14 @@
 import 'dotenv/config.js';
 import { z } from 'zod';
-import { zodToJsonSchema } from 'zod-to-json-schema';
 import { createChain } from './chain/chain.js';
 import type { ChatModel } from './index.js';
-import { extractZodObject } from './index.js';
 import { Msg, OpenAIChatModel } from './index.js';
+import { createAiFunction } from './utils/ai-function.js';
 
 const model = new OpenAIChatModel({
   // Log responses to console for debugging
   hooks: { onResponse: [async (...args) => console.log(...args)] },
 });
-
-function zodToFuncParams(schema: z.ZodObject<any>) {
-  const jsonSchema = zodToJsonSchema(schema, 'mySchema');
-  return jsonSchema.definitions!.mySchema;
-}
 
 // @ts-ignore
 const simpleChain = createChain({
@@ -36,53 +30,25 @@ const simpleChain = createChain({
   retries: 1,
 });
 
-class AiFunction<Schema extends z.ZodObject<any>> {
-  name: string;
-  description?: string;
-  schema: Schema;
-
-  constructor(args: { name: string; description?: string; schema: Schema }) {
-    this.name = args.name;
-    this.description = args.description;
-    this.schema = args.schema;
-  }
-
-  getSpec() {
-    return {
-      name: this.name,
-      description: this.description,
-      parameters: zodToFuncParams(this.schema),
-    };
-  }
-
-  validate(message: ChatModel.Message) {
-    const { name, arguments: args } = message.function_call || {};
-    if (name !== this.name) {
-      throw new Error(`Expected function ${this.name} to be called`);
-    }
-    return extractZodObject({
-      schema: this.schema,
-      json: args || '',
-    });
-  }
-}
-
-const ageFunc = new AiFunction({
-  name: 'extract_age',
-  schema: z.object({
-    age: z.number().describe('The age of the person'),
-  }),
-});
+const ageFunc = createAiFunction(
+  {
+    name: 'extract_age',
+    argsSchema: z.object({
+      age: z.number().describe('The age of the person'),
+    }),
+  },
+  async (args) => args
+);
 
 const zodChain = createChain({
   model: model.addParams({
-    functions: [ageFunc.getSpec()],
+    functions: [ageFunc.spec],
   }),
   prompt: (args: { text: string }) => [
     Msg.system("You extract a person's age from a sentence."),
     Msg.user(`How old is ${args.text}?`),
   ],
-  validator: ageFunc.validate,
+  validator: ageFunc.parseArgs,
   retries: 1,
 });
 
