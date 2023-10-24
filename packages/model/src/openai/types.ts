@@ -2,6 +2,8 @@ import type {
   ChatParams,
   ChatResponse,
   ChatStreamResponse,
+  CompletionParams,
+  CompletionResponse,
   EmbeddingParams,
   EmbeddingResponse,
   OpenAIClient,
@@ -35,5 +37,11 @@ export namespace OpenAI {
     export type Params = EmbeddingParams;
     /** A response from the chat completion endpoint. */
     export type Response = EmbeddingResponse;
+  }
+
+  export namespace Completion {
+    export type Params = CompletionParams;
+    /** A response from the chat completion endpoint. */
+    export type Response = CompletionResponse;
   }
 }

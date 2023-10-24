@@ -142,6 +142,28 @@ export namespace Model {
     }
   }
 
+  export namespace Completion {
+    export interface Run extends Model.Run {
+      prompt:
+        | string
+        | Array<string>
+        | Array<number>
+        | Array<Array<number>>
+        | null;
+    }
+    export interface Config extends Model.Config {}
+    export interface Response extends Model.Response {
+      completions: { completion: string }[];
+    }
+    export interface IModel<
+      CConfig extends Config = Config,
+      CRun extends Run = Run,
+      CResponse extends Response = Response
+    > extends Model.IModel<CConfig, CRun, CResponse> {
+      modelType: 'completion';
+    }
+  }
+
   /**
    * Generic interface for a model tokenizer
    */
