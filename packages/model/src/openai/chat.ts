@@ -45,13 +45,15 @@ export class OChatModel
         Model.Chat.Run,
         Model.Chat.Response
       >,
-      'client'
+      'client' | 'params'
     >
   ) {
+    let { client, params, ...rest } = args;
     // Add a default client if none is provided
-    let { client, ...rest } = args;
     client = client ?? createOpenAIClient();
-    super({ client, ...rest });
+    // Set default model if no params are provided
+    params = params ?? { model: 'gpt-3.5-turbo' };
+    super({ client, params, ...rest });
   }
 
   protected async runModel(
