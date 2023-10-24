@@ -8,6 +8,7 @@ import { createOpenAITokenizer } from '../tokenizer/openai-tokenizer.js';
 
 const deepmerge = deepmergeInit();
 type InnerType<T> = T extends ReadableStream<infer U> ? U : never;
+type ChatCompletionChunk = InnerType<ChatStreamResponse>;
 
 export class OpenAIChatModel implements ChatModel {
   private cache?: ChatModel.Properties['cache'];
@@ -105,6 +106,10 @@ export class OpenAIChatModel implements ChatModel {
     const mergedContext = this.mergeContext(this.context, context);
     const mergedParams = this.mergeParams(this.params, params);
 
+    if (this.hooks?.onStart) {
+      this.hooks.onStart.map((hook) => hook(mergedParams, mergedContext));
+    }
+
     try {
       // Check the cache
       const cachedResponse = this.cache && (await this.cache.get(mergedParams));
@@ -115,8 +120,8 @@ export class OpenAIChatModel implements ChatModel {
           cost: 0,
           latency: performance.now() - start,
         };
-        if (this.hooks?.onResponse) {
-          this.hooks.onResponse.map((hook) =>
+        if (this.hooks?.onComplete) {
+          this.hooks.onComplete.map((hook) =>
             hook(mergedParams, response, mergedContext)
           );
         }
@@ -146,8 +151,8 @@ export class OpenAIChatModel implements ChatModel {
       }
 
       // Run the hooks
-      if (this.hooks?.onResponse) {
-        this.hooks.onResponse.map((hook) =>
+      if (this.hooks?.onComplete) {
+        this.hooks.onComplete.map((hook) =>
           hook(mergedParams, enrichedResponse, mergedContext)
         );
       }
@@ -174,6 +179,10 @@ export class OpenAIChatModel implements ChatModel {
     const mergedContext = this.mergeContext(this.context, context);
     const mergedParams = this.mergeParams(this.params, params);
 
+    if (this.hooks?.onStart) {
+      this.hooks.onStart.map((hook) => hook(mergedParams, mergedContext));
+    }
+
     try {
       // Check the cache
       const cachedResponse = this.cache && (await this.cache.get(mergedParams));
@@ -184,8 +193,8 @@ export class OpenAIChatModel implements ChatModel {
           cost: 0,
           latency: performance.now() - start,
         };
-        if (this.hooks?.onResponse) {
-          this.hooks.onResponse.map((hook) =>
+        if (this.hooks?.onComplete) {
+          this.hooks.onComplete.map((hook) =>
             hook(mergedParams, response, mergedContext)
           );
         }
@@ -195,7 +204,7 @@ export class OpenAIChatModel implements ChatModel {
       const stream = await this.client.streamChatCompletion(mergedParams);
 
       // Keep track of the stream's output
-      let chunk = {} as InnerType<ChatStreamResponse>;
+      let chunk = {} as ChatCompletionChunk;
 
       // Get a reader from the stream
       const reader = stream.getReader();
@@ -287,8 +296,8 @@ export class OpenAIChatModel implements ChatModel {
       }
 
       // Run the hooks
-      if (this.hooks?.onResponse) {
-        this.hooks.onResponse.map((hook) =>
+      if (this.hooks?.onComplete) {
+        this.hooks.onComplete.map((hook) =>
           hook(mergedParams, enrichedResponse, mergedContext)
         );
       }

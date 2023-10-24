@@ -46,12 +46,14 @@ export namespace ChatModel {
     cost?: number;
     latency: number;
   };
+
+  type StartHook = (params: ChatParams, context: Context) => Promise<void>;
   /**
    * Called when a response is received from the OpenAI API.
    * Includes cached responses, which can be identified by the `cached` property
    * on the response.
    */
-  type ResponseHook = (
+  type CompleteHook = (
     params: ChatParams,
     response: EnrichedResponse,
     context: Context
@@ -64,7 +66,11 @@ export namespace ChatModel {
   ) => Promise<void>;
   /** Hooks for the ChatModel. */
   export type Hooks = {
-    onResponse?: ResponseHook[];
+    /** Runs before the request is sent. */
+    onStart?: StartHook[];
+    /** Runs after the request has completed. */
+    onComplete?: CompleteHook[];
+    /** Runs before throwing an error. */
     onError?: ErrorHook[];
   };
 
