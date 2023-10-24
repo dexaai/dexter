@@ -1,118 +1,97 @@
-import Keyv from 'keyv';
-import { KvCache } from 'tkv-cache';
-import type {
-  Ctx,
-  Hooks,
-  IModel,
-  ModelCache,
-  ModelConfig,
-  ModelProvider,
-  ModelResponse,
-  ModelRun,
-  ModelType,
-  Prettify,
-} from './types.js';
+import { createTokenizer } from './openai/tokenizer.js';
+import type { IModel, ITokenizer, Prettify } from './types.js';
+import type { Model } from './types2.js';
+import { deepMerge } from './utils/helpers.js';
 
 export interface ModelArgs<
-  MConfig extends ModelConfig,
-  MRun extends ModelRun,
-  MResponse extends ModelResponse
+  MClient extends Model.Client,
+  MConfig extends Model.Config,
+  MRun extends Model.Run,
+  MResponse extends Model.Response
 > {
-  cache?: ModelCache<MRun & MConfig, MResponse>;
-  context?: Ctx;
+  cache?: Model.Cache<MRun & MConfig, MResponse>;
+  client: MClient;
+  context?: Model.Ctx;
   params: MConfig & Partial<MRun>;
-  hooks?: Hooks<MRun & MConfig, MResponse>;
+  hooks?: Model.Hooks<MRun & MConfig, MResponse>;
   debug?: boolean;
 }
 
 export abstract class AbstractModel<
-  MConfig extends ModelConfig,
-  MRun extends ModelRun,
-  MResponse extends ModelResponse,
+  MClient extends Model.Client,
+  MConfig extends Model.Config,
+  MRun extends Model.Run,
+  MResponse extends Model.Response,
   AResponse extends any = any
 > implements IModel<MConfig, MRun, MResponse>
 {
   protected abstract runModel(
     params: Prettify<MRun & MConfig>,
-    context: Ctx
+    context: Model.Ctx
   ): Promise<MResponse>;
 
-  abstract modelType: ModelType;
-  abstract modelProvider: ModelProvider;
-  protected cache?: ModelCache<MRun & MConfig, MResponse>;
-  protected context: Ctx;
+  abstract modelType: Model.Type;
+  abstract modelProvider: Model.Provider;
+  protected cache?: Model.Cache<MRun & MConfig, MResponse>;
+  protected client: MClient;
+  protected context: Model.Ctx;
   protected debug: boolean;
   protected params: MConfig & Partial<MRun>;
-  protected hooks: Hooks<MRun & MConfig, MResponse, AResponse>;
+  protected hooks: Model.Hooks<MRun & MConfig, MResponse, AResponse>;
+  public tokenizer: ITokenizer;
 
-  constructor(args: ModelArgs<MConfig, MRun, MResponse>) {
+  constructor(args: ModelArgs<MClient, MConfig, MRun, MResponse>) {
     this.cache = args.cache;
+    this.client = args.client;
     this.context = args.context ?? {};
     this.debug = args.debug ?? false;
     this.params = args.params;
     this.hooks = args.hooks || {};
-  }
-
-  /**
-   * Add a cache to the model for storing responses
-   * Defaults to an in-memory Keyv cache.
-   */
-  addCache(args?: {
-    /** A Keyv instance to use for caching */
-    keyv?: Keyv<MResponse>;
-    /** Keyv options to create a new Keyv instance */
-    keyvOpts?: Keyv.Options<MResponse>;
-    /** A function to normalize the cache key */
-    normalizeKey?: (params: MRun & MConfig) => Partial<MRun & MConfig>;
-    errorHandler?: (error: unknown) => void;
-  }): this {
-    const { keyvOpts, normalizeKey, errorHandler } = args ?? {};
-    const keyv = args?.keyv ?? new Keyv<MResponse>(keyvOpts);
-    this.cache = new KvCache(keyv, normalizeKey, errorHandler);
-    return this;
-  }
-
-  /** Add hooks to the model for logging and debugging */
-  addHooks(hooks: Hooks<MRun & MConfig, MResponse, AResponse>): this {
-    this.hooks = { ...this.hooks, ...hooks };
-    return this;
-  }
-
-  /**
-   * Add context to the model.
-   * New context is merged with existing context, overwriting any existing keys.
-   */
-  addContext(context: Ctx): this {
-    this.context = { ...this.context, ...context };
-    return this;
+    this.tokenizer = createTokenizer(args.params.model);
   }
 
   async run(
     params: Prettify<MRun & Partial<MConfig>>,
-    context?: Ctx
+    context?: Model.Ctx
   ): Promise<MResponse> {
-    // Merge the default params with the provided params
-    const mergedParams: MRun & MConfig = {
-      ...this.params,
-      ...params,
-    };
-    const mergedContext = { ...this.context, ...context };
+    const start = Date.now();
+    const mergedContext = this.mergeContext(this.context, context);
+    const mergedParams = deepMerge(this.params, params) as MRun & MConfig;
 
-    // Return cached response if available
-    const cached = await this?.cache?.get(mergedParams);
-    if (cached) {
-      await this.hooks.afterCacheHit?.({
+    this.hooks?.onStart?.forEach((hook) =>
+      hook({
         timestamp: new Date().toISOString(),
         modelType: this.modelType,
         modelProvider: this.modelProvider,
         params: mergedParams,
-        response: cached,
         context: mergedContext,
-      });
-      return cached;
-    }
+      })
+    );
 
     try {
+      // Check the cache
+      const cachedResponse = this.cache && (await this.cache.get(mergedParams));
+      if (cachedResponse) {
+        const response: MResponse = {
+          ...cachedResponse,
+          cached: true,
+          cost: 0,
+          latency: Date.now() - start,
+        };
+        this.hooks.onComplete?.forEach((hook) =>
+          hook({
+            timestamp: new Date().toISOString(),
+            modelType: this.modelType,
+            modelProvider: this.modelProvider,
+            params: mergedParams,
+            response,
+            context: mergedContext,
+            cached: true,
+          })
+        );
+        return response;
+      }
+
       // Run the model (e.g. make the API request)
       const response = await this.runModel(mergedParams, mergedContext);
 
@@ -121,15 +100,110 @@ export abstract class AbstractModel<
 
       return response;
     } catch (error) {
-      await this.hooks.beforeError?.({
-        timestamp: new Date().toISOString(),
-        modelType: this.modelType,
-        modelProvider: this.modelProvider,
-        params: mergedParams,
-        error,
-        context: mergedContext,
-      });
+      this.hooks?.onError?.forEach((hook) =>
+        hook({
+          timestamp: new Date().toISOString(),
+          modelType: this.modelType,
+          modelProvider: this.modelProvider,
+          params: mergedParams,
+          error,
+          context: mergedContext,
+        })
+      );
       throw error;
     }
+  }
+
+  /** Set the cache to a new cache. */
+  setCache(cache: typeof this.cache): this {
+    this.cache = cache;
+    return this;
+  }
+
+  /** Set the client to a new OpenAI API client. */
+  setClient(client: typeof this.client): this {
+    this.client = client;
+    return this;
+  }
+
+  /** Add the context. Overrides existing keys. */
+  updateContext(context: typeof this.context): this {
+    this.context = this.mergeContext(this.context, context);
+    return this;
+  }
+
+  /** Set the context to a new context. Removes all existing values. */
+  setContext(context: Model.Ctx): this {
+    this.context = context;
+    return this;
+  }
+
+  /** Add the params. Overrides existing keys. */
+  addParams(params: Partial<typeof this.params>): this {
+    const modelChanged = params.model && params.model !== this.params.model;
+    this.params = this.mergeParams(this.params, params);
+    if (modelChanged) {
+      this.tokenizer = createTokenizer(this.params.model);
+    }
+    return this;
+  }
+
+  /** Set the params to a new params. Removes all existing values. */
+  setParams(params: typeof this.params): this {
+    this.params = params;
+    this.tokenizer = createTokenizer(this.params.model);
+    return this;
+  }
+
+  /** Add hooks to the model. */
+  addHooks(hooks: typeof this.hooks): this {
+    this.hooks = this.mergeHooks(this.hooks, hooks);
+    return this;
+  }
+
+  /** Set the hooks to a new set of hooks. Removes all existing hooks. */
+  setHooks(hooks: typeof this.hooks): this {
+    this.hooks = hooks;
+    return this;
+  }
+
+  /** Clone the model and merge/orverride the given properties. */
+  // @TODO
+  // clone(
+  //   params?: Partial<typeof this.params>,
+  //   context?: Model.Ctx,
+  // ): this {
+  //   return new OpenAIChatModel({
+  //     cache: params?.cache || this.cache,
+  //     client: params?.client || this.client,
+  //     context: this.mergeContext(this.context, context),
+  //     params: this.mergeParams(
+  //       this.params,
+  //       (params?.params || {}) as ChatModel.GenerateParams
+  //     ),
+  //     hooks: this.mergeHooks(this.hooks, params?.hooks || {}),
+  //   });
+  // }
+
+  private mergeContext(
+    classContext: Model.Ctx,
+    newContext?: Model.Ctx
+  ): Model.Ctx {
+    if (!newContext) return classContext;
+    return deepMerge(classContext, newContext);
+  }
+
+  private mergeParams(
+    classParams: Partial<typeof this.params>,
+    newParams: Partial<typeof this.params>
+  ): typeof this.params {
+    return deepMerge(classParams, newParams) as any;
+  }
+
+  private mergeHooks(
+    existingHooks: typeof this.hooks,
+    newHooks: typeof this.hooks
+  ): typeof this.hooks {
+    return deepMerge(existingHooks, newHooks);
   }
 }

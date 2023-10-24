@@ -1,108 +1,97 @@
-import type { z } from 'zod';
-import type {
-  ChatConfig,
-  ChatResponse,
-  ChatRun,
-  Ctx,
-  IChatModel,
-  Prettify,
-  TokenCounts,
-} from '../types.js';
+import type { SetOptional } from 'type-fest';
 import type { ModelArgs } from '../model.js';
 import { AbstractModel } from '../model.js';
 import { createOpenAIClient, extractTokens } from './client.js';
-import { createTokenizer } from './tokenizer.js';
-import type {
-  ChatMessage,
-  OpenAIChatModel,
-  OpenAIChatParams,
-  OpenAIChatResponse,
-  OpenAIClient,
-} from './client.js';
-import { extractZodObject } from '../utils/extract-zod-object.js';
-import { getErrorMessage } from '../utils/get-error-message.js';
 import { calculateCost } from './costs.js';
+import type { OpenAI } from './types.js';
+import type { Model } from '../types2.js';
+import { deepMerge } from '../utils/helpers.js';
 
 export interface OChatConfig
-  extends ChatConfig,
-    Omit<OpenAIChatParams, 'messages' | 'user'> {
+  extends Model.Chat.Config,
+    Omit<OpenAI.Chat.Params, 'messages'> {
   /** Handle new chunks from streaming requests. */
   handleUpdate?: (chunk: string) => void;
-  model: OpenAIChatModel;
+  model: string;
 }
 
-export type IOChatModel = IChatModel<OChatConfig, ChatRun, ChatResponse>;
+export type IOChatModel = Model.Chat.IModel<
+  OChatConfig,
+  Model.Chat.Run,
+  Model.Chat.Response
+>;
+
+type InnerType<T> = T extends ReadableStream<infer U> ? U : never;
+type ChatCompletionChunk = InnerType<OpenAI.Chat.StreamResponse>;
 
 export class OChatModel
-  extends AbstractModel<OChatConfig, ChatRun, ChatResponse, OpenAIChatResponse>
+  extends AbstractModel<
+    OpenAI.Client,
+    OChatConfig,
+    Model.Chat.Run,
+    Model.Chat.Response,
+    OpenAI.Chat.Response
+  >
   implements IOChatModel
 {
   modelType = 'chat' as const;
   modelProvider = 'openai' as const;
-  openaiClient: OpenAIClient;
 
   constructor(
-    args: Prettify<
-      ModelArgs<OChatConfig, ChatRun, ChatResponse> & {
-        openaiClient?: OpenAIClient;
-      }
+    args: SetOptional<
+      ModelArgs<
+        OpenAI.Client,
+        OChatConfig,
+        Model.Chat.Run,
+        Model.Chat.Response
+      >,
+      'client'
     >
   ) {
-    const { openaiClient, ...rest } = args;
-    super(rest);
-    this.openaiClient = openaiClient || createOpenAIClient();
+    // Add a default client if none is provided
+    let { client, ...rest } = args;
+    client = client ?? createOpenAIClient();
+    super({ client, ...rest });
   }
 
-  async runModel(
-    params: ChatRun & OChatConfig,
-    context: Ctx
-  ): Promise<ChatResponse> {
-    const { handleUpdate, ...restParams } = params;
-    if (this.debug) {
-      logMessages({ messages: params.messages, type: 'req' });
-    }
+  protected async runModel(
+    { handleUpdate, ...params }: Model.Chat.Run & OChatConfig,
+    context: Model.Ctx
+  ): Promise<Model.Chat.Response> {
+    const start = Date.now();
+
     // Use non-streaming API if no handler is provided
     if (!handleUpdate) {
-      const start = Date.now();
-      const { message, response } =
-        await this.openaiClient.createChatCompletion({
-          user: typeof context.user === 'string' ? context.user : '',
-          ...restParams,
-        });
-      const latency = Date.now() - start;
+      // Make the OpenAI API request
+      const response = await this.client.createChatCompletion(params);
+
+      this.hooks?.onApiResponse?.forEach((hook) =>
+        hook({
+          timestamp: new Date().toISOString(),
+          modelType: this.modelType,
+          modelProvider: this.modelProvider,
+          params,
+          response,
+          latency: Date.now() - start,
+          context,
+        })
+      );
+
       const tokens = extractTokens(response.usage);
-      await this.hooks.afterApiResponse?.({
-        cost: calculateCost({ model: params.model, tokens }),
-        timestamp: new Date().toISOString(),
-        modelType: this.modelType,
-        modelProvider: this.modelProvider,
-        params: restParams,
-        response,
+      const modelResponse: Model.Chat.Response = {
+        message: response.choices[0].message,
+        cached: false,
         tokens,
-        context,
-        latency,
-      });
-      if (this.debug) {
-        logMessages({
-          cost: calculateCost({ model: params.model, tokens }),
-          messages: [message],
-          type: 'res',
-          tokens,
-          latency,
-        });
-      }
-      return { message, tokens };
+        cost: calculateCost({ model: params.model, tokens }),
+      };
+
+      return modelResponse;
     } else {
-      const start = Date.now();
-      const stream = await this.openaiClient.streamChatCompletion({
-        user: typeof context.user === 'string' ? context.user : '',
-        ...restParams,
-      });
+      // Use the streaming API if a handler is provided
+      const stream = await this.client.streamChatCompletion(params);
 
       // Keep track of the stream's output
-      let text = '';
-      let role = '';
-      let response = {} as OpenAIChatResponse;
+      let chunk = {} as ChatCompletionChunk;
 
       // Get a reader from the stream
       const reader = stream.getReader();
@@ -116,136 +105,137 @@ export class OChatModel
           break;
         }
 
-        // Only set role once
-        if (!role && value?.message?.role) {
-          role = value.message.role;
+        // Create the initial chunk
+        if (!chunk.id) {
+          chunk = value;
         }
 
-        response = { ...response, ...value?.response };
+        const delta = value.choices[0].delta;
 
         // Send an update to the caller
-        const messageContent = value?.message?.content;
+        const messageContent = delta?.content;
         if (typeof messageContent === 'string') {
-          text = `${text}${messageContent}`;
           try {
-            // @TODO: Should this be throttled?
             handleUpdate(messageContent);
           } catch (err) {
             console.error('Error handling update', err);
           }
         }
+
+        // Merge the delta into the chunk
+        const { content, function_call } = delta;
+        if (content) {
+          chunk.choices[0].delta.content = `${chunk.choices[0].delta.content}${content}`;
+        }
+        if (function_call) {
+          chunk.choices[0].delta.function_call = deepMerge(
+            chunk.choices[0].delta.function_call,
+            function_call
+          );
+        }
       }
 
       // Once the stream is done, release the reader
       reader.releaseLock();
-      const latency = Date.now() - start;
 
-      // Construct the complete message
-      const message: ChatMessage = {
-        role: role as ChatMessage['role'],
-        content: text,
-      };
-
-      // Streamed responses don't include token usage so we have to add it
-      const tokenizer = createTokenizer(params.model);
-      const promptTokens = tokenizer.countTokens(params.messages);
-      const completionTokens = tokenizer.countTokens(message);
-      const tokens: TokenCounts = {
-        prompt: promptTokens,
-        completion: completionTokens,
-        total: promptTokens + completionTokens,
-      };
-      const responseUsage = {
-        prompt_tokens: tokens.prompt,
-        completion_tokens: tokens.completion,
-        total_tokens: tokens.total,
-      };
-
-      // Add final message content and token usage now that the stream is done
-      response = {
-        ...response,
-        usage: responseUsage,
+      const choice = chunk.choices[0];
+      const response: OpenAI.Chat.Response = {
+        ...chunk,
         choices: [
           {
-            ...response.choices[0],
-            message,
+            finish_reason:
+              choice.finish_reason as OpenAI.Chat.Response['choices'][0]['finish_reason'],
+            index: choice.index,
+            message: choice.delta as Model.Message,
           },
         ],
       };
 
-      await this.hooks.afterApiResponse?.({
-        cost: calculateCost({ model: params.model, tokens }),
-        timestamp: new Date().toISOString(),
-        modelType: this.modelType,
-        modelProvider: this.modelProvider,
-        params: restParams,
-        response,
+      // Calculate the token usage and add it to the response.
+      // OpenAI doesn't provide token usage for streaming requests.
+      const promptTokens = this.tokenizer.countTokens(params.messages);
+      const completionTokens = this.tokenizer.countTokens(
+        response.choices[0].message
+      );
+      response.usage = {
+        completion_tokens: completionTokens,
+        prompt_tokens: promptTokens,
+        total_tokens: promptTokens + completionTokens,
+      };
+
+      this.hooks?.onApiResponse?.forEach((hook) =>
+        hook({
+          timestamp: new Date().toISOString(),
+          modelType: this.modelType,
+          modelProvider: this.modelProvider,
+          params,
+          response,
+          latency: Date.now() - start,
+          context,
+        })
+      );
+
+      const tokens = extractTokens(response.usage);
+      const modelResponse: Model.Chat.Response = {
+        message: response.choices[0].message,
+        cached: false,
         tokens,
-        context,
-        latency,
-      });
-      if (this.debug) {
-        logMessages({
-          cost: calculateCost({ model: params.model, tokens }),
-          messages: [message],
-          type: 'res',
-          tokens,
-          latency,
-        });
-      }
-      return { message, tokens };
+        cost: calculateCost({ model: params.model, tokens }),
+      };
+
+      return modelResponse;
     }
   }
 }
 
-/**
- * Pretty-print a list of messages to the console for debugging.
- */
-function logMessages(args: {
-  messages: ChatMessage[];
-  type: 'req' | 'res';
-  tokens?: TokenCounts;
-  latency?: number;
-  cost?: number;
-}) {
-  const tokens = args.tokens
-    ? `[Tokens: ${args.tokens.prompt} + ${args.tokens.completion} = ${args.tokens.total}]`
-    : null;
-  const latency = args.latency ? `[Latency: ${args.latency}ms]` : null;
-  const cost = args.cost ? `[Cost: $${(args.cost / 100).toFixed(5)}]` : null;
-  const meta = [latency, cost, tokens].filter(Boolean).join('---');
-  if (args.type === 'req') {
-    console.info(`-----> [Request] ----->`);
-  } else {
-    console.info(`<===== [Response] <===== ${meta}`);
-  }
-  console.debug();
-  args.messages.forEach(logMessage);
-}
+// /**
+//  * Pretty-print a list of messages to the console for debugging.
+//  */
+// function logMessages(args: {
+//   messages: Model.Message[];
+//   type: 'req' | 'res';
+//   tokens?: TokenCounts;
+//   latency?: number;
+//   cost?: number;
+// }) {
+//   const tokens = args.tokens
+//     ? `[Tokens: ${args.tokens.prompt} + ${args.tokens.completion} = ${args.tokens.total}]`
+//     : null;
+//   const latency = args.latency ? `[Latency: ${args.latency}ms]` : null;
+//   const cost = args.cost ? `[Cost: $${(args.cost / 100).toFixed(5)}]` : null;
+//   const meta = [latency, cost, tokens].filter(Boolean).join('---');
+//   if (args.type === 'req') {
+//     console.info(`-----> [Request] ----->`);
+//   } else {
+//     console.info(`<===== [Response] <===== ${meta}`);
+//   }
+//   console.debug();
+//   args.messages.forEach(logMessage);
+// }
 
-function logMessage(message: ChatMessage, index: number) {
-  console.debug(
-    `[${index}] ${message.role.toUpperCase()}:${
-      message.name ? ` (${message.name}) ` : ''
-    }`
-  );
-  if (message.content) {
-    console.debug(message.content);
-  }
-  if (message.function_call) {
-    console.debug(`Function call: ${message.function_call.name}`);
-    if (message.function_call.arguments) {
-      try {
-        const formatted = JSON.stringify(
-          JSON.parse(message.function_call.arguments),
-          null,
-          2
-        );
-        console.debug(formatted);
-      } catch (err) {
-        console.debug(message.function_call.arguments);
-      }
-    }
-  }
-  console.debug();
-}
+// function logMessage(message: Model.Message, index: number) {
+//   console.debug(
+//     `[${index}] ${message.role.toUpperCase()}:${
+//       message.name ? ` (${message.name}) ` : ''
+//     }`
+//   );
+//   if (message.content) {
+//     console.debug(message.content);
+//   }
+//   if (message.function_call) {
+//     console.debug(`Function call: ${message.function_call.name}`);
+//     if (message.function_call.arguments) {
+//       try {
+//         const formatted = JSON.stringify(
+//           JSON.parse(message.function_call.arguments),
+//           null,
+//           2
+//         );
+//         console.debug(formatted);
+//       } catch (err) {
+//         console.debug(message.function_call.arguments);
+//       }
+//     }
+//   }
+//   console.debug();
+// }

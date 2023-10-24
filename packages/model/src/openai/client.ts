@@ -1,8 +1,9 @@
 import type { ChatMessage } from 'openai-fetch';
 import { OpenAIClient } from 'openai-fetch';
-import type { TokenCounts } from '../types.js';
+import type { Model } from '../types2.js';
 
-let cachedClient: OpenAIClient | undefined;
+/** Cached OpenAI clients. */
+const cachedClients = new Map<string, OpenAIClient>();
 
 /** Create a new openai-fetch OpenAIClient. */
 export function createOpenAIClient(
@@ -11,32 +12,26 @@ export function createOpenAIClient(
   /** Force a new client to be created. */
   forceNew = false
 ): OpenAIClient {
-  // Only use a cached client if no options are passed.
-  if (opts === undefined && cachedClient && !forceNew) {
-    return cachedClient;
+  if (!forceNew) {
+    const cachedClient = cachedClients.get(JSON.stringify(opts));
+    if (cachedClient) return cachedClient;
   }
-  cachedClient = new OpenAIClient(opts);
-  return cachedClient;
+
+  const client = new OpenAIClient(opts);
+  cachedClients.set(JSON.stringify(opts), client);
+
+  return client;
 }
-
-export { OpenAIApiError, OpenAIClient } from 'openai-fetch';
-
-export type {
-  ChatCompletionParams as OpenAIChatParams,
-  ChatCompletionResponse as OpenAIChatResponse,
-  ChatMessageFunction as OpenAIChatFunction,
-  ChatMessage,
-  CompletionParams as OpenAICompletionParams,
-  CompletionResponse as OpenAICompletionResponse,
-  EmbeddingParams as OpenAIEmbeddingParams,
-  EmbeddingResponse as OpenAIEmbeddingResponse,
-} from 'openai-fetch';
 
 /** Extract tokens from an OpenAI API response */
 export function extractTokens(
-  usage: Record<string, number | undefined> | undefined
+  usage?: {
+    prompt_tokens?: number;
+    completion_tokens?: number;
+    total_tokens?: number;
+  }
 ) {
-  const tokens: TokenCounts = {
+  const tokens: Model.TokenCounts = {
     prompt: usage?.['prompt_tokens'] ?? 0,
     completion: usage?.['completion_tokens'] ?? 0,
     total: usage?.['total_tokens'] ?? 0,
@@ -59,32 +54,3 @@ export function formatName<Msg extends ChatMessage>(message: Msg): Msg {
 
   return { role, name: formattedName, content } as Msg;
 }
-
-const CHAT_MODELS = [
-  'gpt-3.5-turbo',
-  'gpt-3.5-turbo-0301',
-  'gpt-4',
-  'gpt-4-0314',
-  'gpt-4-32k',
-  'gpt-4-32k-0314',
-  'gpt-4-0613',
-  'gpt-4-32k-0613',
-  'gpt-3.5-turbo-0613',
-  'gpt-3.5-turbo-16k',
-] as const;
-export type OpenAIChatModel = (typeof CHAT_MODELS)[number];
-
-const EMBEDDING_MODELS = [
-  'text-embedding-ada-002',
-  'text-similarity-davinci-001',
-  'text-similarity-curie-001',
-  'text-similarity-babbage-001',
-  'text-similarity-ada-001',
-  'text-search-davinci-doc-001',
-  'text-search-curie-doc-001',
-  'text-search-babbage-doc-001',
-  'text-search-ada-doc-001',
-  'code-search-babbage-code-001',
-  'code-search-ada-code-001',
-] as const;
-export type OpenAIEmbeddingModel = (typeof EMBEDDING_MODELS)[number];
