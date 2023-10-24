@@ -38,7 +38,7 @@ export class OChatModel
   modelProvider = 'openai' as const;
 
   constructor(
-    args: SetOptional<
+    args?: SetOptional<
       ModelArgs<
         OpenAI.Client,
         OChatConfig,
@@ -48,7 +48,7 @@ export class OChatModel
       'client' | 'params'
     >
   ) {
-    let { client, params, ...rest } = args;
+    let { client, params, ...rest } = args ?? {};
     // Add a default client if none is provided
     client = client ?? createOpenAIClient();
     // Set default model if no params are provided

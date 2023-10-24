@@ -163,7 +163,6 @@ importers:
       ky: ^0.33.3
       openai-fetch: 2.0.0-beta.4
       p-map: ^6.0.0
-      p-retry: ^5.1.2
       p-throttle: ^5.1.0
       parse-json: ^7.0.0
       tiktoken: ^1.0.10
@@ -186,7 +185,6 @@ importers:
       ky: 0.33.3
       openai-fetch: 2.0.0-beta.4
       p-map: 6.0.0
-      p-retry: 5.1.2
       p-throttle: 5.1.0
       parse-json: 7.0.0
       tiktoken: 1.0.10

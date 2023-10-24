@@ -1,7 +1,9 @@
 import type {
-  ChatParams as OChatParams,
+  ChatParams,
   ChatResponse,
   ChatStreamResponse,
+  EmbeddingParams,
+  EmbeddingResponse,
   OpenAIClient,
 } from 'openai-fetch';
 
@@ -11,21 +13,27 @@ export namespace OpenAI {
   export namespace Chat {
     /** Model parameters passed to the OpenAI API. */
     export type Params = {
-      messages: OChatParams['messages'];
-      model: OChatParams['model'];
-      frequency_penalty?: OChatParams['frequency_penalty'];
-      function_call?: OChatParams['function_call'];
-      functions?: OChatParams['functions'];
-      logit_bias?: OChatParams['logit_bias'];
-      max_tokens?: OChatParams['max_tokens'];
-      presence_penalty?: OChatParams['presence_penalty'];
-      stop?: OChatParams['stop'];
-      temperature?: OChatParams['temperature'];
-      top_p?: OChatParams['top_p'];
+      messages: ChatParams['messages'];
+      model: ChatParams['model'];
+      frequency_penalty?: ChatParams['frequency_penalty'];
+      function_call?: ChatParams['function_call'];
+      functions?: ChatParams['functions'];
+      logit_bias?: ChatParams['logit_bias'];
+      max_tokens?: ChatParams['max_tokens'];
+      presence_penalty?: ChatParams['presence_penalty'];
+      stop?: ChatParams['stop'];
+      temperature?: ChatParams['temperature'];
+      top_p?: ChatParams['top_p'];
     };
     /** A response from the chat completion endpoint. */
     export type Response = ChatResponse;
     /** A streamed response from the chat completion endpoint. */
     export type StreamResponse = ChatStreamResponse;
+  }
+
+  export namespace Embedding {
+    export type Params = EmbeddingParams;
+    /** A response from the chat completion endpoint. */
+    export type Response = EmbeddingResponse;
   }
 }
