@@ -32,7 +32,14 @@ class Tokenizer implements ITokenizer {
 
   constructor(model: string) {
     this.model = model;
-    this.tiktoken = encoding_for_model(model as TiktokenModel);
+    try {
+      this.tiktoken = encoding_for_model(model as TiktokenModel);
+    } catch (e) {
+      console.error(
+        `Failed to create tokenizer for model: ${model}. Using gpt-3.5-turbo as a fallback.`
+      );
+      this.tiktoken = encoding_for_model('gpt-3.5-turbo');
+    }
   }
 
   /** Encode text to tokens */
