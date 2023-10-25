@@ -2,8 +2,8 @@ import type { SetOptional } from 'type-fest';
 import type { ModelArgs } from '../model.js';
 import { AbstractModel } from '../model.js';
 import { createOpenAIClient, extractTokens } from './client.js';
-import { calculateCost } from './costs.js';
-import type { OpenAI } from './types.js';
+import { calculateCost } from './utils/costs.js';
+import type { OpenAI } from './openai-types.js';
 import type { Model } from '../types2.js';
 
 export interface OCompletionConfig

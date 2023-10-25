@@ -4,8 +4,8 @@ import pMap from 'p-map';
 import type { ModelArgs } from '../model.js';
 import { AbstractModel } from '../model.js';
 import { createOpenAIClient } from './client.js';
-import { calculateCost } from './costs.js';
-import type { OpenAI } from './types.js';
+import { calculateCost } from './utils/costs.js';
+import type { OpenAI } from './openai-types.js';
 import type { Model } from '../types2.js';
 import { deepMerge } from '../utils/helpers.js';
 
