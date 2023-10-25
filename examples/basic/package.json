@@ -10,10 +10,7 @@
   },
   "dependencies": {
     "@dexaai/datastore": "workspace:*",
-    "@dexaai/functions": "workspace:*",
     "@dexaai/model": "workspace:*",
-    "tslib": "^2.6.2",
-    "workgpt": "^0.1.1",
     "zod": "^3.21.4"
   },
   "devDependencies": {

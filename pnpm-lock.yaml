@@ -23,23 +23,17 @@ importers:
     specifiers:
       '@dexaai/datastore': workspace:*
       '@dexaai/eslint-config': ^0.4.0
-      '@dexaai/functions': workspace:*
       '@dexaai/model': workspace:*
       '@types/node': ^20.5.9
       dotenv: ^16.3.1
       eslint: ^8.48.0
       tsconfig: workspace:*
-      tslib: ^2.6.2
       type-fest: 4.3.1
       typescript: ^5.2.2
-      workgpt: ^0.1.1
       zod: ^3.21.4
     dependencies:
       '@dexaai/datastore': link:../../packages/datastore
-      '@dexaai/functions': link:../../packages/functions
       '@dexaai/model': link:../../packages/model
-      tslib: 2.6.2
-      workgpt: 0.1.2
       zod: 3.21.4
     devDependencies:
       '@dexaai/eslint-config': 0.4.0_w2g2uv42be7wag4oipwkfv43p4
@@ -80,37 +74,6 @@ importers:
       pinecone-client: 1.1.0
       tkv-cache: 0.1.2
       ts-extras: 0.11.0
-    devDependencies:
-      '@dexaai/eslint-config': 0.4.0_w2g2uv42be7wag4oipwkfv43p4
-      '@types/node': 20.5.9
-      eslint: 8.48.0
-      tsconfig: link:../../config/tsconfig
-      tsup: 7.2.0_typescript@5.2.2
-      type-fest: 4.3.1
-      typescript: 5.2.2
-      vite: 4.4.9_@types+node@20.5.9
-      vitest: 0.34.3
-
-  packages/functions:
-    specifiers:
-      '@dexaai/eslint-config': ^0.4.0
-      '@dexaai/model': workspace:*
-      '@types/node': ^20.5.9
-      eslint: ^8.48.0
-      tsconfig: workspace:*
-      tslib: ^2.6.2
-      tsup: ^7.0.0
-      type-fest: 4.3.1
-      typescript: ^5.2.2
-      vite: ^4.3.9
-      vitest: ^0.34.3
-      zod: ^3.21.4
-      zod-to-json-schema: ^3.21.4
-    dependencies:
-      '@dexaai/model': link:../model
-      tslib: 2.6.2
-      zod: 3.21.4
-      zod-to-json-schema: 3.21.4_zod@3.21.4
     devDependencies:
       '@dexaai/eslint-config': 0.4.0_w2g2uv42be7wag4oipwkfv43p4
       '@types/node': 20.5.9
@@ -1126,6 +1089,7 @@ packages:
 
   /@types/json-schema/7.0.12:
     resolution: {integrity: sha512-Hr5Jfhc9eYOQNPYO5WLDq/n4jqijdHNlDXjuAQkkt+mWdQR+XJToOHrsD4cPaMXpn6KO7y2+wM8AZEs8VpBLVA==}
+    dev: true
 
   /@types/json5/0.0.29:
     resolution: {integrity: sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==}
@@ -1662,11 +1626,6 @@ packages:
       ansi-styles: 4.3.0
       supports-color: 7.2.0
     dev: true
-
-  /chalk/5.3.0:
-    resolution: {integrity: sha512-dLitG79d+GV1Nb/VYcCDFivJeK1hiukt9QjRNVOsUtTy1rR1YJsmpGGTZ3qJos+uw7WmWF4wUwBd9jxjocFC2w==}
-    engines: {node: ^12.17.0 || ^14.13 || >=16.0.0}
-    dev: false
 
   /chardet/0.7.0:
     resolution: {integrity: sha512-mT8iDcrh03qDGRRmoA2hmBJnxpllMR+0/0qlzjqZES6NdiWDcZkCNAk4rPFZ9Q85r27unkiNNg8ZOiwZXBHwcA==}
@@ -3317,6 +3276,7 @@ packages:
     engines: {node: '>=10'}
     dependencies:
       yallist: 4.0.0
+    dev: true
 
   /lz-string/1.5.0:
     resolution: {integrity: sha512-h5bgJWpxJNswbU7qCrV0tIKQCaS3blPDrqKWx+QxzuzL1zGUzij9XCWLrSLsJPu5t+eWA/ycetzYAO5IOMcWAQ==}
@@ -3904,10 +3864,6 @@ packages:
       strip-indent: 3.0.0
     dev: true
 
-  /reflect-metadata/0.1.13:
-    resolution: {integrity: sha512-Ts1Y/anZELhSsjMcU605fU9RE4Oi3p5ORujwbIKXfWa+0Zxs510Qrmrce5/Jowq3cHSZSJqBjypxmHarc+vEWg==}
-    dev: false
-
   /reflect.getprototypeof/1.0.4:
     resolution: {integrity: sha512-ECkTw8TmJwW60lOTR+ZkODISW6RQ8+2CL3COqtiJKLd6MmB45hN51HprHFziKLGkAuTGQhBb91V8cy+KHlaCjw==}
     engines: {node: '>= 0.4'}
@@ -4063,6 +4019,7 @@ packages:
     hasBin: true
     dependencies:
       lru-cache: 6.0.0
+    dev: true
 
   /set-blocking/2.0.0:
     resolution: {integrity: sha512-KiKBS8AnWGEyLzofFfmvKwpdPzqiy16LvQfK3yv/fVH7Bj13/wl3JSR1J+rfgRE9q7xUJK4qvgS8raSOeLUehw==}
@@ -4435,10 +4392,6 @@ packages:
   /tslib/1.14.1:
     resolution: {integrity: sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==}
     dev: true
-
-  /tslib/2.6.2:
-    resolution: {integrity: sha512-AEYxH93jGFPn/a2iVAwW87VuUIkR1FVUKB77NwMF7nBTDkDrrT/Hpt/IrCJ0QXhW27jTBDcf5ZY7w6RiqTMw2Q==}
-    dev: false
 
   /tsup/7.2.0_typescript@5.2.2:
     resolution: {integrity: sha512-vDHlczXbgUvY3rWvqFEbSqmC1L7woozbzngMqTtL2PGBODTtWlRwGDDawhvWzr5c1QjKe4OAKqJGfE1xeXUvtQ==}
@@ -4934,21 +4887,6 @@ packages:
       stackback: 0.0.2
     dev: true
 
-  /workgpt/0.1.2:
-    resolution: {integrity: sha512-1+1g2c25CEmzU17X+Co4YoEOQd3zfvVclq1UvxbCoH/tHDf2Vnp6vn1SB5KpewLlsozuDIfOFjcx/DpMSWZ//g==}
-    engines: {node: '>= 18'}
-    peerDependencies:
-      puppeteer: ^20.7.1
-      vm2: ^3.9.17
-    dependencies:
-      '@types/json-schema': 7.0.12
-      chalk: 5.3.0
-      reflect-metadata: 0.1.13
-      semver: 7.5.4
-      zod: 3.21.4
-      zod-to-json-schema: 3.21.4_zod@3.21.4
-    dev: false
-
   /wrap-ansi/6.2.0:
     resolution: {integrity: sha512-r6lPcBGxZXlIcymEu7InxDMhdW0KDxpLgoFLcguasxCaJ/SOIZwINatK9KY/tf+ZrlywOKU0UDj3ATXUBfxJXA==}
     engines: {node: '>=8'}
@@ -4990,6 +4928,7 @@ packages:
 
   /yallist/4.0.0:
     resolution: {integrity: sha512-3wdGidZyq5PB084XLES5TpOSRA3wjXAlIWMhum2kRcv/41Sn2emQ0dycQW4uZXLejwKvg6EsvbdlVL+FYEct7A==}
+    dev: true
 
   /yaml/2.3.1:
     resolution: {integrity: sha512-2eHWfjaoXgTBC2jNM1LRef62VQa0umtvRiDSk6HSzW7RvS5YtkabJrwYLLEKWBc8a5U2PTSCs+dJjUTJdlHsWQ==}
