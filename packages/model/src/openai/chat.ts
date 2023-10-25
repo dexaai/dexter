@@ -38,6 +38,12 @@ export class ChatModel
     // Set default model if no params are provided
     params = params ?? { model: 'gpt-3.5-turbo' };
     super({ client, params, ...rest });
+    if (args?.debug) {
+      this.mergeHooks(args.hooks || {}, {
+        onStart: [logInput],
+        onComplete: [logResponse],
+      });
+    }
   }
 
   protected async runModel(
@@ -188,54 +194,60 @@ export class ChatModel
   }
 }
 
-// /**
-//  * Pretty-print a list of messages to the console for debugging.
-//  */
-// function logMessages(args: {
-//   messages: Model.Message[];
-//   type: 'req' | 'res';
-//   tokens?: TokenCounts;
-//   latency?: number;
-//   cost?: number;
-// }) {
-//   const tokens = args.tokens
-//     ? `[Tokens: ${args.tokens.prompt} + ${args.tokens.completion} = ${args.tokens.total}]`
-//     : null;
-//   const latency = args.latency ? `[Latency: ${args.latency}ms]` : null;
-//   const cost = args.cost ? `[Cost: $${(args.cost / 100).toFixed(5)}]` : null;
-//   const meta = [latency, cost, tokens].filter(Boolean).join('---');
-//   if (args.type === 'req') {
-//     console.info(`-----> [Request] ----->`);
-//   } else {
-//     console.info(`<===== [Response] <===== ${meta}`);
-//   }
-//   console.debug();
-//   args.messages.forEach(logMessage);
-// }
+/**
+ * Verbose logging for debugging prompts
+ */
+function logInput(args: { params: { messages: Model.Message[] } }) {
+  console.debug(`-----> [Request] ----->`);
+  console.debug();
+  args.params.messages.forEach(logMessage);
+}
 
-// function logMessage(message: Model.Message, index: number) {
-//   console.debug(
-//     `[${index}] ${message.role.toUpperCase()}:${
-//       message.name ? ` (${message.name}) ` : ''
-//     }`
-//   );
-//   if (message.content) {
-//     console.debug(message.content);
-//   }
-//   if (message.function_call) {
-//     console.debug(`Function call: ${message.function_call.name}`);
-//     if (message.function_call.arguments) {
-//       try {
-//         const formatted = JSON.stringify(
-//           JSON.parse(message.function_call.arguments),
-//           null,
-//           2
-//         );
-//         console.debug(formatted);
-//       } catch (err) {
-//         console.debug(message.function_call.arguments);
-//       }
-//     }
-//   }
-//   console.debug();
-// }
+function logResponse(args: {
+  response: {
+    tokens: Model.TokenCounts;
+    latency?: number;
+    cached: boolean;
+    message: Model.Message;
+    cost?: number;
+  };
+  params: { messages: Model.Message[] };
+}) {
+  const { tokens, latency, cost, message } = args.response;
+  const tokensStr = `[Tokens: ${tokens.prompt} + ${tokens.completion} = ${tokens.total}]`;
+  const latencyStr = `[Latency: ${latency}ms]`;
+  const costStr =
+    typeof cost === 'number'
+      ? `[Cost: $${(cost / 100).toFixed(5)}]`
+      : `[Cost: UNKNOWN]`;
+  const meta = [latencyStr, costStr, tokensStr].filter(Boolean).join('---');
+  console.debug(`<===== [Response] <===== ${meta}`);
+  console.debug();
+  logMessage(message, args.params.messages.length + 1);
+}
+function logMessage(message: Model.Message, index: number) {
+  console.debug(
+    `[${index}] ${message.role.toUpperCase()}:${
+      message.name ? ` (${message.name}) ` : ''
+    }`
+  );
+  if (message.content) {
+    console.debug(message.content);
+  }
+  if (message.function_call) {
+    console.debug(`Function call: ${message.function_call.name}`);
+    if (message.function_call.arguments) {
+      try {
+        const formatted = JSON.stringify(
+          JSON.parse(message.function_call.arguments),
+          null,
+          2
+        );
+        console.debug(formatted);
+      } catch (err) {
+        console.debug(message.function_call.arguments);
+      }
+    }
+  }
+  console.debug();
+}
