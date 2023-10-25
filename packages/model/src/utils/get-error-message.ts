@@ -2,7 +2,7 @@ type ErrorWithMessage = {
   message: string;
 };
 
-function isErrorWithMessage(error: unknown): error is ErrorWithMessage {
+function isErrorWithMsg(error: unknown): error is ErrorWithMessage {
   return (
     typeof error === 'object' &&
     error !== null &&
@@ -11,8 +11,8 @@ function isErrorWithMessage(error: unknown): error is ErrorWithMessage {
   );
 }
 
-function toErrorWithMessage(maybeError: unknown): ErrorWithMessage {
-  if (isErrorWithMessage(maybeError)) return maybeError;
+export function toErrorWithMsg(maybeError: unknown): ErrorWithMessage {
+  if (isErrorWithMsg(maybeError)) return maybeError;
 
   try {
     return new Error(JSON.stringify(maybeError));
@@ -24,6 +24,6 @@ function toErrorWithMessage(maybeError: unknown): ErrorWithMessage {
 }
 
 /** Get the error message string from an unknown type. */
-export function getErrorMessage(error: unknown) {
-  return toErrorWithMessage(error).message;
+export function getErrorMsg(error: unknown) {
+  return toErrorWithMsg(error).message;
 }

@@ -8,10 +8,15 @@ import { createSpladeVector } from './client.js';
 import type { SparseVector } from './types.js';
 import type { Prettify } from '../utils/helpers.js';
 
-export type ISpladeModel = SparseVector.IModel<
-  SparseVector.Config,
-  SparseVector.Run,
-  SparseVector.Response
+export type SpladeModelArgs = Prettify<
+  ModelArgs<
+    SpladeClient,
+    SparseVector.Config,
+    SparseVector.Run,
+    SparseVector.Response
+  > & {
+    serviceUrl?: string;
+  }
 >;
 
 export class SpladeModel
@@ -21,24 +26,18 @@ export class SpladeModel
     SparseVector.Run,
     SparseVector.Response
   >
-  implements ISpladeModel
+  implements
+    SparseVector.IModel<
+      SparseVector.Config,
+      SparseVector.Run,
+      SparseVector.Response
+    >
 {
   modelType = 'sparse-vector' as const;
   modelProvider = 'custom' as const;
   serviceUrl: string;
 
-  constructor(
-    args: Prettify<
-      ModelArgs<
-        SpladeClient,
-        SparseVector.Config,
-        SparseVector.Run,
-        SparseVector.Response
-      > & {
-        serviceUrl?: string;
-      }
-    >
-  ) {
+  constructor(args: SpladeModelArgs) {
     const { serviceUrl, ...rest } = args;
     super(rest);
     const safeProcess = globalThis.process || { env: {} };
