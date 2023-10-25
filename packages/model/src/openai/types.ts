@@ -12,10 +12,15 @@ import type { Model } from '../types.js';
 
 type InnerType<T> = T extends ReadableStream<infer U> ? U : never;
 
+/**
+ * Types specific to OpenAI models
+ */
 export namespace OpenAI {
   export type Client = OpenAIClient;
 
-  /** OpenAI chat completion endpoint. */
+  /**
+   * OpenAI Chat model
+   */
   export namespace Chat {
     /** Model parameters passed to the OpenAI API. */
     export type Params = {
@@ -45,7 +50,9 @@ export namespace OpenAI {
     }
   }
 
-  /** OpenAI text embedding endpoint. */
+  /**
+   * OpenAI text embedding model
+   */
   export namespace Embedding {
     /** Model parameters passed to the OpenAI API. */
     export type Params = EmbeddingParams;
@@ -71,7 +78,9 @@ export namespace OpenAI {
     }
   }
 
-  /** OpenAI (legacy) text completion endpoint. */
+  /**
+   * OpenAI (legacy) text completion model.
+   */
   export namespace Completion {
     /** Model parameters passed to the OpenAI API. */
     export type Params = CompletionParams;

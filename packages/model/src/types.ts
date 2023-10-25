@@ -1,59 +1,121 @@
 import type { ChatMessage } from 'openai-fetch';
 
+/**
+ * Generic Model extended by provider specific implementations.
+ */
 export namespace Model {
-  /** Token counts for model request. */
-  export type TokenCounts = {
-    prompt: number;
-    completion: number;
-    total: number;
-  };
+  /**
+   * Base model
+   */
+  export namespace Base {
+    /** Client for making API calls. Extended by specific model clients. */
+    export type Client = any;
+    export interface Config {
+      model: string;
+    }
+    export interface Run {}
+    export interface Params extends Config, Run {}
+    export interface Response {
+      cached: boolean;
+      cost?: number;
+      tokens: TokenCounts;
+    }
+    export interface IModel<
+      MConfig extends Config,
+      MRun extends Run,
+      ModelResp extends Response
+    > {
+      modelType: Type;
+      modelProvider: Provider;
+      run(params: MRun & Partial<MConfig>, context?: Ctx): Promise<ModelResp>;
+    }
+  }
+
+  /**
+   * Cache for storing model responses
+   */
+  export interface Cache<MParams extends Base.Params, MResponse extends any> {
+    get(key: MParams): Promise<MResponse | null | undefined>;
+    set(key: MParams, value: MResponse): Promise<boolean>;
+  }
+
+  /**
+   * Chat Model
+   */
+  export namespace Chat {
+    export interface Run extends Base.Run {
+      messages: Model.Message[];
+    }
+    export interface Config extends Base.Config {
+      /** Handle new chunk from streaming requests. */
+      handleUpdate?: (chunk: string) => void;
+    }
+    export interface Response extends Base.Response {
+      message: Model.Message;
+    }
+    export interface IModel<
+      CConfig extends Chat.Config,
+      CRun extends Chat.Run,
+      CResponse extends Chat.Response
+    > extends Base.IModel<CConfig, CRun, CResponse> {
+      modelType: 'chat';
+    }
+  }
+
+  /**
+   * Completion model
+   */
+  export namespace Completion {
+    export interface Run extends Base.Run {
+      prompt:
+        | string
+        | Array<string>
+        | Array<number>
+        | Array<Array<number>>
+        | null;
+    }
+    export interface Config extends Base.Config {}
+    export interface Response extends Base.Response {
+      completions: { completion: string }[];
+    }
+    export interface IModel<
+      CConfig extends Config = Config,
+      CRun extends Run = Run,
+      CResponse extends Base.Response = Base.Response
+    > extends Base.IModel<CConfig, CRun, CResponse> {
+      modelType: 'completion';
+    }
+  }
 
   /** Generic metadata object. */
   export type Ctx = { [key: string]: any };
 
-  /** Primary message type for chat models */
-  export type Message = ChatMessage;
-
-  /** Client for making API calls. Extended by specific model clients. */
-  export type Client = any;
-
-  export type Type =
-    | 'base'
-    | 'completion'
-    | 'chat'
-    | 'embedding'
-    | 'sparse-vector';
-  export type Provider = 'openai' | 'custom';
-
   /**
-   * Base model
+   * Embedding Model
    */
-  export interface Config {
-    model: string;
-  }
-  export interface Run {}
-  interface Params extends Config, Run {}
-  export interface Response {
-    cached: boolean;
-    cost?: number;
-    tokens: TokenCounts;
-  }
-  export interface IModel<
-    MConfig extends Config,
-    MRun extends Run,
-    ModelResp extends Response
-  > {
-    modelType: Type;
-    modelProvider: Provider;
-    run(params: MRun & Partial<MConfig>, context?: Ctx): Promise<ModelResp>;
+  export namespace Embedding {
+    export interface Run extends Base.Run {
+      input: string[];
+    }
+    export interface Config extends Base.Config {}
+    export interface Response extends Base.Response {
+      embeddings: number[][];
+    }
+    export interface IModel<
+      EConfig extends Config = Config,
+      ERun extends Run = Run,
+      EResponse extends Base.Response = Base.Response
+    > extends Base.IModel<EConfig, ERun, EResponse> {
+      modelType: 'embedding';
+    }
   }
 
   /**
    * Hooks for logging and debugging
    */
   export interface Hooks<
-    MParams extends Params,
-    MResponse extends Response,
+    MParams extends Base.Params,
+    MResponse extends Base.Response,
     AResponse extends any = any
   > {
     onStart?: ((event: {
@@ -92,73 +154,6 @@ export namespace Model {
   }
 
   /**
-   * Cache for storing model responses
-   */
-  export interface Cache<MParams extends Params, MResponse extends any> {
-    get(key: MParams): Promise<MResponse | null | undefined>;
-    set(key: MParams, value: MResponse): Promise<boolean>;
-  }
-
-  export namespace Chat {
-    export interface Run extends Model.Run {
-      messages: Model.Message[];
-    }
-    export interface Config extends Model.Config {
-      /** Handle new chunk from streaming requests. */
-      handleUpdate?: (chunk: string) => void;
-    }
-    export interface Response extends Model.Response {
-      message: Model.Message;
-    }
-    export interface IModel<
-      CConfig extends Chat.Config,
-      CRun extends Chat.Run,
-      CResponse extends Chat.Response
-    > extends Model.IModel<CConfig, CRun, CResponse> {
-      modelType: 'chat';
-    }
-  }
-
-  export namespace Embedding {
-    export interface Run extends Model.Run {
-      input: string[];
-    }
-    export interface Config extends Model.Config {}
-    export interface Response extends Model.Response {
-      embeddings: number[][];
-    }
-    export interface IModel<
-      EConfig extends Config = Config,
-      ERun extends Run = Run,
-      EResponse extends Response = Response
-    > extends Model.IModel<EConfig, ERun, EResponse> {
-      modelType: 'embedding';
-    }
-  }
-
-  export namespace Completion {
-    export interface Run extends Model.Run {
-      prompt:
-        | string
-        | Array<string>
-        | Array<number>
-        | Array<Array<number>>
-        | null;
-    }
-    export interface Config extends Model.Config {}
-    export interface Response extends Model.Response {
-      completions: { completion: string }[];
-    }
-    export interface IModel<
-      CConfig extends Config = Config,
-      CRun extends Run = Run,
-      CResponse extends Response = Response
-    > extends Model.IModel<CConfig, CRun, CResponse> {
-      modelType: 'completion';
-    }
-  }
-
-  /**
    * Generic interface for a model tokenizer
    */
   export interface ITokenizer {
@@ -182,4 +177,25 @@ export namespace Model {
       from?: 'start' | 'end';
     }): string;
   }
+
+  /** Primary message type for chat models */
+  export type Message = ChatMessage;
+
+  /** The provider of the model (eg: OpenAI) */
+  export type Provider = (string & {}) | 'openai' | 'custom';
+
+  /** Token counts for model response. */
+  export type TokenCounts = {
+    prompt: number;
+    completion: number;
+    total: number;
+  };
+
+  /** The type of data returned by the model */
+  export type Type =
+    | 'base'
+    | 'completion'
+    | 'chat'
+    | 'embedding'
+    | 'sparse-vector';
 }

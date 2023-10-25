@@ -1,13 +1,23 @@
-import type { SetOptional } from 'type-fest';
 import pThrottle from 'p-throttle';
 import pMap from 'p-map';
+import type { SetOptional } from 'type-fest';
+import type { OpenAI } from './types.js';
 import type { ModelArgs } from '../model.js';
-import { AbstractModel } from '../model.js';
-import { createOpenAIClient } from './client.js';
-import { calculateCost } from './utils/costs.js';
-import type { OpenAI } from './openai-types.js';
 import type { Model } from '../types.js';
+import { calculateCost } from './utils/calculate-cost.js';
+import { createClient } from './utils/client.js';
+import { AbstractModel } from '../model.js';
 import { deepMerge } from '../utils/helpers.js';
+
+export type EmbeddingModelArgs = SetOptional<
+  ModelArgs<
+    OpenAI.Client,
+    OpenAI.Embedding.Config,
+    Model.Embedding.Run,
+    Model.Embedding.Response
+  >,
+  'client' | 'params'
+>;
 
 type BulkEmbedder = (
   params: Model.Embedding.Run & OpenAI.Embedding.Config,
@@ -43,19 +53,9 @@ export class EmbeddingModel
   throttledModel: BulkEmbedder;
 
   /** Doesn't accept OpenAIClient because retry needs to be handled at the model level. */
-  constructor(
-    args?: SetOptional<
-      ModelArgs<
-        OpenAI.Client,
-        OpenAI.Embedding.Config,
-        Model.Embedding.Run,
-        Model.Embedding.Response
-      >,
-      'client' | 'params'
-    >
-  ) {
+  constructor(args?: EmbeddingModelArgs) {
     let { client, params, ...rest } = args || {};
-    client = client || createOpenAIClient();
+    client = client || createClient();
     params = params || { model: 'text-embedding-ada-002' };
     super({ client, params, ...rest });
     const interval = DEFAULTS.throttleInterval;

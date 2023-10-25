@@ -9,22 +9,22 @@ export namespace SparseVector {
     indices: number[];
     values: number[];
   };
-  export interface Run extends Model.Run {
+  export interface Run extends Model.Base.Run {
     input: string[];
   }
-  export interface Config extends Model.Config {
+  export interface Config extends Model.Base.Config {
     concurrency?: number;
     throttleLimit?: number;
     throttleInterval?: number;
   }
-  export interface Response extends Model.Response {
+  export interface Response extends Model.Base.Response {
     vectors: Vector[];
   }
   export interface IModel<
     SConfig extends Config = Config,
     SRun extends Run = Run,
     SResponse extends Response = Response
-  > extends Model.IModel<SConfig, SRun, SResponse> {
+  > extends Model.Base.IModel<SConfig, SRun, SResponse> {
     modelType: 'sparse-vector';
   }
 }

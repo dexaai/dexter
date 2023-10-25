@@ -1,11 +1,21 @@
 import type { SetOptional } from 'type-fest';
+import type { OpenAI } from './types.js';
 import type { ModelArgs } from '../model.js';
-import type { OpenAI } from './openai-types.js';
 import type { Model } from '../types.js';
-import { createOpenAIClient, extractTokens } from './client.js';
+import { calculateCost } from './utils/calculate-cost.js';
+import { createClient, extractTokens } from './utils/client.js';
 import { AbstractModel } from '../model.js';
-import { calculateCost } from './utils/costs.js';
 import { deepMerge } from '../utils/helpers.js';
+
+export type ChatModelArgs = SetOptional<
+  ModelArgs<
+    OpenAI.Client,
+    OpenAI.Chat.Config,
+    Model.Chat.Run,
+    Model.Chat.Response
+  >,
+  'client' | 'params'
+>;
 
 export class ChatModel
   extends AbstractModel<
@@ -21,20 +31,10 @@ export class ChatModel
   modelType = 'chat' as const;
   modelProvider = 'openai' as const;
 
-  constructor(
-    args?: SetOptional<
-      ModelArgs<
-        OpenAI.Client,
-        OpenAI.Chat.Config,
-        Model.Chat.Run,
-        Model.Chat.Response
-      >,
-      'client' | 'params'
-    >
-  ) {
+  constructor(args?: ChatModelArgs) {
     let { client, params, ...rest } = args ?? {};
     // Add a default client if none is provided
-    client = client ?? createOpenAIClient();
+    client = client ?? createClient();
     // Set default model if no params are provided
     params = params ?? { model: 'gpt-3.5-turbo' };
     super({ client, params, ...rest });

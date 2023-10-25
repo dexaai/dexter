@@ -4,10 +4,10 @@ import type { Prettify } from './utils/helpers.js';
 import { deepMerge } from './utils/helpers.js';
 
 export interface ModelArgs<
-  MClient extends Model.Client,
-  MConfig extends Model.Config,
-  MRun extends Model.Run,
-  MResponse extends Model.Response
+  MClient extends Model.Base.Client,
+  MConfig extends Model.Base.Config,
+  MRun extends Model.Base.Run,
+  MResponse extends Model.Base.Response
 > {
   cache?: Model.Cache<MRun & MConfig, MResponse>;
   client: MClient;
@@ -18,12 +18,12 @@ export interface ModelArgs<
 }
 
 export abstract class AbstractModel<
-  MClient extends Model.Client,
-  MConfig extends Model.Config,
-  MRun extends Model.Run,
-  MResponse extends Model.Response,
+  MClient extends Model.Base.Client,
+  MConfig extends Model.Base.Config,
+  MRun extends Model.Base.Run,
+  MResponse extends Model.Base.Response,
   AResponse extends any = any
-> implements Model.IModel<MConfig, MRun, MResponse>
+> implements Model.Base.IModel<MConfig, MRun, MResponse>
 {
   protected abstract runModel(
     params: Prettify<MRun & MConfig>,

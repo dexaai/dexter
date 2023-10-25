@@ -1,5 +1,5 @@
 import { describe, expect } from 'vitest';
-import { calculateCost } from './costs.js';
+import { calculateCost } from './calculate-cost.js';
 
 describe('Calculates cost for', () => {
   test.each([

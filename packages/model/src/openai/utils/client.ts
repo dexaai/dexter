@@ -1,12 +1,12 @@
 import type { ChatMessage } from 'openai-fetch';
 import { OpenAIClient } from 'openai-fetch';
-import type { Model } from '../types.js';
+import type { Model } from '../../types.js';
 
 /** Cached OpenAI clients. */
 const cachedClients = new Map<string, OpenAIClient>();
 
 /** Create a new openai-fetch OpenAIClient. */
-export function createOpenAIClient(
+export function createClient(
   /** Options to pass to the OpenAI client. */
   opts?: ConstructorParameters<typeof OpenAIClient>[0],
   /** Force a new client to be created. */
