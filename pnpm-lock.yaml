@@ -153,26 +153,20 @@ importers:
     specifiers:
       '@dexaai/eslint-config': ^0.4.0
       '@fastify/deepmerge': ^1.3.0
-      '@types/common-tags': ^1.8.2
       '@types/node': ^20.5.9
       '@types/uuid': ^9.0.3
       eslint: ^8.48.0
-      froebel: ^0.23.2
       jsonrepair: ^3.2.0
-      keyv: ^4.5.2
-      ky: ^0.33.3
+      ky: ^1.1.0
       openai-fetch: 2.0.0-beta.4
       p-map: ^6.0.0
       p-throttle: ^5.1.0
       parse-json: ^7.0.0
       tiktoken: ^1.0.10
-      tkv-cache: ^0.1.2
-      ts-extras: ^0.11.0
       tsconfig: workspace:*
       tsup: ^7.0.0
       type-fest: 4.3.1
       typescript: ^5.2.2
-      uuid: ^9.0.0
       vite: ^4.3.9
       vitest: ^0.34.3
       zod: ^3.21.4
@@ -180,24 +174,18 @@ importers:
       zod-validation-error: ^1.3.1
     dependencies:
       '@fastify/deepmerge': 1.3.0
-      froebel: 0.23.2
       jsonrepair: 3.2.0
-      keyv: 4.5.3
-      ky: 0.33.3
+      ky: 1.1.0
       openai-fetch: 2.0.0-beta.4
       p-map: 6.0.0
       p-throttle: 5.1.0
       parse-json: 7.0.0
       tiktoken: 1.0.10
-      tkv-cache: 0.1.2
-      ts-extras: 0.11.0
-      uuid: 9.0.0
       zod: 3.21.4
       zod-to-json-schema: 3.21.4_zod@3.21.4
       zod-validation-error: 1.3.1_zod@3.21.4
     devDependencies:
       '@dexaai/eslint-config': 0.4.0_w2g2uv42be7wag4oipwkfv43p4
-      '@types/common-tags': 1.8.2
       '@types/node': 20.5.9
       '@types/uuid': 9.0.3
       eslint: 8.48.0
@@ -1206,10 +1194,6 @@ packages:
 
   /@types/chai/4.3.6:
     resolution: {integrity: sha512-VOVRLM1mBxIRxydiViqPcKn6MIxZytrbMpd6RJLIWKxUNr3zux8no0Oc7kJx0WAPIitgZ0gkrDS+btlqQpubpw==}
-    dev: true
-
-  /@types/common-tags/1.8.2:
-    resolution: {integrity: sha512-Z5UcOnlqxFm0tCCTEhkcVOfSihWOMyKypIWHtQNSYh6fMdPUIVpNdLBYutDpDXVHsMUrYzI2IczUHXIzpUovmQ==}
     dev: true
 
   /@types/is-ci/3.0.0:
@@ -2748,10 +2732,6 @@ packages:
     dependencies:
       node-domexception: 1.0.0
       web-streams-polyfill: 4.0.0-beta.3
-    dev: false
-
-  /froebel/0.23.2:
-    resolution: {integrity: sha512-/JKWifYmyj3XBEkM29NLEcEa4OhfCtKIUCzzgFrIi001s1ciIlQUKXUSRY7kS/e+U0Rf5HiyggypvaT1qiQQLg==}
     dev: false
 
   /fs-extra/7.0.1:
@@ -4974,11 +4954,6 @@ packages:
     dependencies:
       punycode: 2.3.0
     dev: true
-
-  /uuid/9.0.0:
-    resolution: {integrity: sha512-MXcSTerfPa4uqyzStbRoTgt5XIe3x5+42+q1sDuy3R5MDk66URdLMOZe5aPX/SQd+kuYAh0FdP/pO28IkQyTeg==}
-    hasBin: true
-    dev: false
 
   /validate-npm-package-license/3.0.4:
     resolution: {integrity: sha512-DpKm2Ui/xN7/HQKCtpZxoRWBhZ9Z0kqtygG8XCgNQ8ZlDnxuQmWhj566j8fN4Cu3/JmbhsDo7fcAJq4s9h27Ew==}
