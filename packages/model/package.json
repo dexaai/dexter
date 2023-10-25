@@ -5,9 +5,9 @@
   "description": "",
   "repository": "dexaai/llm-tools",
   "scripts": {
-    "build": "tsup",
+    "build": "rm -rf dist && tsc --project tsconfig.dist.json",
     "clean": "rm -rf .turbo node_modules dist",
-    "dev": "tsup --watch",
+    "dev": "tsc --watch",
     "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
     "test": "vitest",
     "typecheck": "tsc --noEmit"
@@ -16,52 +16,23 @@
   "files": [
     "dist"
   ],
-  "types": "./dist/index.d.ts",
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.js",
   "exports": {
     "./package.json": "./package.json",
     ".": {
       "types": "./dist/index.d.ts",
-      "require": "./dist/index.cjs",
-      "import": "./dist/index.js",
-      "default": "./dist/index.js"
+      "import": "./dist/index.js"
     },
     "./openai": {
-      "types": "./dist/openai/index.d.ts",
-      "require": "./dist/openai/index.cjs",
-      "import": "./dist/openai/index.js",
-      "default": "./dist/openai/index.js"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
     },
     "./custom": {
-      "types": "./dist/custom/index.d.ts",
-      "require": "./dist/custom/index.cjs",
-      "import": "./dist/custom/index.js",
-      "default": "./dist/custom/index.js"
-    },
-    "./utils": {
-      "types": "./dist/utils/index.d.ts",
-      "require": "./dist/utils/index.cjs",
-      "import": "./dist/utils/index.js",
-      "default": "./dist/utils/index.js"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
     }
   },
-  "typesVersions": {
-    "*": {
-      "openai": [
-        "./dist/openai/index.d.ts"
-      ],
-      "custom": [
-        "./dist/custom/index.d.ts"
-      ],
-      "utils": [
-        "./dist/utils/index.d.ts"
-      ],
-      "tokenizer": [
-        "./dist/tokenizer/index.d.ts"
-      ]
-    }
-  },
+  "types": "./dist/index.d.ts",
+  "main": "./dist/index.js",
   "dependencies": {
     "@fastify/deepmerge": "^1.3.0",
     "jsonrepair": "^3.2.0",
@@ -78,10 +49,8 @@
   "devDependencies": {
     "@dexaai/eslint-config": "^0.4.0",
     "@types/node": "^20.5.9",
-    "@types/uuid": "^9.0.3",
     "eslint": "^8.48.0",
     "tsconfig": "workspace:*",
-    "tsup": "^7.0.0",
     "type-fest": "4.3.1",
     "typescript": "^5.2.2",
     "vite": "^4.3.9",
