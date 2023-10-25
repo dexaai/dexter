@@ -12,6 +12,7 @@ import type {
 export namespace OpenAI {
   export type Client = OpenAIClient;
 
+  /** OpenAI chat completion endpoint. */
   export namespace Chat {
     /** Model parameters passed to the OpenAI API. */
     export type Params = {
@@ -27,21 +28,25 @@ export namespace OpenAI {
       temperature?: ChatParams['temperature'];
       top_p?: ChatParams['top_p'];
     };
-    /** A response from the chat completion endpoint. */
+    /** Response from the OpenAI API. */
     export type Response = ChatResponse;
-    /** A streamed response from the chat completion endpoint. */
+    /** Streaming response from the OpenAI API. */
     export type StreamResponse = ChatStreamResponse;
   }
 
+  /** OpenAI text embedding endpoint. */
   export namespace Embedding {
+    /** Model parameters passed to the OpenAI API. */
     export type Params = EmbeddingParams;
-    /** A response from the chat completion endpoint. */
+    /** Response from the OpenAI API. */
     export type Response = EmbeddingResponse;
   }
 
+  /** OpenAI (legacy) text completion endpoint. */
   export namespace Completion {
+    /** Model parameters passed to the OpenAI API. */
     export type Params = CompletionParams;
-    /** A response from the chat completion endpoint. */
+    /** Response from the OpenAI API. */
     export type Response = CompletionResponse;
   }
 }

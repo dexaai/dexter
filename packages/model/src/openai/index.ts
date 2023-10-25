@@ -10,7 +10,6 @@ export type {
 export type {
   IOCompletionModel as ICompletionModel,
   OCompletionConfig as ICompletionConfig,
-  OCompletionsResponse as ICompletionResponse,
 } from './completion.js';
 export type {
   IOEmbeddingModel as IEmbeddingModel,

@@ -20,12 +20,6 @@ export namespace Model {
    */
   export type Client = any;
 
-  /** Sparse vectors from SPLADE models. */
-  export type SparseValues = {
-    indices: number[];
-    values: number[];
-  };
-
   export type Type =
     | 'base'
     | 'completion'
