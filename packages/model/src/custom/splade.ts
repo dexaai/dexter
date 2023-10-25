@@ -2,7 +2,7 @@ import pThrottle from 'p-throttle';
 import pMap from 'p-map';
 import type { ModelArgs } from '../model.js';
 import { AbstractModel } from '../model.js';
-import type { Model } from '../types2.js';
+import type { Model } from '../types.js';
 import type { SpladeClient } from './client.js';
 import { createSpladeVector } from './client.js';
 import type { SparseVector } from './types.js';

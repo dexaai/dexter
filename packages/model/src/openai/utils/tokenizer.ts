@@ -1,7 +1,7 @@
 import { encoding_for_model } from 'tiktoken';
 import type { Tiktoken, TiktokenModel } from 'tiktoken';
 import type { ChatMessage } from 'openai-fetch';
-import type { Model } from '../../types2.js';
+import type { Model } from '../../types.js';
 
 // Store instances of the tokenizer to avoid re-creating them for the same model
 const tokenizerCache = new Map<string, Tokenizer>();

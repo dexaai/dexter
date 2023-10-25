@@ -4,7 +4,7 @@ import { AbstractModel } from '../model.js';
 import { createOpenAIClient, extractTokens } from './client.js';
 import { calculateCost } from './utils/costs.js';
 import type { OpenAI } from './openai-types.js';
-import type { Model } from '../types2.js';
+import type { Model } from '../types.js';
 import { deepMerge } from '../utils/helpers.js';
 
 export interface OChatConfig

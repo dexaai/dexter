@@ -1,4 +1,4 @@
-import type { Model } from '../types2.js';
+import type { Model } from '../types.js';
 
 /**
  * Sparse vector model (SPLADE)
