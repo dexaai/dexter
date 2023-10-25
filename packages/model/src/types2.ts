@@ -14,10 +14,7 @@ export namespace Model {
   /** Primary message type for chat models */
   export type Message = ChatMessage;
 
-  /**
-   * Client for making API calls.
-   * TODO: more specific?
-   */
+  /** Client for making API calls. Extended by specific model clients. */
   export type Client = any;
 
   export type Type =

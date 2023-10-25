@@ -3,11 +3,6 @@ export type {
   OChatConfig as IChatConfig,
 } from './chat.js';
 export type {
-  ChatResponse as IChatResponse,
-  EmbeddingResponse as IEmbeddingResponse,
-  ITokenizer,
-} from '../types.js';
-export type {
   IOCompletionModel as ICompletionModel,
   OCompletionConfig as ICompletionConfig,
 } from './completion.js';

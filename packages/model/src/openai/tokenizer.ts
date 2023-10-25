@@ -1,14 +1,15 @@
 import { encoding_for_model } from 'tiktoken';
 import type { Tiktoken, TiktokenModel } from 'tiktoken';
 import type { ChatMessage } from 'openai-fetch';
-import type { ITokenizer, CreateTokenizer } from '../types.js';
+import type { Model } from '../types2.js';
 
 // Store instances of the tokenizer to avoid re-creating them for the same model
 const tokenizerCache = new Map<string, Tokenizer>();
 
 /** Create a tokenizer for a specific model */
-export const createTokenizer: CreateTokenizer = (model: string) => {
-  // export function createTokenizer(model: ModelName): ITokenizer {
+export const createTokenizer: (model: string) => Tokenizer = (
+  model: string
+) => {
   if (tokenizerCache.has(model)) {
     return tokenizerCache.get(model)!;
   } else {
@@ -26,7 +27,7 @@ const GPT_4_MODELS = [
 ] as const;
 type Gpt4ModelName = (typeof GPT_4_MODELS)[number];
 
-class Tokenizer implements ITokenizer {
+class Tokenizer implements Model.ITokenizer {
   model: string;
   tiktoken: Tiktoken;
 

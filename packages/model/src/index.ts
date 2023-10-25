@@ -1,11 +1,3 @@
-export type {
-  ChatMessage,
-  IChatModel,
-  ICompletionModel,
-  IEmbeddingModel,
-  ISparseModel,
-  ITokenizer,
-  SparseValues,
-} from './types.js';
+export type { Model } from './types2.js';
 
 export { AbstractModel } from './model.js';

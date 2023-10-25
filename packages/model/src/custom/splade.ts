@@ -5,8 +5,8 @@ import { AbstractModel } from '../model.js';
 import type { Model } from '../types2.js';
 import type { SpladeClient } from './client.js';
 import { createSpladeVector } from './client.js';
-import type { Prettify } from '../types.js';
 import type { SparseVector } from './types.js';
+import type { Prettify } from '../utils/helpers.js';
 
 export type ISpladeModel = SparseVector.IModel<
   SparseVector.Config,

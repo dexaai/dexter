@@ -1,6 +1,6 @@
 import { createTokenizer } from './openai/tokenizer.js';
-import type { IModel, ITokenizer, Prettify } from './types.js';
 import type { Model } from './types2.js';
+import type { Prettify } from './utils/helpers.js';
 import { deepMerge } from './utils/helpers.js';
 
 export interface ModelArgs<
@@ -23,7 +23,7 @@ export abstract class AbstractModel<
   MRun extends Model.Run,
   MResponse extends Model.Response,
   AResponse extends any = any
-> implements IModel<MConfig, MRun, MResponse>
+> implements Model.IModel<MConfig, MRun, MResponse>
 {
   protected abstract runModel(
     params: Prettify<MRun & MConfig>,
@@ -38,7 +38,7 @@ export abstract class AbstractModel<
   protected debug: boolean;
   protected params: MConfig & Partial<MRun>;
   protected hooks: Model.Hooks<MRun & MConfig, MResponse, AResponse>;
-  public tokenizer: ITokenizer;
+  public tokenizer: Model.ITokenizer;
 
   constructor(args: ModelArgs<MClient, MConfig, MRun, MResponse>) {
     this.cache = args.cache;
