@@ -21,7 +21,6 @@ importers:
 
   examples/basic:
     specifiers:
-      '@dexaai/agent': workspace:*
       '@dexaai/datastore': workspace:*
       '@dexaai/eslint-config': ^0.4.0
       '@dexaai/functions': workspace:*
@@ -36,7 +35,6 @@ importers:
       workgpt: ^0.1.1
       zod: ^3.21.4
     dependencies:
-      '@dexaai/agent': link:../../packages/agent
       '@dexaai/datastore': link:../../packages/datastore
       '@dexaai/functions': link:../../packages/functions
       '@dexaai/model': link:../../packages/model
@@ -51,31 +49,6 @@ importers:
       tsconfig: link:../../config/tsconfig
       type-fest: 4.3.1
       typescript: 5.2.2
-
-  packages/agent:
-    specifiers:
-      '@dexaai/eslint-config': ^0.4.0
-      '@dexaai/model': workspace:*
-      '@types/node': ^20.5.9
-      eslint: ^8.48.0
-      tsconfig: workspace:*
-      tsup: ^7.0.0
-      typescript: ^5.2.2
-      vite: ^4.3.9
-      vitest: ^0.34.3
-      workgpt: ^0.1.1
-    dependencies:
-      '@dexaai/model': link:../model
-      workgpt: 0.1.2
-    devDependencies:
-      '@dexaai/eslint-config': 0.4.0_w2g2uv42be7wag4oipwkfv43p4
-      '@types/node': 20.5.9
-      eslint: 8.48.0
-      tsconfig: link:../../config/tsconfig
-      tsup: 7.2.0_typescript@5.2.2
-      typescript: 5.2.2
-      vite: 4.4.9_@types+node@20.5.9
-      vitest: 0.34.3
 
   packages/datastore:
     specifiers:

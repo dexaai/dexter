@@ -9,7 +9,6 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@dexaai/agent": "workspace:*",
     "@dexaai/datastore": "workspace:*",
     "@dexaai/functions": "workspace:*",
     "@dexaai/model": "workspace:*",
