@@ -25,10 +25,16 @@ export abstract class AbstractModel<
   AResponse extends any = any
 > implements Model.Base.IModel<MConfig, MRun, MResponse>
 {
+  /** This is used to implement specific model calls */
   protected abstract runModel(
     params: Prettify<MRun & MConfig>,
     context: Model.Ctx
   ): Promise<MResponse>;
+
+  /** Clone the model, optionally adding new arguments */
+  abstract clone<Args extends ModelArgs<MClient, MConfig, MRun, MResponse>>(
+    args?: Args
+  ): this;
 
   abstract modelType: Model.Type;
   abstract modelProvider: Model.Provider;
@@ -58,7 +64,7 @@ export abstract class AbstractModel<
     const mergedContext = this.mergeContext(this.context, context);
     const mergedParams = deepMerge(this.params, params) as MRun & MConfig;
 
-    this.hooks?.onStart?.forEach((hook) =>
+    this.hooks.onStart?.forEach((hook) =>
       hook({
         timestamp: new Date().toISOString(),
         modelType: this.modelType,
@@ -95,6 +101,18 @@ export abstract class AbstractModel<
       // Run the model (e.g. make the API request)
       const response = await this.runModel(mergedParams, mergedContext);
 
+      this.hooks.onComplete?.forEach((hook) =>
+        hook({
+          timestamp: new Date().toISOString(),
+          modelType: this.modelType,
+          modelProvider: this.modelProvider,
+          params: mergedParams,
+          response,
+          context: mergedContext,
+          cached: false,
+        })
+      );
+
       // Update the cache
       await this?.cache?.set(mergedParams, response);
 
@@ -114,16 +132,26 @@ export abstract class AbstractModel<
     }
   }
 
-  /** Set the cache to a new cache. */
-  setCache(cache: typeof this.cache): this {
+  /** Set the cache to a new cache. Set to undefined to remove existing. */
+  setCache(cache: typeof this.cache | undefined): this {
     this.cache = cache;
     return this;
+  }
+
+  /** Get the current client */
+  getClient() {
+    return this.client;
   }
 
   /** Set the client to a new OpenAI API client. */
   setClient(client: typeof this.client): this {
     this.client = client;
     return this;
+  }
+
+  /** Get the current context */
+  getContext() {
+    return this.context;
   }
 
   /** Add the context. Overrides existing keys. */
@@ -136,6 +164,11 @@ export abstract class AbstractModel<
   setContext(context: Model.Ctx): this {
     this.context = context;
     return this;
+  }
+
+  /** Get the current params */
+  getParams() {
+    return this.params;
   }
 
   /** Add the params. Overrides existing keys. */
@@ -155,37 +188,27 @@ export abstract class AbstractModel<
     return this;
   }
 
+  /** Get the current hooks */
+  getHooks() {
+    return this.hooks;
+  }
+
   /** Add hooks to the model. */
   addHooks(hooks: typeof this.hooks): this {
     this.hooks = this.mergeHooks(this.hooks, hooks);
     return this;
   }
 
-  /** Set the hooks to a new set of hooks. Removes all existing hooks. */
+  /**
+   * Set the hooks to a new set of hooks. Removes all existing hooks.
+   * Set to empty object `{}` to remove existing hooks.
+   */
   setHooks(hooks: typeof this.hooks): this {
     this.hooks = hooks;
     return this;
   }
 
-  /** Clone the model and merge/orverride the given properties. */
-  // @TODO
-  // clone(
-  //   params?: Partial<typeof this.params>,
-  //   context?: Model.Ctx,
-  // ): this {
-  //   return new OpenAIChatModel({
-  //     cache: params?.cache || this.cache,
-  //     client: params?.client || this.client,
-  //     context: this.mergeContext(this.context, context),
-  //     params: this.mergeParams(
-  //       this.params,
-  //       (params?.params || {}) as ChatModel.GenerateParams
-  //     ),
-  //     hooks: this.mergeHooks(this.hooks, params?.hooks || {}),
-  //   });
-  // }
-
-  private mergeContext(
+  protected mergeContext(
     classContext: Model.Ctx,
     newContext?: Model.Ctx
   ): Model.Ctx {
@@ -193,14 +216,14 @@ export abstract class AbstractModel<
     return deepMerge(classContext, newContext);
   }
 
-  private mergeParams(
+  protected mergeParams(
     classParams: Partial<typeof this.params>,
     newParams: Partial<typeof this.params>
   ): typeof this.params {
     return deepMerge(classParams, newParams) as any;
   }
 
-  private mergeHooks(
+  protected mergeHooks(
     existingHooks: typeof this.hooks,
     newHooks: typeof this.hooks
   ): typeof this.hooks {

@@ -77,4 +77,18 @@ export class CompletionModel
 
     return modelResponse;
   }
+
+  /** Clone the model and merge/orverride the given properties. */
+  clone(args?: CompletionModelArgs): this {
+    const { cache, client, context, debug, params, hooks } = args ?? {};
+    // @ts-ignore
+    return new CompletionModel({
+      cache: cache || this.cache,
+      client: client || this.client,
+      context: this.mergeContext(this.context, context),
+      debug: debug || this.debug,
+      params: this.mergeParams(this.params, params ?? {}),
+      hooks: this.mergeHooks(this.hooks, hooks || {}),
+    });
+  }
 }
