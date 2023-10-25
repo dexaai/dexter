@@ -1,32 +1,25 @@
 import type { SetOptional } from 'type-fest';
 import type { ModelArgs } from '../model.js';
-import { AbstractModel } from '../model.js';
-import { createOpenAIClient, extractTokens } from './client.js';
-import { calculateCost } from './utils/costs.js';
 import type { OpenAI } from './openai-types.js';
 import type { Model } from '../types.js';
+import { createOpenAIClient, extractTokens } from './client.js';
+import { AbstractModel } from '../model.js';
+import { calculateCost } from './utils/costs.js';
 
-export interface OCompletionConfig
-  extends Model.Completion.Config,
-    Omit<OpenAI.Completion.Params, 'prompt' | 'user'> {
-  model: string;
-}
-
-export type IOCompletionModel = Model.Completion.IModel<
-  OCompletionConfig,
-  Model.Completion.Run,
-  Model.Completion.Response
->;
-
-export class OCompletionModel
+export class CompletionModel
   extends AbstractModel<
     OpenAI.Client,
-    OCompletionConfig,
+    OpenAI.Completion.Config,
     Model.Completion.Run,
     Model.Completion.Response,
     OpenAI.Completion.Response
   >
-  implements IOCompletionModel
+  implements
+    Model.Completion.IModel<
+      OpenAI.Completion.Config,
+      Model.Completion.Run,
+      Model.Completion.Response
+    >
 {
   modelType = 'completion' as const;
   modelProvider = 'openai' as const;
@@ -35,7 +28,7 @@ export class OCompletionModel
     args?: SetOptional<
       ModelArgs<
         OpenAI.Client,
-        OCompletionConfig,
+        OpenAI.Completion.Config,
         Model.Completion.Run,
         Model.Completion.Response
       >,
@@ -50,8 +43,8 @@ export class OCompletionModel
     super({ client, params, ...rest });
   }
 
-  async runModel(
-    params: Model.Completion.Run & OCompletionConfig,
+  protected async runModel(
+    params: Model.Completion.Run & OpenAI.Completion.Config,
     context: Model.Ctx
   ): Promise<Model.Completion.Response> {
     const start = Date.now();

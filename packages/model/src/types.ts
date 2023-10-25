@@ -103,7 +103,10 @@ export namespace Model {
     export interface Run extends Model.Run {
       messages: Model.Message[];
     }
-    export interface Config extends Model.Config {}
+    export interface Config extends Model.Config {
+      /** Handle new chunk from streaming requests. */
+      handleUpdate?: (chunk: string) => void;
+    }
     export interface Response extends Model.Response {
       message: Model.Message;
     }

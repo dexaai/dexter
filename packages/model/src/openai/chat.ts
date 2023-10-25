@@ -1,38 +1,22 @@
 import type { SetOptional } from 'type-fest';
 import type { ModelArgs } from '../model.js';
-import { AbstractModel } from '../model.js';
-import { createOpenAIClient, extractTokens } from './client.js';
-import { calculateCost } from './utils/costs.js';
 import type { OpenAI } from './openai-types.js';
 import type { Model } from '../types.js';
+import { createOpenAIClient, extractTokens } from './client.js';
+import { AbstractModel } from '../model.js';
+import { calculateCost } from './utils/costs.js';
 import { deepMerge } from '../utils/helpers.js';
 
-export interface OChatConfig
-  extends Model.Chat.Config,
-    Omit<OpenAI.Chat.Params, 'messages'> {
-  /** Handle new chunks from streaming requests. */
-  handleUpdate?: (chunk: string) => void;
-  model: string;
-}
-
-export type IOChatModel = Model.Chat.IModel<
-  OChatConfig,
-  Model.Chat.Run,
-  Model.Chat.Response
->;
-
-type InnerType<T> = T extends ReadableStream<infer U> ? U : never;
-type ChatCompletionChunk = InnerType<OpenAI.Chat.StreamResponse>;
-
-export class OChatModel
+export class ChatModel
   extends AbstractModel<
     OpenAI.Client,
-    OChatConfig,
+    OpenAI.Chat.Config,
     Model.Chat.Run,
     Model.Chat.Response,
     OpenAI.Chat.Response
   >
-  implements IOChatModel
+  implements
+    Model.Chat.IModel<OpenAI.Chat.Config, Model.Chat.Run, Model.Chat.Response>
 {
   modelType = 'chat' as const;
   modelProvider = 'openai' as const;
@@ -41,7 +25,7 @@ export class OChatModel
     args?: SetOptional<
       ModelArgs<
         OpenAI.Client,
-        OChatConfig,
+        OpenAI.Chat.Config,
         Model.Chat.Run,
         Model.Chat.Response
       >,
@@ -57,7 +41,7 @@ export class OChatModel
   }
 
   protected async runModel(
-    { handleUpdate, ...params }: Model.Chat.Run & OChatConfig,
+    { handleUpdate, ...params }: Model.Chat.Run & OpenAI.Chat.Config,
     context: Model.Ctx
   ): Promise<Model.Chat.Response> {
     const start = Date.now();
@@ -93,7 +77,7 @@ export class OChatModel
       const stream = await this.client.streamChatCompletion(params);
 
       // Keep track of the stream's output
-      let chunk = {} as ChatCompletionChunk;
+      let chunk = {} as OpenAI.Chat.CompletionChunk;
 
       // Get a reader from the stream
       const reader = stream.getReader();

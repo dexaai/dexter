@@ -1,8 +1,8 @@
 import 'dotenv/config.js';
-import { OChatModel } from './chat.js';
+import { ChatModel } from './chat.js';
 
 (async () => {
-  const model = new OChatModel({
+  const model = new ChatModel({
     params: {
       model: 'gpt-3.5-turbo',
     },

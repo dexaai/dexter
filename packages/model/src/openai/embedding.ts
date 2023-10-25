@@ -9,30 +9,8 @@ import type { OpenAI } from './openai-types.js';
 import type { Model } from '../types.js';
 import { deepMerge } from '../utils/helpers.js';
 
-interface BatchOptions {
-  maxTokensPerBatch: number;
-  maxBatchSize: number;
-}
-interface ThrottleOptions {
-  maxRequestsPerMin: number;
-  maxConcurrentRequests: number;
-}
-export interface OEmbeddingConfig
-  extends Model.Embedding.Config,
-    Omit<OpenAI.Embedding.Params, 'input'> {
-  model: string;
-  batch?: Partial<BatchOptions>;
-  throttle?: Partial<ThrottleOptions>;
-}
-
-export type IOEmbeddingModel = Model.Embedding.IModel<
-  OEmbeddingConfig,
-  Model.Embedding.Run,
-  Model.Embedding.Response
->;
-
 type BulkEmbedder = (
-  params: Model.Embedding.Run & OEmbeddingConfig,
+  params: Model.Embedding.Run & OpenAI.Embedding.Config,
   context: Model.Ctx
 ) => Promise<Model.Embedding.Response>;
 
@@ -45,15 +23,20 @@ const DEFAULTS = {
   maxRequestsPerMin: 3500,
 } as const;
 
-export class OEmbeddingModel
+export class EmbeddingModel
   extends AbstractModel<
     OpenAI.Client,
-    OEmbeddingConfig,
+    OpenAI.Embedding.Config,
     Model.Embedding.Run,
     Model.Embedding.Response,
     OpenAI.Embedding.Response
   >
-  implements IOEmbeddingModel
+  implements
+    Model.Embedding.IModel<
+      OpenAI.Embedding.Config,
+      Model.Embedding.Run,
+      Model.Embedding.Response
+    >
 {
   modelType = 'embedding' as const;
   modelProvider = 'openai' as const;
@@ -64,7 +47,7 @@ export class OEmbeddingModel
     args?: SetOptional<
       ModelArgs<
         OpenAI.Client,
-        OEmbeddingConfig,
+        OpenAI.Embedding.Config,
         Model.Embedding.Run,
         Model.Embedding.Response
       >,
@@ -82,7 +65,7 @@ export class OEmbeddingModel
     // Create the throttled function
     this.throttledModel = pThrottle({ limit, interval })(
       async (
-        params: Model.Embedding.Run & OEmbeddingConfig,
+        params: Model.Embedding.Run & OpenAI.Embedding.Config,
         context: Model.Ctx
       ) => {
         const start = Date.now();
@@ -124,7 +107,7 @@ export class OEmbeddingModel
   }
 
   protected async runModel(
-    params: Model.Embedding.Run & OEmbeddingConfig,
+    params: Model.Embedding.Run & OpenAI.Embedding.Config,
     context: Model.Ctx
   ): Promise<Model.Embedding.Response> {
     // Batch the inputs for the requests
@@ -189,7 +172,7 @@ type InputBatch = { text: string; tokenCount: number }[];
 function batchInputs(args: {
   input: string[];
   tokenizer: Model.ITokenizer;
-  options?: Partial<BatchOptions>;
+  options?: Partial<OpenAI.Embedding.BatchOptions>;
 }): InputBatch[] {
   const { input: inputs, tokenizer, options } = args;
   const {

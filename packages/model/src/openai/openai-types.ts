@@ -8,6 +8,9 @@ import type {
   EmbeddingResponse,
   OpenAIClient,
 } from 'openai-fetch';
+import type { Model } from '../types.js';
+
+type InnerType<T> = T extends ReadableStream<infer U> ? U : never;
 
 export namespace OpenAI {
   export type Client = OpenAIClient;
@@ -32,6 +35,14 @@ export namespace OpenAI {
     export type Response = ChatResponse;
     /** Streaming response from the OpenAI API. */
     export type StreamResponse = ChatStreamResponse;
+    /** A chunk recieved from a streaming response */
+    export type CompletionChunk = InnerType<StreamResponse>;
+    /** ChatModel class config */
+    export interface Config
+      extends Model.Chat.Config,
+        Omit<Params, 'messages' | 'user'> {
+      model: Params['model'];
+    }
   }
 
   /** OpenAI text embedding endpoint. */
@@ -40,6 +51,24 @@ export namespace OpenAI {
     export type Params = EmbeddingParams;
     /** Response from the OpenAI API. */
     export type Response = EmbeddingResponse;
+    /** API request batching options */
+    export interface BatchOptions {
+      maxTokensPerBatch: number;
+      maxBatchSize: number;
+    }
+    /** API request throttling options */
+    interface ThrottleOptions {
+      maxRequestsPerMin: number;
+      maxConcurrentRequests: number;
+    }
+    /** Completion Model class config */
+    export interface Config
+      extends Model.Embedding.Config,
+        Omit<Params, 'input' | 'user'> {
+      model: Params['model'];
+      batch?: Partial<BatchOptions>;
+      throttle?: Partial<ThrottleOptions>;
+    }
   }
 
   /** OpenAI (legacy) text completion endpoint. */
@@ -48,5 +77,11 @@ export namespace OpenAI {
     export type Params = CompletionParams;
     /** Response from the OpenAI API. */
     export type Response = CompletionResponse;
+    /** CompletionModel class config */
+    export interface Config
+      extends Model.Completion.Config,
+        Omit<Params, 'prompt' | 'user'> {
+      model: Params['model'];
+    }
   }
 }

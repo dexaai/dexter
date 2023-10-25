@@ -1,8 +1,8 @@
 import 'dotenv/config.js';
-import { OEmbeddingModel } from './embedding.js';
+import { EmbeddingModel } from './embedding.js';
 
 (async () => {
-  const model = new OEmbeddingModel({
+  const model = new EmbeddingModel({
     params: {
       model: 'text-embedding-ada-002',
       batch: {
