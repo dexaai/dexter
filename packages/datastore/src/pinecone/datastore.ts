@@ -2,10 +2,11 @@ import { AbstractDatastore } from '../datastore.js';
 import type { Dstore, Prettify } from '../types.js';
 import type { PineconeClient } from './client.js';
 import { createPineconeClient } from './client.js';
+import type { Pinecone } from './types.js';
 
 export class Datastore<DocMeta extends Dstore.BaseMeta>
-  extends AbstractDatastore<DocMeta>
-  implements Dstore.IDatastore<DocMeta>
+  extends AbstractDatastore<DocMeta, Pinecone.QueryFilter<DocMeta>>
+  implements Dstore.IDatastore<DocMeta, Pinecone.QueryFilter<DocMeta>>
 {
   datastoreType = 'embedding' as const;
   datastoreProvider = 'pinecone' as const;
@@ -13,7 +14,7 @@ export class Datastore<DocMeta extends Dstore.BaseMeta>
 
   constructor(
     args: Prettify<
-      Dstore.Opts<DocMeta> & {
+      Dstore.Opts<DocMeta, Pinecone.QueryFilter<DocMeta>> & {
         pinecone?: PineconeClient<DocMeta>;
       }
     >
@@ -28,7 +29,7 @@ export class Datastore<DocMeta extends Dstore.BaseMeta>
   }
 
   async runQuery(
-    query: Dstore.Query<DocMeta>,
+    query: Dstore.Query<DocMeta, Pinecone.QueryFilter<DocMeta>>,
     context?: Dstore.Ctx
   ): Promise<Dstore.QueryResult<DocMeta>> {
     const mergedContext = { ...this.context, ...context };

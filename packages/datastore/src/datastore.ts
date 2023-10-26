@@ -1,11 +1,13 @@
 import type { Model } from '@dexaai/model';
 import type { Dstore } from './types.js';
 
-export abstract class AbstractDatastore<DocMeta extends Dstore.BaseMeta>
-  implements Dstore.IDatastore<DocMeta>
+export abstract class AbstractDatastore<
+  DocMeta extends Dstore.BaseMeta,
+  Filter extends Dstore.BaseFilter<DocMeta>
+> implements Dstore.IDatastore<DocMeta, Filter>
 {
   protected abstract runQuery(
-    query: Dstore.Query<DocMeta>,
+    query: Dstore.Query<DocMeta, Filter>,
     context?: Dstore.Ctx
   ): Promise<Dstore.QueryResult<DocMeta>>;
   abstract upsert(
@@ -21,11 +23,11 @@ export abstract class AbstractDatastore<DocMeta extends Dstore.BaseMeta>
   protected namespace: string;
   protected contentKey: keyof DocMeta;
   protected embeddingModel: Model.Embedding.IModel;
-  protected cache?: Dstore.Cache<DocMeta>;
-  protected hooks: Dstore.Hooks<DocMeta>;
+  protected cache?: Dstore.Cache<DocMeta, Filter>;
+  protected hooks: Dstore.Hooks<DocMeta, Filter>;
   protected context: Dstore.Ctx;
 
-  constructor(args: Dstore.Opts<DocMeta>) {
+  constructor(args: Dstore.Opts<DocMeta, Filter>) {
     this.namespace = args.namespace;
     this.contentKey = args.contentKey;
     this.embeddingModel = args.embeddingModel;
@@ -42,7 +44,7 @@ export abstract class AbstractDatastore<DocMeta extends Dstore.BaseMeta>
   }
 
   async query(
-    query: Dstore.Query<DocMeta>,
+    query: Dstore.Query<DocMeta, Filter>,
     context?: Dstore.Ctx
   ): Promise<Dstore.QueryResult<DocMeta>> {
     // Return cached response if available

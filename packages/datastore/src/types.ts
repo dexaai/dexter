@@ -13,9 +13,15 @@ export namespace Dstore {
   /**
    * Cache for storing query responses
    */
-  export interface Cache<DocMeta extends BaseMeta> {
-    get(key: Query<DocMeta>): Promise<QueryResult<DocMeta> | null>;
-    set(key: Query<DocMeta>, value: QueryResult<DocMeta>): Promise<boolean>;
+  export interface Cache<
+    DocMeta extends BaseMeta,
+    Filter extends BaseFilter<DocMeta>
+  > {
+    get(key: Query<DocMeta, Filter>): Promise<QueryResult<DocMeta> | null>;
+    set(
+      key: Query<DocMeta, Filter>,
+      value: QueryResult<DocMeta>
+    ): Promise<boolean>;
   }
 
   /** Generic metadata object. */
@@ -31,31 +37,17 @@ export namespace Dstore {
   }
 
   /**
-   * The possible leaf values for filter objects.
-   * @note Null values aren't supported in metadata for filters, but are allowed here and automatically removed for convenience.
-   */
-  type FilterValue = string | number | boolean | null | string[] | number[];
-
-  /** Mongo style query operators */
-  type FilterOperator =
-    | '$eq'
-    | '$ne'
-    | '$gt'
-    | '$gte'
-    | '$lt'
-    | '$lte'
-    | '$in'
-    | '$nin';
-
-  /**
    * Hooks for logging and debugging
    */
-  export interface Hooks<DocMeta extends BaseMeta> {
+  export interface Hooks<
+    DocMeta extends BaseMeta,
+    Filter extends BaseFilter<DocMeta>
+  > {
     afterApiResponse?: (event: {
       timestamp: string;
       datastoreType: Type;
       datastoreProvider: Provider;
-      query: Query<DocMeta>;
+      query: Query<DocMeta, Filter>;
       response: unknown;
       latency: number;
       context: Ctx;
@@ -64,7 +56,7 @@ export namespace Dstore {
       timestamp: string;
       datastoreType: Type;
       datastoreProvider: Provider;
-      query: Query<DocMeta>;
+      query: Query<DocMeta, Filter>;
       response: unknown;
       context: Ctx;
     }) => void | Promise<void>;
@@ -72,7 +64,7 @@ export namespace Dstore {
       timestamp: string;
       datastoreType: Type;
       datastoreProvider: Provider;
-      query?: Query<DocMeta>;
+      query?: Query<DocMeta, Filter>;
       upsert?: Doc<DocMeta>[];
       error: unknown;
       context: Ctx;
@@ -82,9 +74,15 @@ export namespace Dstore {
   /**
    * Datastore interface implemented by provider specific implementations.
    */
-  export interface IDatastore<DocMeta extends BaseMeta> {
+  export interface IDatastore<
+    DocMeta extends BaseMeta,
+    Filter extends BaseFilter<DocMeta>
+  > {
     /** Query the DataStore for documents. */
-    query(query: Query<DocMeta>, context?: Ctx): Promise<QueryResult<DocMeta>>;
+    query(
+      query: Query<DocMeta, Filter>,
+      context?: Ctx
+    ): Promise<QueryResult<DocMeta>>;
 
     /** Insert or update documents in the DataStore. */
     upsert(docs: Doc<DocMeta>[], context?: Ctx): Promise<void>;
@@ -99,7 +97,10 @@ export namespace Dstore {
   /**
    * Options for creating a Datastore instance.
    */
-  export interface Opts<DocMeta extends BaseMeta> {
+  export interface Opts<
+    DocMeta extends BaseMeta,
+    Filter extends BaseFilter<DocMeta>
+  > {
     /**
      * The metadata key of the content that is embedded.
      * The value associated with the key must be a string.
@@ -107,8 +108,8 @@ export namespace Dstore {
     contentKey: keyof DocMeta;
     namespace: string;
     embeddingModel: Model.Embedding.IModel;
-    cache?: Cache<DocMeta>;
-    hooks?: Hooks<DocMeta>;
+    cache?: Cache<DocMeta, Filter>;
+    hooks?: Hooks<DocMeta, Filter>;
     context?: Ctx;
     debug?: boolean;
   }
@@ -116,7 +117,10 @@ export namespace Dstore {
   /**
    * Options for creating a hybrid Datastore instance (with Splade).
    */
-  export interface OptsHybrid<DocMeta extends BaseMeta> extends Opts<DocMeta> {
+  export interface OptsHybrid<
+    DocMeta extends BaseMeta,
+    Filter extends BaseFilter<DocMeta>
+  > extends Opts<DocMeta, Filter> {
     /** Splade instance for creating sparse vectors */
     spladeModel: Model.SparseVector.IModel;
   }
@@ -127,26 +131,21 @@ export namespace Dstore {
   /**
    * Arguments to run a query.
    */
-  export interface Query<Meta extends BaseMeta> {
+  export interface Query<
+    Meta extends BaseMeta,
+    Filter extends BaseFilter<Meta>
+  > {
     query: string;
     embedding?: number[];
     sparseVector?: Model.SparseVector.Vector;
     topK?: number;
     minScore?: number;
-    filter?: QueryFilter<Meta>;
+    filter?: Filter;
     includeValues?: boolean;
   }
-  /**
-   * An object of metadata filters.
-   * @see https://www.pinecone.io/docs/metadata-filtering/
-   */
-  export type QueryFilter<Metadata extends BaseMeta> = {
-    [key in keyof Metadata | FilterOperator]?:
-      | FilterValue
-      | {
-          [key in keyof Metadata | FilterOperator]?: FilterValue;
-        };
-  };
+
+  // @ts-ignore
+  export type BaseFilter<Meta extends BaseMeta> = any;
 
   /**
    * The results of running a query.
