@@ -43,32 +43,30 @@ export namespace Dstore {
     DocMeta extends BaseMeta,
     Filter extends BaseFilter<DocMeta>
   > {
-    afterApiResponse?: (event: {
+    onQueryStart?: ((event: {
       timestamp: string;
       datastoreType: Type;
       datastoreProvider: Provider;
       query: Query<DocMeta, Filter>;
-      response: unknown;
+      context: Ctx;
+    }) => void | Promise<void>)[];
+    onQueryComplete?: ((event: {
+      timestamp: string;
+      datastoreType: Type;
+      datastoreProvider: Provider;
+      query: Query<DocMeta, Filter>;
+      response: QueryResult<DocMeta>;
       latency: number;
+      cached: boolean;
       context: Ctx;
-    }) => void | Promise<void>;
-    afterCacheHit?: (event: {
+    }) => void | Promise<void>)[];
+    onError?: ((event: {
       timestamp: string;
       datastoreType: Type;
       datastoreProvider: Provider;
-      query: Query<DocMeta, Filter>;
-      response: unknown;
-      context: Ctx;
-    }) => void | Promise<void>;
-    beforeError?: (event: {
-      timestamp: string;
-      datastoreType: Type;
-      datastoreProvider: Provider;
-      query?: Query<DocMeta, Filter>;
-      upsert?: Doc<DocMeta>[];
       error: unknown;
       context: Ctx;
-    }) => void | Promise<void>;
+    }) => void | Promise<void>)[];
   }
 
   /**

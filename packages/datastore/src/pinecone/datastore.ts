@@ -51,7 +51,6 @@ export class Datastore<DocMeta extends Dstore.BaseMeta>
     }
 
     // Query Pinecone
-    const start = Date.now();
     const response = await this.pinecone.query({
       topK: query.topK ?? 10,
       ...(typeof query.minScore === 'number'
@@ -64,16 +63,6 @@ export class Datastore<DocMeta extends Dstore.BaseMeta>
       includeValues: query.includeValues ?? false,
       includeMetadata: true,
       vector: queryEmbedding,
-    });
-    const latency = Date.now() - start;
-    await this.hooks.afterApiResponse?.({
-      timestamp: new Date().toISOString(),
-      datastoreType: this.datastoreType,
-      datastoreProvider: this.datastoreProvider,
-      query,
-      response,
-      context: mergedContext,
-      latency,
     });
 
     const queryResult: Dstore.QueryResult<DocMeta> = {
@@ -145,14 +134,15 @@ export class Datastore<DocMeta extends Dstore.BaseMeta>
         })),
       });
     } catch (error) {
-      await this.hooks.beforeError?.({
-        timestamp: new Date().toISOString(),
-        datastoreType: this.datastoreType,
-        datastoreProvider: this.datastoreProvider,
-        upsert: docs,
-        error,
-        context: mergedContext,
-      });
+      this.hooks?.onError?.forEach((hook) =>
+        hook({
+          timestamp: new Date().toISOString(),
+          datastoreType: this.datastoreType,
+          datastoreProvider: this.datastoreProvider,
+          error,
+          context: mergedContext,
+        })
+      );
       throw error;
     }
   }

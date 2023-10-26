@@ -1,5 +1,6 @@
 import type { Model } from '@dexaai/model';
 import type { Dstore } from './types.js';
+import { deepMerge } from './utils/helpers.js';
 
 export abstract class AbstractDatastore<
   DocMeta extends Dstore.BaseMeta,
@@ -33,32 +34,48 @@ export abstract class AbstractDatastore<
     this.embeddingModel = args.embeddingModel;
     this.cache = args.cache;
     this.context = args.context ?? {};
-    this.hooks = args.debug
-      ? {
-          afterApiResponse: console.log,
-          afterCacheHit: console.log,
-          beforeError: console.error,
-          ...args.hooks,
-        }
-      : args.hooks ?? {};
+    this.hooks = args.hooks ?? {};
+    if (args.debug) {
+      this.mergeHooks(args.hooks ?? {}, {
+        onQueryStart: [console.debug],
+        onQueryComplete: [console.debug],
+        onError: [console.error],
+      });
+    }
   }
 
   async query(
     query: Dstore.Query<DocMeta, Filter>,
     context?: Dstore.Ctx
   ): Promise<Dstore.QueryResult<DocMeta>> {
-    // Return cached response if available
-    const cached = await this?.cache?.get(query);
-    if (cached) {
-      const mergedContext = { ...this.context, ...context };
-      await this.hooks.afterCacheHit?.({
+    const start = Date.now();
+    const mergedContext = { ...this.context, ...context };
+
+    this.hooks?.onQueryStart?.forEach((hook) =>
+      hook({
         timestamp: new Date().toISOString(),
         datastoreType: this.datastoreType,
         datastoreProvider: this.datastoreProvider,
         query,
-        response: cached,
         context: mergedContext,
-      });
+      })
+    );
+
+    // Return cached response if available
+    const cached = await this?.cache?.get(query);
+    if (cached) {
+      this.hooks?.onQueryComplete?.forEach((hook) =>
+        hook({
+          timestamp: new Date().toISOString(),
+          datastoreType: this.datastoreType,
+          datastoreProvider: this.datastoreProvider,
+          query,
+          response: cached,
+          cached: true,
+          context: mergedContext,
+          latency: Date.now() - start,
+        })
+      );
       return cached;
     }
 
@@ -66,21 +83,41 @@ export abstract class AbstractDatastore<
       // Run the query
       const response = await this.runQuery(query, context);
 
+      this.hooks?.onQueryComplete?.forEach((hook) =>
+        hook({
+          timestamp: new Date().toISOString(),
+          datastoreType: this.datastoreType,
+          datastoreProvider: this.datastoreProvider,
+          query,
+          response,
+          cached: true,
+          context: mergedContext,
+          latency: Date.now() - start,
+        })
+      );
+
       // Update the cache
       await this?.cache?.set(query, response);
 
       return response;
     } catch (error) {
-      const mergedContext = { ...this.context, ...context };
-      await this.hooks.beforeError?.({
-        timestamp: new Date().toISOString(),
-        datastoreType: this.datastoreType,
-        datastoreProvider: this.datastoreProvider,
-        query,
-        error,
-        context: mergedContext,
-      });
+      this.hooks?.onError?.forEach((hook) =>
+        hook({
+          timestamp: new Date().toISOString(),
+          datastoreType: this.datastoreType,
+          datastoreProvider: this.datastoreProvider,
+          error,
+          context: mergedContext,
+        })
+      );
       throw error;
     }
+  }
+
+  protected mergeHooks(
+    existingHooks: typeof this.hooks,
+    newHooks: typeof this.hooks
+  ): typeof this.hooks {
+    return deepMerge(existingHooks, newHooks);
   }
 }

@@ -48,6 +48,7 @@ importers:
     specifiers:
       '@dexaai/eslint-config': ^0.4.0
       '@dexaai/model': workspace:*
+      '@fastify/deepmerge': ^1.3.0
       '@types/node': ^20.5.9
       eslint: ^8.48.0
       pinecone-client: ^1.1.0
@@ -58,6 +59,7 @@ importers:
       vitest: ^0.34.3
     dependencies:
       '@dexaai/model': link:../model
+      '@fastify/deepmerge': 1.3.0
       pinecone-client: 1.1.0
     devDependencies:
       '@dexaai/eslint-config': 0.4.0_w2g2uv42be7wag4oipwkfv43p4
