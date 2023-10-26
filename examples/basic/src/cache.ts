@@ -1,6 +1,8 @@
 import 'dotenv/config';
 import { Datastore } from '@dexaai/datastore/pinecone';
 import { EmbeddingModel } from '@dexaai/model/openai';
+import { getMemoryCache } from '@dexaai/model';
+import { getMemoryCache as datastoreCache } from '@dexaai/datastore';
 
 // Base Datastore
 (async () => {
@@ -8,19 +10,21 @@ import { EmbeddingModel } from '@dexaai/model/openai';
   const embeddingModel = new EmbeddingModel({
     params: { model: 'text-embedding-ada-002' },
     context: { test: 'test' },
-    hooks: { afterApiResponse: console.log },
-  }).addCache();
+    hooks: { onApiResponse: [console.log] },
+    cache: getMemoryCache(),
+  });
   await embeddingModel.run({ input: ['cat'] });
   // This should be cached
   await embeddingModel.run({ input: ['cat'] });
 
   // Datastore with cache
-  const store = new Datastore({
+  const store = new Datastore<{ content: string }>({
     namespace: 'test',
     contentKey: 'content',
     embeddingModel,
-    hooks: { afterApiResponse: console.log },
-  }).addCache();
+    hooks: { onQueryComplete: [console.log] },
+    cache: datastoreCache(),
+  });
   await store.upsert([
     { id: '1', metadata: { content: 'cat' } },
     { id: '2', metadata: { content: 'dog' } },

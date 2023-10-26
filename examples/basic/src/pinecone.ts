@@ -18,14 +18,14 @@ import { SpladeModel } from '@dexaai/model/custom';
       },
     },
     context: { test: 'test' },
-    hooks: { afterApiResponse: console.log },
+    hooks: { onComplete: [console.log] },
   });
 
   const store = new Datastore({
     namespace: 'test',
     contentKey: 'content',
     embeddingModel,
-    hooks: { afterApiResponse: console.log },
+    hooks: { onQueryComplete: [console.log] },
   });
 
   await store.upsert([
@@ -57,7 +57,7 @@ import { SpladeModel } from '@dexaai/model/custom';
   // Hybrid Datastore
   const spladeModel = new SpladeModel({
     params: { model: 'naver/splade-cocondenser-ensembledistil' },
-    hooks: { afterApiResponse: console.log },
+    debug: true,
   });
 
   const hStore = new HybridDatastore({
@@ -66,7 +66,7 @@ import { SpladeModel } from '@dexaai/model/custom';
     embeddingModel,
     spladeModel,
     context: { baz: 'qux' },
-    hooks: { afterApiResponse: console.log },
+    hooks: { onQueryComplete: [console.log] },
   });
 
   await hStore.upsert([
