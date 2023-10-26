@@ -58,6 +58,9 @@ export class Datastore<DocMeta extends Dstore.BaseMeta>
         ? { minScore: query.minScore }
         : {}),
       ...(query.filter && { filter: query.filter }),
+      ...(typeof query.hybridAlpha === 'number' && {
+        hybridAlpha: query.hybridAlpha,
+      }),
       includeValues: query.includeValues ?? false,
       includeMetadata: true,
       vector: queryEmbedding,

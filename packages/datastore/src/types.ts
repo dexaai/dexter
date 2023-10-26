@@ -142,6 +142,7 @@ export namespace Dstore {
     minScore?: number;
     filter?: Filter;
     includeValues?: boolean;
+    hybridAlpha?: number;
   }
 
   // @ts-ignore
