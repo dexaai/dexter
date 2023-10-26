@@ -1,43 +1,31 @@
-import Keyv from 'keyv';
-import { KvCache } from 'tkv-cache';
-import type { IEmbeddingModel, ISparseModel } from '@dexaai/model';
-import type {
-  BaseMeta,
-  Ctx,
-  DatastoreOpts,
-  DatastoreProvider,
-  DatastoreType,
-  Doc,
-  Hooks,
-  HDatastoreOpts,
-  IDatastore,
-  Query,
-  QueryCache,
-  QueryResult,
-} from './types.js';
+import type { Model } from '@dexaai/model';
+import type { Dstore } from './types.js';
 
-export abstract class BaseDatastore<DocMeta extends BaseMeta>
-  implements IDatastore<DocMeta>
+export abstract class AbstractDatastore<DocMeta extends Dstore.BaseMeta>
+  implements Dstore.IDatastore<DocMeta>
 {
   protected abstract runQuery(
-    query: Query<DocMeta>,
-    context?: Ctx
-  ): Promise<QueryResult<DocMeta>>;
-  abstract upsert(docs: Doc<DocMeta>[], context?: Ctx): Promise<void>;
+    query: Dstore.Query<DocMeta>,
+    context?: Dstore.Ctx
+  ): Promise<Dstore.QueryResult<DocMeta>>;
+  abstract upsert(
+    docs: Dstore.Doc<DocMeta>[],
+    context?: Dstore.Ctx
+  ): Promise<void>;
   abstract delete(docIds: string[]): Promise<void>;
   abstract deleteAll(): Promise<void>;
 
-  abstract datastoreType: DatastoreType;
-  abstract datastoreProvider: DatastoreProvider;
+  abstract datastoreType: Dstore.Type;
+  abstract datastoreProvider: Dstore.Provider;
 
   protected namespace: string;
   protected contentKey: keyof DocMeta;
-  protected embeddingModel: IEmbeddingModel;
-  protected cache?: QueryCache<DocMeta>;
-  protected hooks: Hooks<DocMeta>;
-  protected context: Ctx;
+  protected embeddingModel: Model.Embedding.IModel;
+  protected cache?: Dstore.Cache<DocMeta>;
+  protected hooks: Dstore.Hooks<DocMeta>;
+  protected context: Dstore.Ctx;
 
-  constructor(args: DatastoreOpts<DocMeta>) {
+  constructor(args: Dstore.Opts<DocMeta>) {
     this.namespace = args.namespace;
     this.contentKey = args.contentKey;
     this.embeddingModel = args.embeddingModel;
@@ -53,29 +41,10 @@ export abstract class BaseDatastore<DocMeta extends BaseMeta>
       : args.hooks ?? {};
   }
 
-  /**
-   * Add a cache to the datastore for storing query responses.
-   * Defaults to an in-memory Keyv cache.
-   */
-  addCache(args?: {
-    /** A Keyv instance to use for caching */
-    keyv?: Keyv<QueryResult<DocMeta>>;
-    /** Keyv options to create a new Keyv instance */
-    keyvOpts?: Keyv.Options<QueryResult<DocMeta>>;
-    /** A function to normalize the cache key */
-    normalizeKey?: (params: Query<DocMeta>) => Partial<Query<DocMeta>>;
-    errorHandler?: (error: unknown) => void;
-  }): this {
-    const { keyvOpts, normalizeKey, errorHandler } = args ?? {};
-    const keyv = args?.keyv ?? new Keyv<QueryResult<DocMeta>>(keyvOpts);
-    this.cache = new KvCache(keyv, normalizeKey, errorHandler);
-    return this;
-  }
-
   async query(
-    query: Query<DocMeta>,
-    context?: Ctx
-  ): Promise<QueryResult<DocMeta>> {
+    query: Dstore.Query<DocMeta>,
+    context?: Dstore.Ctx
+  ): Promise<Dstore.QueryResult<DocMeta>> {
     // Return cached response if available
     const cached = await this?.cache?.get(query);
     if (cached) {
@@ -111,18 +80,5 @@ export abstract class BaseDatastore<DocMeta extends BaseMeta>
       });
       throw error;
     }
-  }
-}
-
-export abstract class BaseHybridDatastore<DocMeta extends BaseMeta>
-  extends BaseDatastore<DocMeta>
-  implements IDatastore<DocMeta>
-{
-  protected spladeModel: ISparseModel;
-
-  constructor(args: HDatastoreOpts<DocMeta>) {
-    const { spladeModel, ...rest } = args;
-    super(rest);
-    this.spladeModel = args.spladeModel;
   }
 }

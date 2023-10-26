@@ -1,5 +1,5 @@
 import ky from 'ky';
-import type { SparseVector } from './types.js';
+import type { Model } from '../types.js';
 
 export type SpladeClient = typeof createSpladeVector;
 
@@ -9,14 +9,14 @@ export async function createSpladeVector(
     model: string;
   },
   serviceUrl: string
-): Promise<SparseVector.Vector> {
+): Promise<Model.SparseVector.Vector> {
   try {
     const sparseValues = await ky
       .post(serviceUrl, {
         timeout: 1000 * 60,
         json: { text: params.input },
       })
-      .json<SparseVector.Vector>();
+      .json<Model.SparseVector.Vector>();
     return sparseValues;
   } catch (e) {
     // @ts-ignore: TODO: add custom Error class that handles this

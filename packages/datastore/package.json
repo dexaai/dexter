@@ -5,9 +5,9 @@
   "description": "",
   "repository": "dexaai/llm-tools",
   "scripts": {
-    "build": "tsup",
+    "build": "rm -rf dist && tsc --project tsconfig.dist.json",
     "clean": "rm -rf .turbo node_modules dist",
-    "dev": "tsup --watch",
+    "dev": "tsc --watch",
     "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
     "test": "vitest",
     "typecheck": "tsc --noEmit"
@@ -16,48 +16,28 @@
   "files": [
     "dist"
   ],
-  "types": "./dist/index.d.ts",
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.js",
   "exports": {
     "./package.json": "./package.json",
     ".": {
       "types": "./dist/index.d.ts",
-      "require": "./dist/index.cjs",
-      "import": "./dist/index.js",
-      "default": "./dist/index.js"
+      "import": "./dist/index.js"
     },
     "./pinecone": {
       "types": "./dist/pinecone/index.d.ts",
-      "require": "./dist/pinecone/index.cjs",
-      "import": "./dist/pinecone/index.js",
-      "default": "./dist/pinecone/index.js"
+      "import": "./dist/pinecone/index.js"
     }
   },
-  "typesVersions": {
-    "*": {
-      "pinecone": [
-        "./dist/pinecone/index.d.ts"
-      ]
-    }
-  },
+  "types": "./dist/index.d.ts",
+  "main": "./dist/index.js",
   "dependencies": {
     "@dexaai/model": "workspace:*",
-    "keyv": "^4.5.2",
-    "ky": "^0.33.3",
-    "p-map": "^6.0.0",
-    "p-retry": "^5.1.2",
-    "p-throttle": "^5.1.0",
-    "pinecone-client": "^1.1.0",
-    "tkv-cache": "^0.1.2",
-    "ts-extras": "^0.11.0"
+    "pinecone-client": "^1.1.0"
   },
   "devDependencies": {
     "@dexaai/eslint-config": "^0.4.0",
     "@types/node": "^20.5.9",
     "eslint": "^8.48.0",
     "tsconfig": "workspace:*",
-    "tsup": "^7.0.0",
     "type-fest": "4.3.1",
     "typescript": "^5.2.2",
     "vite": "^4.3.9",

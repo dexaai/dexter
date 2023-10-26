@@ -1,13 +1,4 @@
-export { BaseDatastore, BaseHybridDatastore } from './datastore.js';
+export { AbstractDatastore } from './datastore.js';
+export { AbstractHybridDatastore } from './hybrid-datastore.js';
 export { VectorUtils } from './utils/vectors.js';
-export type {
-  BaseMeta,
-  Ctx,
-  DatastoreOpts,
-  Doc,
-  HDatastoreOpts,
-  IDatastore,
-  Prettify,
-  Query,
-  QueryResult,
-} from './types.js';
+export type { Dstore } from './types.js';

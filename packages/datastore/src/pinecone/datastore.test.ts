@@ -2,7 +2,8 @@ import { SpladeModel } from '@dexaai/model/custom';
 import { EmbeddingModel } from '@dexaai/model/openai';
 import { PineconeClient } from 'pinecone-client';
 import { describe, expect, it } from 'vitest';
-import { Datastore, HybridDatastore } from './datastore.js';
+import { Datastore } from './datastore.js';
+import { HybridDatastore } from './hybrid-datastore.js';
 
 vi.mock('@dexaai/model/openai', () => {
   const EmbeddingModel = vi.fn();

@@ -5,15 +5,17 @@ import { AbstractModel } from '../model.js';
 import type { Model } from '../types.js';
 import type { SpladeClient } from './client.js';
 import { createSpladeVector } from './client.js';
-import type { SparseVector } from './types.js';
 import type { Prettify } from '../utils/helpers.js';
 
 export type SpladeModelArgs = Prettify<
-  ModelArgs<
-    SpladeClient,
-    SparseVector.Config,
-    SparseVector.Run,
-    SparseVector.Response
+  Omit<
+    ModelArgs<
+      SpladeClient,
+      Model.SparseVector.Config,
+      Model.SparseVector.Run,
+      Model.SparseVector.Response
+    >,
+    'client'
   > & {
     serviceUrl?: string;
   }
@@ -22,15 +24,15 @@ export type SpladeModelArgs = Prettify<
 export class SpladeModel
   extends AbstractModel<
     SpladeClient,
-    SparseVector.Config,
-    SparseVector.Run,
-    SparseVector.Response
+    Model.SparseVector.Config,
+    Model.SparseVector.Run,
+    Model.SparseVector.Response
   >
   implements
-    SparseVector.IModel<
-      SparseVector.Config,
-      SparseVector.Run,
-      SparseVector.Response
+    Model.SparseVector.IModel<
+      Model.SparseVector.Config,
+      Model.SparseVector.Run,
+      Model.SparseVector.Response
     >
 {
   modelType = 'sparse-vector' as const;
@@ -39,7 +41,7 @@ export class SpladeModel
 
   constructor(args: SpladeModelArgs) {
     const { serviceUrl, ...rest } = args;
-    super(rest);
+    super({ client: createSpladeVector, ...rest });
     const safeProcess = globalThis.process || { env: {} };
     const tempServiceUrl = serviceUrl || safeProcess.env['SPLADE_SERVICE_URL'];
     if (!tempServiceUrl) {
@@ -49,9 +51,9 @@ export class SpladeModel
   }
 
   protected async runModel(
-    params: SparseVector.Run & SparseVector.Config,
+    params: Model.SparseVector.Run & Model.SparseVector.Config,
     context: Model.Ctx
-  ): Promise<SparseVector.Response> {
+  ): Promise<Model.SparseVector.Response> {
     const interval = params.throttleInterval ?? 1000 * 60; // 1 minute
     const limit = params.throttleLimit ?? 600;
     const concurrency = params.concurrency ?? 10;
@@ -104,11 +106,10 @@ export class SpladeModel
 
   /** Clone the model and merge/orverride the given properties. */
   clone(args?: SpladeModelArgs): this {
-    const { cache, client, context, debug, params, hooks } = args ?? {};
+    const { cache, context, debug, params, hooks } = args ?? {};
     // @ts-ignore
     return new SpladeModel({
       cache: cache || this.cache,
-      client: client || this.client,
       context: this.mergeContext(this.context, context),
       debug: debug || this.debug,
       params: this.mergeParams(this.params, params ?? {}),

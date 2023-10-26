@@ -23,12 +23,12 @@
       "import": "./dist/index.js"
     },
     "./openai": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
+      "types": "./dist/openai/index.d.ts",
+      "import": "./dist/openai/index.js"
     },
     "./custom": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
+      "types": "./dist/custom/index.d.ts",
+      "import": "./dist/custom/index.js"
     }
   },
   "types": "./dist/index.d.ts",

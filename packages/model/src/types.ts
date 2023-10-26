@@ -104,7 +104,7 @@ export namespace Model {
     export interface IModel<
       EConfig extends Config = Config,
       ERun extends Run = Run,
-      EResponse extends Base.Response = Base.Response
+      EResponse extends Response = Response
     > extends Base.IModel<EConfig, ERun, EResponse> {
       modelType: 'embedding';
     }
@@ -184,6 +184,35 @@ export namespace Model {
   /** The provider of the model (eg: OpenAI) */
   export type Provider = (string & {}) | 'openai' | 'custom';
 
+  /**
+   * Sparse vector model (SPLADE)
+   */
+  export namespace SparseVector {
+    /** Sparse vector from SPLADE models. */
+    export type Vector = {
+      indices: number[];
+      values: number[];
+    };
+    export interface Run extends Model.Base.Run {
+      input: string[];
+    }
+    export interface Config extends Model.Base.Config {
+      concurrency?: number;
+      throttleLimit?: number;
+      throttleInterval?: number;
+    }
+    export interface Response extends Model.Base.Response {
+      vectors: Vector[];
+    }
+    export interface IModel<
+      SConfig extends Config = Config,
+      SRun extends Run = Run,
+      SResponse extends Response = Response
+    > extends Model.Base.IModel<SConfig, SRun, SResponse> {
+      modelType: 'sparse-vector';
+    }
+  }
+
   /** Token counts for model response. */
   export type TokenCounts = {
     prompt: number;
@@ -193,6 +222,7 @@ export namespace Model {
 
   /** The type of data returned by the model */
   export type Type =
+    | (string & {})
     | 'base'
     | 'completion'
     | 'chat'
