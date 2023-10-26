@@ -2,6 +2,7 @@ import { SpladeModel } from '@dexaai/model/custom';
 import { EmbeddingModel } from '@dexaai/model/openai';
 import { PineconeClient } from 'pinecone-client';
 import { describe, expect, it } from 'vitest';
+import { getMemoryCache } from '../index.js';
 import { Datastore } from './datastore.js';
 import { HybridDatastore } from './hybrid-datastore.js';
 
@@ -39,6 +40,10 @@ vi.mock('pinecone-client', () => {
   PineconeClient.prototype.upsert = vi
     .fn()
     .mockImplementation((_args: { vectors: unknown }) => {});
+  PineconeClient.prototype.query = vi.fn().mockImplementation(() => ({
+    query: {},
+    docs: [],
+  }));
   return { PineconeClient };
 });
 
@@ -306,5 +311,20 @@ describe('HybridDatastore', () => {
         },
       ],
     });
+  });
+
+  it('caches queries', async () => {
+    const datastore = new HybridDatastore<Meta>({
+      namespace: 'test',
+      contentKey: 'content',
+      embeddingModel,
+      spladeModel,
+      pinecone: pineconeClient,
+      cache: getMemoryCache(),
+    });
+    await datastore.query({ query: 'test' });
+    expect(pineconeClient.query).toHaveBeenCalledOnce();
+    await datastore.query({ query: 'test' });
+    expect(pineconeClient.query).toHaveBeenCalledOnce();
   });
 });
