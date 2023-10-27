@@ -32,9 +32,9 @@ export namespace Model {
       cost?: number;
     }
     export interface IModel<
-      MConfig extends Config,
-      MRun extends Run,
-      ModelResp extends Response
+      MConfig extends Base.Config,
+      MRun extends Base.Run,
+      ModelResp extends Base.Response
     > {
       modelType: Type;
       modelProvider: Provider;
@@ -266,11 +266,12 @@ export namespace Model {
     export interface Response extends Model.Base.Response {
       vectors: Vector[];
     }
-    export interface IModel<
-      SConfig extends Config = Config,
-      SRun extends Run = Run,
-      SResponse extends Response = Response
-    > extends Model.Base.IModel<SConfig, SRun, SResponse> {
+    export interface IModel
+      extends Base.IModel<
+        SparseVector.Config,
+        SparseVector.Run,
+        SparseVector.Response
+      > {
       modelType: 'sparse-vector';
     }
   }

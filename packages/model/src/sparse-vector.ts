@@ -27,12 +27,7 @@ export class SparseVectorModel
     Model.SparseVector.Run,
     Model.SparseVector.Response
   >
-  implements
-    Model.SparseVector.IModel<
-      Model.SparseVector.Config,
-      Model.SparseVector.Run,
-      Model.SparseVector.Response
-    >
+  implements Model.SparseVector.IModel
 {
   modelType = 'sparse-vector' as const;
   modelProvider = 'custom' as const;
