@@ -1,18 +1,17 @@
 import pThrottle from 'p-throttle';
 import pMap from 'p-map';
 import type { SetOptional } from 'type-fest';
-import type { OpenAI } from './types.js';
-import type { ModelArgs } from '../model.js';
-import type { Model } from '../types.js';
+import type { ModelArgs } from './model.js';
+import type { Model } from './types.js';
 import { calculateCost } from './utils/calculate-cost.js';
-import { createClient } from './utils/client.js';
-import { AbstractModel } from '../model.js';
-import { deepMerge } from '../utils/helpers.js';
+import { createOpenAiClient } from './clients/openai.js';
+import { AbstractModel } from './model.js';
+import { deepMerge } from './utils/helpers.js';
 
 export type EmbeddingModelArgs = SetOptional<
   ModelArgs<
-    OpenAI.Client,
-    OpenAI.Embedding.Config,
+    Model.Embedding.Client,
+    Model.Embedding.Config,
     Model.Embedding.Run,
     Model.Embedding.Response
   >,
@@ -20,7 +19,7 @@ export type EmbeddingModelArgs = SetOptional<
 >;
 
 type BulkEmbedder = (
-  params: Model.Embedding.Run & OpenAI.Embedding.Config,
+  params: Model.Embedding.Run & Model.Embedding.Config,
   context: Model.Ctx
 ) => Promise<Model.Embedding.Response>;
 
@@ -35,18 +34,13 @@ const DEFAULTS = {
 
 export class EmbeddingModel
   extends AbstractModel<
-    OpenAI.Client,
-    OpenAI.Embedding.Config,
+    Model.Embedding.Client,
+    Model.Embedding.Config,
     Model.Embedding.Run,
     Model.Embedding.Response,
-    OpenAI.Embedding.Response
+    Model.Embedding.ApiResponse
   >
-  implements
-    Model.Embedding.IModel<
-      OpenAI.Embedding.Config,
-      Model.Embedding.Run,
-      Model.Embedding.Response
-    >
+  implements Model.Embedding.IModel
 {
   modelType = 'embedding' as const;
   modelProvider = 'openai' as const;
@@ -55,7 +49,7 @@ export class EmbeddingModel
   /** Doesn't accept OpenAIClient because retry needs to be handled at the model level. */
   constructor(args?: EmbeddingModelArgs) {
     let { client, params, ...rest } = args || {};
-    client = client || createClient();
+    client = client || createOpenAiClient();
     params = params || { model: 'text-embedding-ada-002' };
     super({ client, params, ...rest });
     const interval = DEFAULTS.throttleInterval;
@@ -65,7 +59,7 @@ export class EmbeddingModel
     // Create the throttled function
     this.throttledModel = pThrottle({ limit, interval })(
       async (
-        params: Model.Embedding.Run & OpenAI.Embedding.Config,
+        params: Model.Embedding.Run & Model.Embedding.Config,
         context: Model.Ctx
       ) => {
         const start = Date.now();
@@ -88,17 +82,11 @@ export class EmbeddingModel
           })
         );
 
-        const tokens = {
-          prompt: 0,
-          completion: 0,
-          total: 0,
-        };
-
         const modelResponse: Model.Embedding.Response = {
-          embeddings: response.data.map((embedding) => embedding.embedding),
+          ...response,
+          embeddings: response.data.map((item) => item.embedding),
           cached: false,
-          tokens,
-          cost: calculateCost({ model: params.model, tokens }),
+          cost: calculateCost({ model: params.model, tokens: response.usage }),
         };
 
         return modelResponse;
@@ -107,7 +95,7 @@ export class EmbeddingModel
   }
 
   protected async runModel(
-    params: Model.Embedding.Run & OpenAI.Embedding.Config,
+    params: Model.Embedding.Run & Model.Embedding.Config,
     context: Model.Ctx
   ): Promise<Model.Embedding.Response> {
     // Batch the inputs for the requests
@@ -140,23 +128,21 @@ export class EmbeddingModel
     );
 
     // Flatten the batches of embeddings into a single array
-    const embeddings = embeddingBatches.map((batch) => batch.embeddings).flat();
+    const embeddingsObjs = embeddingBatches.map((batch) => batch.data).flat();
 
     // Add up the tokens from the batches
     const totalTokens = batches.reduce((acc, curr) => {
       return acc + curr.reduce((acc, curr) => acc + curr.tokenCount, 0);
     }, 0);
-    const tokens: Model.TokenCounts = {
-      total: totalTokens,
-      prompt: totalTokens,
-      completion: 0,
-    };
 
+    const { data: _, ...firstBatch } = embeddingBatches[0];
+    const usage = { prompt_tokens: totalTokens, total_tokens: totalTokens };
     const modelResponse: Model.Embedding.Response = {
-      embeddings,
+      ...firstBatch,
+      usage,
+      data: embeddingsObjs,
       cached: false,
-      tokens,
-      cost: calculateCost({ model: params.model, tokens }),
+      cost: calculateCost({ model: params.model, tokens: usage }),
     };
 
     return modelResponse;
@@ -186,7 +172,7 @@ type InputBatch = { text: string; tokenCount: number }[];
 function batchInputs(args: {
   input: string[];
   tokenizer: Model.ITokenizer;
-  options?: Partial<OpenAI.Embedding.BatchOptions>;
+  options?: Partial<Model.Embedding.BatchOptions>;
 }): InputBatch[] {
   const { input: inputs, tokenizer, options } = args;
   const {

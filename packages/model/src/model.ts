@@ -1,4 +1,4 @@
-import { createTokenizer } from './openai/utils/tokenizer.js';
+import { createTokenizer } from './utils/tokenizer.js';
 import type { Model } from './types.js';
 import type { Prettify } from './utils/helpers.js';
 import { deepMerge } from './utils/helpers.js';

@@ -8,14 +8,14 @@ class Test extends AbstractModel<
   any,
   { model: string },
   { input: string },
-  { output: string; cached: boolean; tokens: Model.TokenCounts }
+  { output: string; cached: boolean }
 > {
   modelType = 'completion' as Model.Type;
   modelProvider = 'custom' as Model.Provider;
   protected async runModel(
     params: { input: string },
     context: Model.Ctx
-  ): Promise<{ output: string; cached: boolean; tokens: Model.TokenCounts }> {
+  ): Promise<{ output: string; cached: boolean }> {
     if (params.input === 'throw error') {
       throw new Error('Test error');
     }
@@ -24,11 +24,6 @@ class Test extends AbstractModel<
         context
       )}`,
       cached: false,
-      tokens: {
-        prompt: 1,
-        completion: 1,
-        total: 2,
-      },
     });
   }
   clone() {
@@ -50,11 +45,6 @@ describe('AbstractModel', () => {
     expect(result).toEqual({
       output: 'fooin > AI response with context: {"userId":"123"}',
       cached: false,
-      tokens: {
-        prompt: 1,
-        completion: 1,
-        total: 2,
-      },
     });
   });
 

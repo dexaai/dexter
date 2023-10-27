@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import { Datastore, HybridDatastore } from '@dexaai/datastore/pinecone';
-import { EmbeddingModel } from '@dexaai/model/openai';
-import { SpladeModel } from '@dexaai/model/custom';
+import { EmbeddingModel } from '@dexaai/model';
+import { SparseVectorModel } from '@dexaai/model';
 
 // Base Datastore
 (async () => {
@@ -55,7 +55,7 @@ import { SpladeModel } from '@dexaai/model/custom';
   console.log(JSON.stringify(result3, null, 2));
 
   // Hybrid Datastore
-  const spladeModel = new SpladeModel({
+  const spladeModel = new SparseVectorModel({
     params: { model: 'naver/splade-cocondenser-ensembledistil' },
     debug: true,
   });

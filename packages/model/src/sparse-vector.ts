@@ -1,16 +1,15 @@
 import pThrottle from 'p-throttle';
 import pMap from 'p-map';
-import type { ModelArgs } from '../model.js';
-import { AbstractModel } from '../model.js';
-import type { Model } from '../types.js';
-import type { SpladeClient } from './client.js';
-import { createSpladeVector } from './client.js';
-import type { Prettify } from '../utils/helpers.js';
+import type { ModelArgs } from './model.js';
+import { AbstractModel } from './model.js';
+import type { Model } from './types.js';
+import { createSpladeClient } from './clients/splade.js';
+import type { Prettify } from './utils/helpers.js';
 
-export type SpladeModelArgs = Prettify<
+export type SparseVectorModelArgs = Prettify<
   Omit<
     ModelArgs<
-      SpladeClient,
+      Model.SparseVector.Client,
       Model.SparseVector.Config,
       Model.SparseVector.Run,
       Model.SparseVector.Response
@@ -21,9 +20,9 @@ export type SpladeModelArgs = Prettify<
   }
 >;
 
-export class SpladeModel
+export class SparseVectorModel
   extends AbstractModel<
-    SpladeClient,
+    Model.SparseVector.Client,
     Model.SparseVector.Config,
     Model.SparseVector.Run,
     Model.SparseVector.Response
@@ -39,9 +38,9 @@ export class SpladeModel
   modelProvider = 'custom' as const;
   serviceUrl: string;
 
-  constructor(args: SpladeModelArgs) {
+  constructor(args: SparseVectorModelArgs) {
     const { serviceUrl, ...rest } = args;
-    super({ client: createSpladeVector, ...rest });
+    super({ client: createSpladeClient(), ...rest });
     const safeProcess = globalThis.process || { env: {} };
     const tempServiceUrl = serviceUrl || safeProcess.env['SPLADE_SERVICE_URL'];
     if (!tempServiceUrl) {
@@ -73,7 +72,6 @@ export class SpladeModel
 
     return {
       vectors: responses.map((r) => r.vector),
-      tokens: { prompt: 0, completion: 0, total: 0 },
       cached: false,
     };
   }
@@ -83,7 +81,10 @@ export class SpladeModel
     context: Model.Ctx
   ) {
     const start = Date.now();
-    const vector = await createSpladeVector(params, this.serviceUrl);
+    const vector = await this.client.createSparseVector(
+      params,
+      this.serviceUrl
+    );
     const latency = Date.now() - start;
 
     // Don't need tokens for this model
@@ -105,10 +106,10 @@ export class SpladeModel
   }
 
   /** Clone the model and merge/orverride the given properties. */
-  clone(args?: SpladeModelArgs): this {
+  clone(args?: SparseVectorModelArgs): this {
     const { cache, context, debug, params, hooks } = args ?? {};
     // @ts-ignore
-    return new SpladeModel({
+    return new SparseVectorModel({
       cache: cache || this.cache,
       context: this.mergeContext(this.context, context),
       debug: debug || this.debug,

@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import { Datastore } from '@dexaai/datastore/pinecone';
-import { EmbeddingModel } from '@dexaai/model/openai';
+import { EmbeddingModel } from '@dexaai/model';
 import { getMemoryCache } from '@dexaai/model';
 import { getMemoryCache as datastoreCache } from '@dexaai/datastore';
 

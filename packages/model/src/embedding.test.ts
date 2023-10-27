@@ -1,37 +1,34 @@
 import { describe, expect, it } from 'vitest';
-import { getMemoryCache } from '../utils/memory-cache.js';
-import { ChatModel } from './chat.js';
-import type { OpenAI } from './types.js';
+import type { Model } from './types.js';
+import { getMemoryCache } from './utils/memory-cache.js';
+import { EmbeddingModel } from './embedding.js';
 
-const FAKE_RESPONSE: OpenAI.Chat.Response = {
-  id: 'fake-id',
-  choices: [
+const FAKE_RESPONSE: Model.Embedding.Response = {
+  data: [
     {
       index: 0,
-      finish_reason: 'stop',
-      message: {
-        role: 'assistant',
-        content: 'Hi from fake AI',
-      },
+      object: 'asdf',
+      embedding: [1, 2, 3],
     },
   ],
-  created: 0,
-  model: 'gpt-fake',
-  object: 'fake-chat',
+  model: 'fake-model',
+  object: 'asdf',
   usage: {
-    completion_tokens: 1,
     prompt_tokens: 1,
-    total_tokens: 2,
+    total_tokens: 1,
   },
+  embeddings: [[1, 2, 3]],
+  cached: false,
+  cost: 0,
 };
 
-describe('ChatModel', () => {
-  let Client: OpenAI.Client;
+describe('EmbeddingModel', () => {
+  let Client: Model.Embedding.Client;
 
   beforeEach(() => {
     vi.setSystemTime(new Date());
-    Client = vi.fn() as unknown as OpenAI.Client;
-    Client.createChatCompletion = vi
+    Client = vi.fn() as unknown as Model.Embedding.Client;
+    Client.createEmbeddings = vi
       .fn()
       .mockImplementation(() => Promise.resolve(FAKE_RESPONSE));
   });
@@ -42,30 +39,18 @@ describe('ChatModel', () => {
   });
 
   it('runs the model', async () => {
-    const chatModel = new ChatModel({ client: Client });
-    const response = await chatModel.run({
-      messages: [{ role: 'user', content: 'content' }],
+    const model = new EmbeddingModel({ client: Client });
+    const response = await model.run({
+      input: ['foo'],
     });
-    expect(response).toEqual({
-      cached: false,
-      cost: 0,
-      message: {
-        role: 'assistant',
-        content: 'Hi from fake AI',
-      },
-      tokens: {
-        prompt: 1,
-        completion: 1,
-        total: 2,
-      },
-    });
+    expect(response).toEqual(FAKE_RESPONSE);
   });
 
   it('triggers hooks', async () => {
     const startHook = vi.fn();
     const apiResponseHook = vi.fn();
     const completeHook = vi.fn();
-    const chatModel = new ChatModel({
+    const model = new EmbeddingModel({
       client: Client,
       params: { model: 'gpt-fake' },
       hooks: {
@@ -75,19 +60,17 @@ describe('ChatModel', () => {
       },
       context: { userId: '123' },
     });
-    await chatModel.run({
-      messages: [{ role: 'user', content: 'content' }],
-    });
+    await model.run({ input: ['foo'] });
     expect(startHook).toHaveBeenCalledOnce();
     expect(apiResponseHook).toHaveBeenCalledOnce();
     expect(completeHook).toHaveBeenCalledOnce();
     expect(apiResponseHook).toHaveBeenCalledWith({
       timestamp: new Date().toISOString(),
-      modelType: 'chat',
+      modelType: 'embedding',
       modelProvider: 'openai',
       params: {
         model: 'gpt-fake',
-        messages: [{ role: 'user', content: 'content' }],
+        input: ['foo'],
       },
       response: FAKE_RESPONSE,
       latency: 0,
@@ -96,13 +79,13 @@ describe('ChatModel', () => {
   });
 
   it('implements clone', async () => {
-    const chatModel = new ChatModel({
+    const model = new EmbeddingModel({
       client: Client,
       context: { userId: '123' },
       params: { model: 'gpt-fake' },
       hooks: { onApiResponse: [() => {}] },
     });
-    const clonedModel = chatModel.clone({
+    const clonedModel = model.clone({
       context: { cloned: true },
       params: { model: 'gpt-fake-cloned' },
       hooks: { onApiResponse: [() => {}] },
@@ -120,27 +103,23 @@ describe('ChatModel', () => {
   it('can cache responses', async () => {
     const apiResponseHook = vi.fn();
     const completeHook = vi.fn();
-    const chatModel = new ChatModel({
+    const model = new EmbeddingModel({
       cache: getMemoryCache(),
       client: Client,
       params: { model: 'gpt-fake' },
       hooks: { onApiResponse: [apiResponseHook], onComplete: [completeHook] },
       context: { userId: '123' },
     });
-    await chatModel.run({
-      messages: [{ role: 'user', content: 'content' }],
-    });
+    await model.run({ input: ['foo'] });
     expect(apiResponseHook).toHaveBeenCalledOnce();
     expect(completeHook).toHaveBeenCalledOnce();
-    expect(Client.createChatCompletion).toHaveBeenCalledOnce();
+    expect(Client.createEmbeddings).toHaveBeenCalledOnce();
     // Make the same request that should be cached
-    await chatModel.run({
-      messages: [{ role: 'user', content: 'content' }],
-    });
+    await model.run({ input: ['foo'] });
     // onApiResponse hook isn't triggered for cached responses
     expect(apiResponseHook).toHaveBeenCalledOnce();
     // onComplete is called for cached responses
     expect(completeHook).toHaveBeenCalledTimes(2);
-    expect(Client.createChatCompletion).toHaveBeenCalledOnce();
+    expect(Client.createEmbeddings).toHaveBeenCalledOnce();
   });
 });

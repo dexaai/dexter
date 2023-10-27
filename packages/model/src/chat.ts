@@ -1,16 +1,15 @@
 import type { SetOptional } from 'type-fest';
-import type { OpenAI } from './types.js';
-import type { ModelArgs } from '../model.js';
-import type { Model } from '../types.js';
+import type { ModelArgs } from './model.js';
+import type { Model } from './types.js';
 import { calculateCost } from './utils/calculate-cost.js';
-import { createClient, extractTokens } from './utils/client.js';
-import { AbstractModel } from '../model.js';
-import { deepMerge } from '../utils/helpers.js';
+import { createOpenAiClient } from './clients/openai.js';
+import { AbstractModel } from './model.js';
+import { deepMerge } from './utils/helpers.js';
 
 export type ChatModelArgs = SetOptional<
   ModelArgs<
-    OpenAI.Client,
-    OpenAI.Chat.Config,
+    Model.Chat.Client,
+    Model.Chat.Config,
     Model.Chat.Run,
     Model.Chat.Response
   >,
@@ -19,14 +18,13 @@ export type ChatModelArgs = SetOptional<
 
 export class ChatModel
   extends AbstractModel<
-    OpenAI.Client,
-    OpenAI.Chat.Config,
+    Model.Chat.Client,
+    Model.Chat.Config,
     Model.Chat.Run,
     Model.Chat.Response,
-    OpenAI.Chat.Response
+    Model.Chat.ApiResponse
   >
-  implements
-    Model.Chat.IModel<OpenAI.Chat.Config, Model.Chat.Run, Model.Chat.Response>
+  implements Model.Chat.IModel
 {
   modelType = 'chat' as const;
   modelProvider = 'openai' as const;
@@ -34,7 +32,7 @@ export class ChatModel
   constructor(args?: ChatModelArgs) {
     let { client, params, ...rest } = args ?? {};
     // Add a default client if none is provided
-    client = client ?? createClient();
+    client = client ?? createOpenAiClient();
     // Set default model if no params are provided
     params = params ?? { model: 'gpt-3.5-turbo' };
     super({ client, params, ...rest });
@@ -47,7 +45,7 @@ export class ChatModel
   }
 
   protected async runModel(
-    { handleUpdate, ...params }: Model.Chat.Run & OpenAI.Chat.Config,
+    { handleUpdate, ...params }: Model.Chat.Run & Model.Chat.Config,
     context: Model.Ctx
   ): Promise<Model.Chat.Response> {
     const start = Date.now();
@@ -69,12 +67,11 @@ export class ChatModel
         })
       );
 
-      const tokens = extractTokens(response.usage);
       const modelResponse: Model.Chat.Response = {
+        ...response,
         message: response.choices[0].message,
         cached: false,
-        tokens,
-        cost: calculateCost({ model: params.model, tokens }),
+        cost: calculateCost({ model: params.model, tokens: response.usage }),
       };
 
       return modelResponse;
@@ -83,7 +80,7 @@ export class ChatModel
       const stream = await this.client.streamChatCompletion(params);
 
       // Keep track of the stream's output
-      let chunk = {} as OpenAI.Chat.CompletionChunk;
+      let chunk = {} as Model.Chat.CompletionChunk;
 
       // Get a reader from the stream
       const reader = stream.getReader();
@@ -131,12 +128,12 @@ export class ChatModel
       reader.releaseLock();
 
       const choice = chunk.choices[0];
-      const response: OpenAI.Chat.Response = {
+      const response: Model.Chat.ApiResponse = {
         ...chunk,
         choices: [
           {
             finish_reason:
-              choice.finish_reason as OpenAI.Chat.Response['choices'][0]['finish_reason'],
+              choice.finish_reason as Model.Chat.Response['choices'][0]['finish_reason'],
             index: choice.index,
             message: choice.delta as Model.Message,
           },
@@ -167,12 +164,11 @@ export class ChatModel
         })
       );
 
-      const tokens = extractTokens(response.usage);
       const modelResponse: Model.Chat.Response = {
+        ...response,
         message: response.choices[0].message,
         cached: false,
-        tokens,
-        cost: calculateCost({ model: params.model, tokens }),
+        cost: calculateCost({ model: params.model, tokens: response.usage }),
       };
 
       return modelResponse;
@@ -205,15 +201,24 @@ function logInput(args: { params: { messages: Model.Message[] } }) {
 
 function logResponse(args: {
   response: {
-    tokens: Model.TokenCounts;
+    usage?: {
+      completion_tokens: number;
+      prompt_tokens: number;
+    };
     latency?: number;
     cached: boolean;
-    message: Model.Message;
+    choices: { message: Model.Message }[];
     cost?: number;
   };
   params: { messages: Model.Message[] };
 }) {
-  const { tokens, latency, cost, message } = args.response;
+  const { usage, latency, cost, choices } = args.response;
+  const tokens = {
+    prompt: usage?.prompt_tokens ?? 0,
+    completion: usage?.completion_tokens ?? 0,
+    total: (usage?.prompt_tokens ?? 0) + (usage?.completion_tokens ?? 0),
+  };
+  const message = choices[0].message;
   const tokensStr = `[Tokens: ${tokens.prompt} + ${tokens.completion} = ${tokens.total}]`;
   const latencyStr = `[Latency: ${latency}ms]`;
   const costStr =

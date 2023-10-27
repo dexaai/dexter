@@ -1,27 +1,24 @@
-import { SpladeModel } from '@dexaai/model/custom';
-import { EmbeddingModel } from '@dexaai/model/openai';
+import { SparseVectorModel } from '@dexaai/model';
+import { EmbeddingModel } from '@dexaai/model';
 import { PineconeClient } from 'pinecone-client';
 import { describe, expect, it } from 'vitest';
 import { getMemoryCache } from '../index.js';
 import { Datastore } from './datastore.js';
 import { HybridDatastore } from './hybrid-datastore.js';
 
-vi.mock('@dexaai/model/openai', () => {
+vi.mock('@dexaai/model', () => {
   const EmbeddingModel = vi.fn();
+  const SparseVectorModel = vi.fn();
   EmbeddingModel.prototype.run = vi
     .fn()
-    .mockImplementation((_args: { input: string[] }) => ({
-      embeddings: [
-        [1, 1],
-        [2, 2],
-      ],
-    }));
-  return { EmbeddingModel };
-});
-
-vi.mock('@dexaai/model/custom', () => {
-  const SpladeModel = vi.fn();
-  SpladeModel.prototype.run = vi
+    .mockImplementation((args: { input: string[] }) => {
+      if (args.input.length === 1) {
+        return { data: [{ embedding: [1, 1] }] };
+      } else {
+        return { data: [{ embedding: [1, 1] }, { embedding: [2, 2] }] };
+      }
+    });
+  SparseVectorModel.prototype.run = vi
     .fn()
     .mockImplementation((_args: { input: string[] }) => ({
       vectors: [
@@ -29,7 +26,7 @@ vi.mock('@dexaai/model/custom', () => {
         { indices: [2, 2], values: [2, 2] },
       ],
     }));
-  return { SpladeModel };
+  return { EmbeddingModel, SparseVectorModel };
 });
 
 vi.mock('pinecone-client', () => {
@@ -175,14 +172,14 @@ describe('Datastore', () => {
 describe('HybridDatastore', () => {
   let datastore: HybridDatastore<Meta>;
   let embeddingModel: EmbeddingModel;
-  let spladeModel: SpladeModel;
+  let spladeModel: SparseVectorModel;
   let pineconeClient: PineconeClient<Meta>;
 
   beforeEach(() => {
     embeddingModel = new EmbeddingModel({
       params: { model: 'text-embedding-ada-002' },
     });
-    spladeModel = new SpladeModel({
+    spladeModel = new SparseVectorModel({
       params: { model: 'naver/splade-cocondenser-ensembledistil' },
     });
     pineconeClient = new PineconeClient({ apiKey: '', baseUrl: '' });

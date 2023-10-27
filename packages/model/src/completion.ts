@@ -1,15 +1,14 @@
 import type { SetOptional } from 'type-fest';
-import type { ModelArgs } from '../model.js';
-import type { OpenAI } from './types.js';
-import type { Model } from '../types.js';
+import type { ModelArgs } from './model.js';
+import type { Model } from './types.js';
 import { calculateCost } from './utils/calculate-cost.js';
-import { createClient, extractTokens } from './utils/client.js';
-import { AbstractModel } from '../model.js';
+import { createOpenAiClient } from './clients/openai.js';
+import { AbstractModel } from './model.js';
 
 export type CompletionModelArgs = SetOptional<
   ModelArgs<
-    OpenAI.Client,
-    OpenAI.Completion.Config,
+    Model.Completion.Client,
+    Model.Completion.Config,
     Model.Completion.Run,
     Model.Completion.Response
   >,
@@ -18,18 +17,13 @@ export type CompletionModelArgs = SetOptional<
 
 export class CompletionModel
   extends AbstractModel<
-    OpenAI.Client,
-    OpenAI.Completion.Config,
+    Model.Completion.Client,
+    Model.Completion.Config,
     Model.Completion.Run,
     Model.Completion.Response,
-    OpenAI.Completion.Response
+    Model.Completion.ApiResponse
   >
-  implements
-    Model.Completion.IModel<
-      OpenAI.Completion.Config,
-      Model.Completion.Run,
-      Model.Completion.Response
-    >
+  implements Model.Completion.IModel
 {
   modelType = 'completion' as const;
   modelProvider = 'openai' as const;
@@ -37,14 +31,14 @@ export class CompletionModel
   constructor(args?: CompletionModelArgs) {
     let { client, params, ...rest } = args ?? {};
     // Add a default client if none is provided
-    client = client ?? createClient();
+    client = client ?? createOpenAiClient();
     // Set default model if no params are provided
     params = params ?? { model: 'gpt-3.5-turbo-instruct' };
     super({ client, params, ...rest });
   }
 
   protected async runModel(
-    params: Model.Completion.Run & OpenAI.Completion.Config,
+    params: Model.Completion.Run & Model.Completion.Config,
     context: Model.Ctx
   ): Promise<Model.Completion.Response> {
     const start = Date.now();
@@ -64,15 +58,11 @@ export class CompletionModel
       })
     );
 
-    const tokens = extractTokens(response.usage);
     const modelResponse: Model.Completion.Response = {
-      completions: response.choices.map((choice) => ({
-        completion: choice.text || '',
-        logprobs: choice.logprobs,
-      })),
+      ...response,
+      completion: response.choices[0].text,
       cached: false,
-      tokens,
-      cost: calculateCost({ model: params.model, tokens }),
+      cost: calculateCost({ model: params.model, tokens: response.usage }),
     };
 
     return modelResponse;

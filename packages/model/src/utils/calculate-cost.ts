@@ -59,11 +59,12 @@ const COSTS: Record<string, Cost> = {
 /** Calculate the cost (in cents) for the given model and tokens. */
 export function calculateCost(args: {
   model: string;
-  tokens: { prompt: number; completion: number };
+  tokens?: { prompt_tokens: number; completion_tokens?: number };
 }): number | undefined {
   const cost = getCost(args.model);
-  if (!cost) return undefined;
-  const { prompt, completion } = args.tokens;
+  if (!cost || !args.tokens) return undefined;
+  const { prompt_tokens: prompt, completion_tokens: completion = 0 } =
+    args.tokens;
   // Work around floating point errors by multiplying by 1000 and rounding.
   const MULTIPLIER = 1000;
   const multipliedCost =

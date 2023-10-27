@@ -39,14 +39,13 @@ export class Datastore<DocMeta extends Dstore.BaseMeta>
 
     // If no query embedding is provided, run the query embedder
     if (!queryEmbedding) {
-      const {
-        embeddings: [embedding],
-      } = await this.embeddingModel.run(
+      const { data } = await this.embeddingModel.run(
         {
           input: [query.query],
         },
         mergedContext
       );
+      const embedding = data[0].embedding;
       queryEmbedding = embedding;
     }
 
@@ -110,13 +109,14 @@ export class Datastore<DocMeta extends Dstore.BaseMeta>
         { input: textsToEmbed },
         mergedContext
       );
+      const embeddings = embeddingRes.data.map((item) => item.embedding);
 
       // Merge the existing embeddings and sparse vectors with the generated ones
       const docsWithEmbeddings = docs.map((doc) => {
         let embedding = doc.embedding;
         // If the doc was missing an embedding, use the generated one
         if (embedding == null) {
-          embedding = embeddingRes.embeddings.shift();
+          embedding = embeddings.shift();
           if (embedding == null) {
             throw new Error('Unexpected missing embedding');
           }

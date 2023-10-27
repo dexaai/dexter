@@ -39,15 +39,13 @@ export class HybridDatastore<DocMeta extends Dstore.BaseMeta>
     const queryEmbedding = query.embedding;
     const querySparseVector = query.sparseVector;
     const [
-      {
-        embeddings: [embedding],
-      },
+      { data },
       {
         vectors: [sparseVector],
       },
     ] = await Promise.all([
       queryEmbedding
-        ? { embeddings: [queryEmbedding] }
+        ? { data: [{ embedding: queryEmbedding }] }
         : this.embeddingModel.run(
             {
               input: [query.query],
@@ -63,6 +61,7 @@ export class HybridDatastore<DocMeta extends Dstore.BaseMeta>
             mergedContext
           ),
     ]);
+    const embedding = data[0].embedding;
 
     // Query Pinecone
     const response = await this.pinecone.query({
@@ -127,13 +126,15 @@ export class HybridDatastore<DocMeta extends Dstore.BaseMeta>
         this.spladeModel.run({ input: textsToEmbed }, mergedContext),
       ]);
 
+      const embeddings = embeddingRes.data.map((item) => item.embedding);
+
       // Merge the existing embeddings and sparse vectors with the generated ones
       const docsWithEmbeddings = docs.map((doc) => {
         let embedding = doc.embedding;
         let sparseVector = doc.sparseVector;
         // If the doc was missing an embedding or sparse vector, use the generated values
         if (embedding == null || sparseVector == null) {
-          embedding = embeddingRes.embeddings.shift();
+          embedding = embeddings.shift();
           sparseVector = spladeRes.vectors.shift();
           if (embedding == null || sparseVector == null) {
             throw new Error('Unexpected missing embedding or sparse vector');

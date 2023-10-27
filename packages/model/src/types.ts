@@ -1,4 +1,16 @@
-import type { ChatMessage } from 'openai-fetch';
+import type {
+  ChatMessage,
+  ChatParams,
+  ChatResponse,
+  ChatStreamResponse,
+  CompletionParams,
+  CompletionResponse,
+  EmbeddingParams,
+  EmbeddingResponse,
+} from 'openai-fetch';
+import type { OpenAIClient } from 'openai-fetch';
+
+type InnerType<T> = T extends ReadableStream<infer U> ? U : never;
 
 /**
  * Generic Model extended by provider specific implementations.
@@ -18,7 +30,6 @@ export namespace Model {
     export interface Response {
       cached: boolean;
       cost?: number;
-      tokens: TokenCounts;
     }
     export interface IModel<
       MConfig extends Config,
@@ -43,21 +54,37 @@ export namespace Model {
    * Chat Model
    */
   export namespace Chat {
+    export type Client = {
+      createChatCompletion: OpenAIClient['createChatCompletion'];
+      streamChatCompletion: OpenAIClient['streamChatCompletion'];
+    };
     export interface Run extends Base.Run {
       messages: Model.Message[];
     }
     export interface Config extends Base.Config {
       /** Handle new chunk from streaming requests. */
       handleUpdate?: (chunk: string) => void;
+      frequency_penalty?: ChatParams['frequency_penalty'];
+      function_call?: ChatParams['function_call'];
+      functions?: ChatParams['functions'];
+      logit_bias?: ChatParams['logit_bias'];
+      max_tokens?: ChatParams['max_tokens'];
+      model: ChatParams['model'];
+      presence_penalty?: ChatParams['presence_penalty'];
+      stop?: ChatParams['stop'];
+      temperature?: ChatParams['temperature'];
+      top_p?: ChatParams['top_p'];
     }
-    export interface Response extends Base.Response {
-      message: Model.Message;
+    export interface Response extends Base.Response, ChatResponse {
+      message: ChatMessage;
     }
-    export interface IModel<
-      CConfig extends Chat.Config,
-      CRun extends Chat.Run,
-      CResponse extends Chat.Response
-    > extends Base.IModel<CConfig, CRun, CResponse> {
+    /** Streaming response from the OpenAI API. */
+    type StreamResponse = ChatStreamResponse;
+    /** A chunk recieved from a streaming response */
+    export type CompletionChunk = InnerType<StreamResponse>;
+    export type ApiResponse = ChatResponse;
+    export interface IModel
+      extends Base.IModel<Chat.Config, Chat.Run, Chat.Response> {
       modelType: 'chat';
     }
   }
@@ -66,6 +93,9 @@ export namespace Model {
    * Completion model
    */
   export namespace Completion {
+    export type Client = {
+      createCompletions: OpenAIClient['createCompletions'];
+    };
     export interface Run extends Base.Run {
       prompt:
         | string
@@ -74,15 +104,21 @@ export namespace Model {
         | Array<Array<number>>
         | null;
     }
-    export interface Config extends Base.Config {}
-    export interface Response extends Base.Response {
-      completions: { completion: string }[];
+    export interface Config
+      extends Base.Config,
+        Omit<CompletionParams, 'prompt' | 'user'> {
+      model: CompletionParams['model'];
     }
-    export interface IModel<
-      CConfig extends Config = Config,
-      CRun extends Run = Run,
-      CResponse extends Base.Response = Base.Response
-    > extends Base.IModel<CConfig, CRun, CResponse> {
+    export interface Response extends Base.Response, CompletionResponse {
+      completion: string;
+    }
+    export type ApiResponse = CompletionResponse;
+    export interface IModel
+      extends Base.IModel<
+        Completion.Config,
+        Completion.Run,
+        Completion.Response
+      > {
       modelType: 'completion';
     }
   }
@@ -94,18 +130,35 @@ export namespace Model {
    * Embedding Model
    */
   export namespace Embedding {
+    export type Client = {
+      createEmbeddings: OpenAIClient['createEmbeddings'];
+    };
     export interface Run extends Base.Run {
       input: string[];
     }
-    export interface Config extends Base.Config {}
-    export interface Response extends Base.Response {
+    /** API request batching options */
+    export interface BatchOptions {
+      maxTokensPerBatch: number;
+      maxBatchSize: number;
+    }
+    /** API request throttling options */
+    interface ThrottleOptions {
+      maxRequestsPerMin: number;
+      maxConcurrentRequests: number;
+    }
+    export interface Config
+      extends Base.Config,
+        Omit<EmbeddingParams, 'input' | 'user'> {
+      model: EmbeddingParams['model'];
+      batch?: Partial<BatchOptions>;
+      throttle?: Partial<ThrottleOptions>;
+    }
+    export interface Response extends Base.Response, EmbeddingResponse {
       embeddings: number[][];
     }
-    export interface IModel<
-      EConfig extends Config = Config,
-      ERun extends Run = Run,
-      EResponse extends Response = Response
-    > extends Base.IModel<EConfig, ERun, EResponse> {
+    export type ApiResponse = EmbeddingResponse;
+    export interface IModel
+      extends Base.IModel<Embedding.Config, Embedding.Run, Embedding.Response> {
       modelType: 'embedding';
     }
   }
@@ -188,6 +241,15 @@ export namespace Model {
    * Sparse vector model (SPLADE)
    */
   export namespace SparseVector {
+    export type Client = {
+      createSparseVector: (
+        params: {
+          input: string;
+          model: string;
+        },
+        serviceUrl: string
+      ) => Promise<SparseVector.Vector>;
+    };
     /** Sparse vector from SPLADE models. */
     export type Vector = {
       indices: number[];
@@ -212,13 +274,6 @@ export namespace Model {
       modelType: 'sparse-vector';
     }
   }
-
-  /** Token counts for model response. */
-  export type TokenCounts = {
-    prompt: number;
-    completion: number;
-    total: number;
-  };
 
   /** The type of data returned by the model */
   export type Type =

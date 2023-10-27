@@ -65,7 +65,11 @@ describe('Calculates cost for', () => {
       expected: 0.48,
     },
   ])('$model', ({ model, prompt, completion, expected }) => {
-    const cost = calculateCost({ model, tokens: { prompt, completion } });
+    const usage = {
+      prompt_tokens: prompt,
+      completion_tokens: completion,
+    };
+    const cost = calculateCost({ model, tokens: usage });
     expect(cost).toEqual(expected);
   });
 });

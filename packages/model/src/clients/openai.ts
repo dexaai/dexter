@@ -1,12 +1,11 @@
 import type { ChatMessage } from 'openai-fetch';
 import { OpenAIClient } from 'openai-fetch';
-import type { Model } from '../../types.js';
 
 /** Cached OpenAI clients. */
 const cachedClients = new Map<string, OpenAIClient>();
 
 /** Create a new openai-fetch OpenAIClient. */
-export function createClient(
+export function createOpenAiClient(
   /** Options to pass to the OpenAI client. */
   opts?: ConstructorParameters<typeof OpenAIClient>[0],
   /** Force a new client to be created. */
@@ -21,20 +20,6 @@ export function createClient(
   cachedClients.set(JSON.stringify(opts), client);
 
   return client;
-}
-
-/** Extract tokens from an OpenAI API response */
-export function extractTokens(usage?: {
-  prompt_tokens?: number;
-  completion_tokens?: number;
-  total_tokens?: number;
-}) {
-  const tokens: Model.TokenCounts = {
-    prompt: usage?.['prompt_tokens'] ?? 0,
-    completion: usage?.['completion_tokens'] ?? 0,
-    total: usage?.['total_tokens'] ?? 0,
-  };
-  return tokens;
 }
 
 /** Reformat name to adhere to OpenAI's naming restrictions: /^[a-zA-Z0-9_-]{1,64}$/ */
