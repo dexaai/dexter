@@ -1,7 +1,7 @@
 {
   "name": "@dexaai/model",
   "type": "module",
-  "version": "0.6.1",
+  "version": "1.0.0-beta.1",
   "description": "",
   "repository": "dexaai/llm-tools",
   "scripts": {
