@@ -158,7 +158,7 @@ importers:
       jsonrepair: ^3.2.0
       keyv: ^4.5.2
       ky: ^0.33.3
-      openai-fetch: ^1.6.3
+      openai-fetch: ^1.6.5
       p-map: ^6.0.0
       p-retry: ^5.1.2
       p-throttle: ^5.1.0
@@ -180,7 +180,7 @@ importers:
       jsonrepair: 3.2.0
       keyv: 4.5.3
       ky: 0.33.3
-      openai-fetch: 1.6.3
+      openai-fetch: 1.6.5
       p-map: 6.0.0
       p-retry: 5.1.2
       p-throttle: 5.1.0
@@ -3602,8 +3602,8 @@ packages:
       mimic-fn: 2.1.0
     dev: true
 
-  /openai-fetch/1.6.3:
-    resolution: {integrity: sha512-IM8bygs5qDOZ/WWB5nEPfm/JOqIj1BIO6R3gAW9vlL1oHtqO9D8ODQvkUNwMWRvW9xqqjlw4AnHYdhQ0o3NabA==}
+  /openai-fetch/1.6.5:
+    resolution: {integrity: sha512-drHLtVBdHn8fs/abwdZ7zX11P2sUpnHiWxKGUv91xifEoDziwQTBcjMZ/JryWQwNKwvBQj6aTKK8nZkKCdRN3g==}
     dependencies:
       ky: 0.33.3
       zod: 3.21.4

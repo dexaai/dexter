@@ -67,7 +67,7 @@
     "jsonrepair": "^3.2.0",
     "keyv": "^4.5.2",
     "ky": "^0.33.3",
-    "openai-fetch": "^1.6.3",
+    "openai-fetch": "^1.6.5",
     "p-map": "^6.0.0",
     "p-retry": "^5.1.2",
     "p-throttle": "^5.1.0",
