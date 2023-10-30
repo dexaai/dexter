@@ -89,8 +89,13 @@ export class Msg {
   }
 
   /** Create a function result message. */
-  static funcResult(content: string, name: string): Prompt.Msg.FuncResult {
-    return { role: 'function', content, name };
+  static funcResult(
+    content: string | object | unknown[],
+    name: string
+  ): Prompt.Msg.FuncResult {
+    const contentString =
+      typeof content === 'string' ? content : JSON.stringify(content);
+    return { role: 'function', content: contentString, name };
   }
 
   /** Get the narrowed message from an EnrichedResponse. */
