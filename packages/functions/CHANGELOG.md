@@ -1,5 +1,13 @@
 # @dexaai/functions
 
+## 0.6.3
+
+### Patch Changes
+
+- Upgrade openai-fetch
+- Updated dependencies
+  - @dexaai/model@0.6.2
+
 ## 0.6.2
 
 ### Patch Changes

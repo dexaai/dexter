@@ -1,5 +1,13 @@
 # @dexaai/agent
 
+## 0.3.2
+
+### Patch Changes
+
+- Upgrade openai-fetch
+- Updated dependencies
+  - @dexaai/model@0.6.2
+
 ## 0.3.1
 
 ### Patch Changes
