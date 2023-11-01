@@ -1,7 +1,7 @@
-import { SparseVectorModel } from '@dexaai/model';
-import { EmbeddingModel } from '@dexaai/model';
 import { PineconeClient } from 'pinecone-client';
 import { describe, expect, it } from 'vitest';
+import { SparseVectorModel } from '../../model/index.js';
+import { EmbeddingModel } from '../../model/index.js';
 import { getMemoryCache } from '../index.js';
 import { Datastore } from './datastore.js';
 import { HybridDatastore } from './hybrid-datastore.js';

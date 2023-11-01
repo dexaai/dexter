@@ -1,4 +1,4 @@
-import type { Model } from '@dexaai/model';
+import type { Model } from '../../model/index.js';
 import { AbstractHybridDatastore } from '../hybrid-datastore.js';
 import type { Dstore, Prettify } from '../types.js';
 import type { PineconeClient } from './client.js';

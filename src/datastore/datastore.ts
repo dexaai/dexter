@@ -1,4 +1,4 @@
-import type { Model } from '@dexaai/model';
+import type { Model } from '../model/index.js';
 import type { Dstore } from './types.js';
 import { deepMerge } from './utils/helpers.js';
 

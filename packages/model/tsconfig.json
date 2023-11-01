@@ -1,9 +1,0 @@
-{
-  "extends": "tsconfig/node-esm.json",
-  "include": ["./src/**/*"],
-  "exclude": ["**/node_modules", "**/.*/"],
-  "compilerOptions": {
-    "outDir": "dist",
-    "types": ["vitest/globals", "node"]
-  }
-}
