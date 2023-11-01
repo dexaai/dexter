@@ -79,7 +79,7 @@ importers:
       eslint: ^8.48.0
       ky: ^1.1.0
       openai: ^4.14.1
-      openai-fetch: 2.0.0-beta.5
+      openai-fetch: 2.0.0-beta.6
       p-map: ^6.0.0
       p-throttle: ^5.1.0
       tiktoken: ^1.0.10
@@ -92,7 +92,7 @@ importers:
       '@fastify/deepmerge': 1.3.0
       ky: 1.1.0
       openai: 4.14.1
-      openai-fetch: 2.0.0-beta.5
+      openai-fetch: 2.0.0-beta.6
       p-map: 6.0.0
       p-throttle: 5.1.0
       tiktoken: 1.0.10
@@ -3482,8 +3482,8 @@ packages:
       wrappy: 1.0.2
     dev: true
 
-  /openai-fetch/2.0.0-beta.5:
-    resolution: {integrity: sha512-JVu/6+UFthJZMPWF4eEXELiXgvcI8EF/foxxyJrFAGJvCUJIuLdMYY8YNMQcyk+Gie+2jXv7gAwBkdSOQiaF6w==}
+  /openai-fetch/2.0.0-beta.6:
+    resolution: {integrity: sha512-EG4koeUiXk1GMuxwA90tgwvsl+quklqm85f8l2jIKYRTOR/kG8xf8hORS48E5PWLjwratThEI1x8HXPDiNy+BQ==}
     engines: {node: '>=18'}
     dependencies:
       ky: 1.1.0
