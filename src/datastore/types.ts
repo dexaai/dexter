@@ -144,6 +144,7 @@ export namespace Dstore {
   }
 
   // @ts-ignore
+  // eslint-disable-next-line
   export type BaseFilter<Meta extends BaseMeta> = any;
 
   /**

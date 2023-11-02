@@ -6,7 +6,7 @@ import { getMemoryCache } from '../index.js';
 import { Datastore } from './datastore.js';
 import { HybridDatastore } from './hybrid-datastore.js';
 
-vi.mock('@dexaai/model', () => {
+vi.mock('../../model/index.js', () => {
   const EmbeddingModel = vi.fn();
   const SparseVectorModel = vi.fn();
   EmbeddingModel.prototype.run = vi
