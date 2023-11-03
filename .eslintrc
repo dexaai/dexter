@@ -1,0 +1,4 @@
+{
+  "extends": ["@dexaai/eslint-config", "@dexaai/eslint-config/node"],
+  "ignorePatterns": ["node_modules/", "dist/"]
+}

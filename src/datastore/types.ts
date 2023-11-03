@@ -144,6 +144,7 @@ export namespace Dstore {
   }
 
   // @ts-ignore
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   export type BaseFilter<Meta extends BaseMeta> = any;
 
   /**
