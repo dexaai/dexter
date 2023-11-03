@@ -9,7 +9,7 @@
     "clean": "rm -rf node_modules dist",
     "dev": "tsc --watch",
     "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
-    "prepare": "npm run build",
+    "prepare": "rm -rf dist && tsc --project tsconfig.dist.json",
     "release": "np",
     "test": "dotenv -e .env.example -- vitest",
     "typecheck": "tsc --noEmit"
