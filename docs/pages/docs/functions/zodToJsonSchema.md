@@ -16,4 +16,4 @@ Generate a JSON Schema from a Zod schema.
 
 ## Source
 
-[src/prompt/functions/zod-to-json.ts:6](https://github.com/dexaai/llm-tools/blob/0d08c9c/src/prompt/functions/zod-to-json.ts#L6)
+[src/prompt/functions/zod-to-json.ts:6](https://github.com/dexaai/llm-tools/blob/2a387dc/src/prompt/functions/zod-to-json.ts#L6)

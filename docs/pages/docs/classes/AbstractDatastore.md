@@ -29,14 +29,14 @@
 
 #### Source
 
-[src/datastore/datastore.ts:30](https://github.com/dexaai/llm-tools/blob/0d08c9c/src/datastore/datastore.ts#L30)
+[src/datastore/datastore.ts:30](https://github.com/dexaai/llm-tools/blob/2a387dc/src/datastore/datastore.ts#L30)
 
 ## Properties
 
 | Modifier | Property | Type | Description | Source |
 | :------ | :------ | :------ | :------ | :------ |
-| `abstract` | `datastoreProvider` | [`Provider`](../namespaces/Dstore/type-aliases/Provider.md) | - | [src/datastore/datastore.ts:21](https://github.com/dexaai/llm-tools/blob/0d08c9c/src/datastore/datastore.ts#L21) |
-| `abstract` | `datastoreType` | [`Type`](../namespaces/Dstore/type-aliases/Type.md) | - | [src/datastore/datastore.ts:20](https://github.com/dexaai/llm-tools/blob/0d08c9c/src/datastore/datastore.ts#L20) |
+| `abstract` | `datastoreProvider` | [`Provider`](../namespaces/Dstore/type-aliases/Provider.md) | - | [src/datastore/datastore.ts:21](https://github.com/dexaai/llm-tools/blob/2a387dc/src/datastore/datastore.ts#L21) |
+| `abstract` | `datastoreType` | [`Type`](../namespaces/Dstore/type-aliases/Type.md) | - | [src/datastore/datastore.ts:20](https://github.com/dexaai/llm-tools/blob/2a387dc/src/datastore/datastore.ts#L20) |
 
 ## Methods
 
@@ -56,7 +56,7 @@
 
 #### Source
 
-[src/datastore/datastore.ts:17](https://github.com/dexaai/llm-tools/blob/0d08c9c/src/datastore/datastore.ts#L17)
+[src/datastore/datastore.ts:17](https://github.com/dexaai/llm-tools/blob/2a387dc/src/datastore/datastore.ts#L17)
 
 ***
 
@@ -70,7 +70,7 @@
 
 #### Source
 
-[src/datastore/datastore.ts:18](https://github.com/dexaai/llm-tools/blob/0d08c9c/src/datastore/datastore.ts#L18)
+[src/datastore/datastore.ts:18](https://github.com/dexaai/llm-tools/blob/2a387dc/src/datastore/datastore.ts#L18)
 
 ***
 
@@ -91,7 +91,7 @@
 
 #### Source
 
-[src/datastore/datastore.ts:46](https://github.com/dexaai/llm-tools/blob/0d08c9c/src/datastore/datastore.ts#L46)
+[src/datastore/datastore.ts:46](https://github.com/dexaai/llm-tools/blob/2a387dc/src/datastore/datastore.ts#L46)
 
 ***
 
@@ -112,4 +112,4 @@
 
 #### Source
 
-[src/datastore/datastore.ts:13](https://github.com/dexaai/llm-tools/blob/0d08c9c/src/datastore/datastore.ts#L13)
+[src/datastore/datastore.ts:13](https://github.com/dexaai/llm-tools/blob/2a387dc/src/datastore/datastore.ts#L13)

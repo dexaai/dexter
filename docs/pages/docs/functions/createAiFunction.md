@@ -1,6 +1,6 @@
-# Function: createAiFunction()
+# Function: createAIFunction()
 
-> **createAiFunction**\<`Schema`, `Return`\>(`spec`, `implementation`): [`AiFunction`](../namespaces/Prompt/interfaces/AiFunction.md)\<`Schema`, `Return`\>
+> **createAIFunction**\<`Schema`, `Return`\>(`spec`, `implementation`): [`AIFunction`](../namespaces/Prompt/interfaces/AIFunction.md)\<`Schema`, `Return`\>
 
 Create a function meant to be used with OpenAI function calling.
 
@@ -29,8 +29,8 @@ function to the OpenAI API `functions` property.
 
 ## Returns
 
-[`AiFunction`](../namespaces/Prompt/interfaces/AiFunction.md)\<`Schema`, `Return`\>
+[`AIFunction`](../namespaces/Prompt/interfaces/AIFunction.md)\<`Schema`, `Return`\>
 
 ## Source
 
-[src/prompt/functions/ai-function.ts:16](https://github.com/dexaai/llm-tools/blob/0d08c9c/src/prompt/functions/ai-function.ts#L16)
+[src/prompt/functions/ai-function.ts:16](https://github.com/dexaai/llm-tools/blob/2a387dc/src/prompt/functions/ai-function.ts#L16)

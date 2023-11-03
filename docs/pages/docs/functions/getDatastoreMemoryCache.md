@@ -17,4 +17,4 @@ A simple in-memory cache for model responses
 
 ## Source
 
-[src/datastore/utils/memory-cache.ts:4](https://github.com/dexaai/llm-tools/blob/0d08c9c/src/datastore/utils/memory-cache.ts#L4)
+[src/datastore/utils/memory-cache.ts:4](https://github.com/dexaai/llm-tools/blob/2a387dc/src/datastore/utils/memory-cache.ts#L4)

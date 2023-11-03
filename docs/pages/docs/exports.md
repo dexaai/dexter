@@ -34,8 +34,8 @@
 ### Functions
 
 - [calculateCost](functions/calculateCost.md)
-- [createAiFunction](functions/createAiFunction.md)
-- [createOpenAiClient](functions/createOpenAiClient.md)
+- [createAIFunction](functions/createAIFunction.md)
+- [createOpenAIClient](functions/createOpenAIClient.md)
 - [createTokenizer](functions/createTokenizer.md)
 - [extractJsonObject](functions/extractJsonObject.md)
 - [extractZodObject](functions/extractZodObject.md)

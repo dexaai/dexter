@@ -22,4 +22,4 @@ Validate the output of an LLM call
 
 ## Source
 
-[src/prompt/types.ts:21](https://github.com/dexaai/llm-tools/blob/0d08c9c/src/prompt/types.ts#L21)
+[src/prompt/types.ts:21](https://github.com/dexaai/llm-tools/blob/2a387dc/src/prompt/types.ts#L21)

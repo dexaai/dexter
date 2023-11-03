@@ -4,4 +4,4 @@
 
 ## Source
 
-[src/model/embedding.ts:11](https://github.com/dexaai/llm-tools/blob/0d08c9c/src/model/embedding.ts#L11)
+[src/model/embedding.ts:11](https://github.com/dexaai/llm-tools/blob/2a387dc/src/model/embedding.ts#L11)

@@ -1,6 +1,6 @@
-# Function: createOpenAiClient()
+# Function: createOpenAIClient()
 
-> **createOpenAiClient**(`opts`?, `forceNew`?): `OpenAIClient`
+> **createOpenAIClient**(`opts`?, `forceNew`?): `OpenAIClient`
 
 Create a new openai-fetch OpenAIClient.
 
@@ -17,4 +17,4 @@ Create a new openai-fetch OpenAIClient.
 
 ## Source
 
-[src/model/clients/openai.ts:8](https://github.com/dexaai/llm-tools/blob/0d08c9c/src/model/clients/openai.ts#L8)
+[src/model/clients/openai.ts:8](https://github.com/dexaai/llm-tools/blob/2a387dc/src/model/clients/openai.ts#L8)
