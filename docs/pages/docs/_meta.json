@@ -1,0 +1,14 @@
+{
+  "exports": "Contents",
+  "namespaces": "Namespaces",
+  "classes": "Classes",
+  "interfaces": "Interfaces",
+  "functions": "Functions",
+  "type-aliases": {
+    "title": "Type Aliases",
+    "display": "hidden"
+  },
+  "README": {
+    "display": "hidden"
+  }
+}

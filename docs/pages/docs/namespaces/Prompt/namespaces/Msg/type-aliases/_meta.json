@@ -1,0 +1,9 @@
+{
+  "Assistant": "Assistant",
+  "FuncCall": "FuncCall",
+  "FuncResult": "FuncResult",
+  "FunctionCall": "FunctionCall",
+  "Role": "Role",
+  "System": "System",
+  "User": "User"
+}
