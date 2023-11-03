@@ -23,8 +23,7 @@ export abstract class AbstractModel<
   MRun extends Model.Base.Run,
   MResponse extends Model.Base.Response,
   AResponse extends any = any
-> implements Model.Base.IModel<MConfig, MRun, MResponse>
-{
+> {
   /** This is used to implement specific model calls */
   protected abstract runModel(
     params: Prettify<MRun & MConfig>,

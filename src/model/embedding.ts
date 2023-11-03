@@ -32,16 +32,13 @@ const DEFAULTS = {
   maxRequestsPerMin: 3500,
 } as const;
 
-export class EmbeddingModel
-  extends AbstractModel<
-    Model.Embedding.Client,
-    Model.Embedding.Config,
-    Model.Embedding.Run,
-    Model.Embedding.Response,
-    Model.Embedding.ApiResponse
-  >
-  implements Model.Embedding.IModel
-{
+export class EmbeddingModel extends AbstractModel<
+  Model.Embedding.Client,
+  Model.Embedding.Config,
+  Model.Embedding.Run,
+  Model.Embedding.Response,
+  Model.Embedding.ApiResponse
+> {
   modelType = 'embedding' as const;
   modelProvider = 'openai' as const;
   throttledModel: BulkEmbedder;

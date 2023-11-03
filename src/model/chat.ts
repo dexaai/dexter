@@ -16,16 +16,13 @@ export type ChatModelArgs = SetOptional<
   'client' | 'params'
 >;
 
-export class ChatModel
-  extends AbstractModel<
-    Model.Chat.Client,
-    Model.Chat.Config,
-    Model.Chat.Run,
-    Model.Chat.Response,
-    Model.Chat.ApiResponse
-  >
-  implements Model.Chat.IModel
-{
+export class ChatModel extends AbstractModel<
+  Model.Chat.Client,
+  Model.Chat.Config,
+  Model.Chat.Run,
+  Model.Chat.Response,
+  Model.Chat.ApiResponse
+> {
   modelType = 'chat' as const;
   modelProvider = 'openai' as const;
 

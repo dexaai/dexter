@@ -9,6 +9,11 @@ import type {
   EmbeddingResponse,
 } from 'openai-fetch';
 import type { OpenAIClient } from 'openai-fetch';
+import type { AbstractModel } from './model.js';
+import type { ChatModel } from './chat.js';
+import type { CompletionModel } from './completion.js';
+import type { EmbeddingModel } from './embedding.js';
+import type { SparseVectorModel } from './sparse-vector.js';
 
 type InnerType<T> = T extends ReadableStream<infer U> ? U : never;
 
@@ -31,15 +36,7 @@ export namespace Model {
       cached: boolean;
       cost?: number;
     }
-    export interface IModel<
-      MConfig extends Base.Config,
-      MRun extends Base.Run,
-      ModelResp extends Base.Response
-    > {
-      modelType: Type;
-      modelProvider: Provider;
-      run(params: MRun & Partial<MConfig>, context?: Ctx): Promise<ModelResp>;
-    }
+    export type Model = AbstractModel<Client, Config, Run, Response, any>;
   }
 
   /**
@@ -83,10 +80,7 @@ export namespace Model {
     /** A chunk recieved from a streaming response */
     export type CompletionChunk = InnerType<StreamResponse>;
     export type ApiResponse = ChatResponse;
-    export interface IModel
-      extends Base.IModel<Chat.Config, Chat.Run, Chat.Response> {
-      modelType: 'chat';
-    }
+    export type Model = ChatModel;
   }
 
   /**
@@ -113,14 +107,7 @@ export namespace Model {
       completion: string;
     }
     export type ApiResponse = CompletionResponse;
-    export interface IModel
-      extends Base.IModel<
-        Completion.Config,
-        Completion.Run,
-        Completion.Response
-      > {
-      modelType: 'completion';
-    }
+    export type Model = CompletionModel;
   }
 
   /** Generic metadata object. */
@@ -157,10 +144,7 @@ export namespace Model {
       embeddings: number[][];
     }
     export type ApiResponse = EmbeddingResponse;
-    export interface IModel
-      extends Base.IModel<Embedding.Config, Embedding.Run, Embedding.Response> {
-      modelType: 'embedding';
-    }
+    export type Model = EmbeddingModel;
   }
 
   /**
@@ -266,14 +250,7 @@ export namespace Model {
     export interface Response extends Model.Base.Response {
       vectors: Vector[];
     }
-    export interface IModel
-      extends Base.IModel<
-        SparseVector.Config,
-        SparseVector.Run,
-        SparseVector.Response
-      > {
-      modelType: 'sparse-vector';
-    }
+    export type Model = SparseVectorModel;
   }
 
   /** The type of data returned by the model */

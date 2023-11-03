@@ -5,10 +5,9 @@ import type { PineconeClient } from './client.js';
 import { createPineconeClient } from './client.js';
 import type { Pinecone } from './types.js';
 
-export class HybridDatastore<DocMeta extends Dstore.BaseMeta>
-  extends AbstractHybridDatastore<DocMeta, Pinecone.QueryFilter<DocMeta>>
-  implements Dstore.IDatastore<DocMeta, Pinecone.QueryFilter<DocMeta>>
-{
+export class HybridDatastore<
+  DocMeta extends Dstore.BaseMeta
+> extends AbstractHybridDatastore<DocMeta, Pinecone.QueryFilter<DocMeta>> {
   datastoreType = 'hybrid' as const;
   datastoreProvider = 'pinecone' as const;
   private readonly pinecone: PineconeClient<DocMeta>;

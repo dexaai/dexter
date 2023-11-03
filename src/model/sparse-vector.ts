@@ -20,15 +20,12 @@ export type SparseVectorModelArgs = Prettify<
   }
 >;
 
-export class SparseVectorModel
-  extends AbstractModel<
-    Model.SparseVector.Client,
-    Model.SparseVector.Config,
-    Model.SparseVector.Run,
-    Model.SparseVector.Response
-  >
-  implements Model.SparseVector.IModel
-{
+export class SparseVectorModel extends AbstractModel<
+  Model.SparseVector.Client,
+  Model.SparseVector.Config,
+  Model.SparseVector.Run,
+  Model.SparseVector.Response
+> {
   modelType = 'sparse-vector' as const;
   modelProvider = 'custom' as const;
   serviceUrl: string;

@@ -5,8 +5,7 @@ import { deepMerge } from './utils/helpers.js';
 export abstract class AbstractDatastore<
   DocMeta extends Dstore.BaseMeta,
   Filter extends Dstore.BaseFilter<DocMeta>
-> implements Dstore.IDatastore<DocMeta, Filter>
-{
+> {
   protected abstract runQuery(
     query: Dstore.Query<DocMeta, Filter>,
     context?: Dstore.Ctx
@@ -23,7 +22,7 @@ export abstract class AbstractDatastore<
 
   protected namespace: string;
   protected contentKey: keyof DocMeta;
-  protected embeddingModel: Model.Embedding.IModel;
+  protected embeddingModel: Model.Embedding.Model;
   protected cache?: Dstore.Cache<DocMeta, Filter>;
   protected events: Dstore.Events<DocMeta, Filter>;
   protected context: Dstore.Ctx;

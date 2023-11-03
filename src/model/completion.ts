@@ -15,16 +15,13 @@ export type CompletionModelArgs = SetOptional<
   'client' | 'params'
 >;
 
-export class CompletionModel
-  extends AbstractModel<
-    Model.Completion.Client,
-    Model.Completion.Config,
-    Model.Completion.Run,
-    Model.Completion.Response,
-    Model.Completion.ApiResponse
-  >
-  implements Model.Completion.IModel
-{
+export class CompletionModel extends AbstractModel<
+  Model.Completion.Client,
+  Model.Completion.Config,
+  Model.Completion.Run,
+  Model.Completion.Response,
+  Model.Completion.ApiResponse
+> {
   modelType = 'completion' as const;
   modelProvider = 'openai' as const;
 
