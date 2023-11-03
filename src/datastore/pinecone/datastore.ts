@@ -134,14 +134,18 @@ export class Datastore<DocMeta extends Dstore.BaseMeta>
         })),
       });
     } catch (error) {
-      this.hooks?.onError?.forEach((hook) =>
-        hook({
-          timestamp: new Date().toISOString(),
-          datastoreType: this.datastoreType,
-          datastoreProvider: this.datastoreProvider,
-          error,
-          context: mergedContext,
-        })
+      await Promise.allSettled(
+        this.events?.onError?.map((event) =>
+          Promise.resolve(
+            event({
+              timestamp: new Date().toISOString(),
+              datastoreType: this.datastoreType,
+              datastoreProvider: this.datastoreProvider,
+              error,
+              context: mergedContext,
+            })
+          )
+        ) ?? []
       );
       throw error;
     }

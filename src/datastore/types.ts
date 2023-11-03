@@ -37,9 +37,9 @@ export namespace Dstore {
   }
 
   /**
-   * Hooks for logging and debugging
+   * Event handlers for logging and debugging
    */
-  export interface Hooks<
+  export interface Events<
     DocMeta extends BaseMeta,
     Filter extends BaseFilter<DocMeta>
   > {
@@ -107,7 +107,7 @@ export namespace Dstore {
     namespace: string;
     embeddingModel: Model.Embedding.IModel;
     cache?: Cache<DocMeta, Filter>;
-    hooks?: Hooks<DocMeta, Filter>;
+    events?: Events<DocMeta, Filter>;
     context?: Ctx;
     debug?: boolean;
   }

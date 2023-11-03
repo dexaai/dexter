@@ -55,27 +55,27 @@ describe('ChatModel', () => {
     expect(response).toEqual(FAKE_RESPONSE);
   });
 
-  it('triggers hooks', async () => {
-    const startHook = vi.fn();
-    const apiResponseHook = vi.fn();
-    const completeHook = vi.fn();
+  it('triggers events', async () => {
+    const startEvent = vi.fn();
+    const apiResponseEvent = vi.fn();
+    const completeEvent = vi.fn();
     const chatModel = new ChatModel({
       client: Client,
       params: { model: 'gpt-fake' },
-      hooks: {
-        onStart: [startHook],
-        onApiResponse: [apiResponseHook],
-        onComplete: [completeHook],
+      events: {
+        onStart: [startEvent],
+        onApiResponse: [apiResponseEvent],
+        onComplete: [completeEvent],
       },
       context: { userId: '123' },
     });
     await chatModel.run({
       messages: [{ role: 'user', content: 'content' }],
     });
-    expect(startHook).toHaveBeenCalledOnce();
-    expect(apiResponseHook).toHaveBeenCalledOnce();
-    expect(completeHook).toHaveBeenCalledOnce();
-    expect(apiResponseHook).toHaveBeenCalledWith({
+    expect(startEvent).toHaveBeenCalledOnce();
+    expect(apiResponseEvent).toHaveBeenCalledOnce();
+    expect(completeEvent).toHaveBeenCalledOnce();
+    expect(apiResponseEvent).toHaveBeenCalledWith({
       timestamp: new Date().toISOString(),
       modelType: 'chat',
       modelProvider: 'openai',
@@ -94,12 +94,12 @@ describe('ChatModel', () => {
       client: Client,
       context: { userId: '123' },
       params: { model: 'gpt-fake' },
-      hooks: { onApiResponse: [() => {}] },
+      events: { onApiResponse: [() => {}] },
     });
     const clonedModel = chatModel.clone({
       context: { cloned: true },
       params: { model: 'gpt-fake-cloned' },
-      hooks: { onApiResponse: [() => {}] },
+      events: { onApiResponse: [() => {}] },
     });
     expect(clonedModel.getContext()).toEqual({
       userId: '123',
@@ -108,33 +108,36 @@ describe('ChatModel', () => {
     expect(clonedModel.getParams()).toEqual({
       model: 'gpt-fake-cloned',
     });
-    expect(clonedModel.getHooks()?.onApiResponse?.length).toBe(2);
+    expect(clonedModel.getEvents()?.onApiResponse?.length).toBe(2);
   });
 
   it('can cache responses', async () => {
-    const apiResponseHook = vi.fn();
-    const completeHook = vi.fn();
+    const apiResponseEvent = vi.fn();
+    const completeEvent = vi.fn();
     const chatModel = new ChatModel({
       cache: getMemoryCache(),
       client: Client,
       params: { model: 'gpt-fake' },
-      hooks: { onApiResponse: [apiResponseHook], onComplete: [completeHook] },
+      events: {
+        onApiResponse: [apiResponseEvent],
+        onComplete: [completeEvent],
+      },
       context: { userId: '123' },
     });
     await chatModel.run({
       messages: [{ role: 'user', content: 'content' }],
     });
-    expect(apiResponseHook).toHaveBeenCalledOnce();
-    expect(completeHook).toHaveBeenCalledOnce();
+    expect(apiResponseEvent).toHaveBeenCalledOnce();
+    expect(completeEvent).toHaveBeenCalledOnce();
     expect(Client.createChatCompletion).toHaveBeenCalledOnce();
     // Make the same request that should be cached
     await chatModel.run({
       messages: [{ role: 'user', content: 'content' }],
     });
-    // onApiResponse hook isn't triggered for cached responses
-    expect(apiResponseHook).toHaveBeenCalledOnce();
+    // onApiResponse event isn't triggered for cached responses
+    expect(apiResponseEvent).toHaveBeenCalledOnce();
     // onComplete is called for cached responses
-    expect(completeHook).toHaveBeenCalledTimes(2);
+    expect(completeEvent).toHaveBeenCalledTimes(2);
     expect(Client.createChatCompletion).toHaveBeenCalledOnce();
   });
 });

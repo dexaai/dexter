@@ -85,16 +85,20 @@ export class SparseVectorModel
     // Don't need tokens for this model
     const tokens = { prompt: 0, completion: 0, total: 0 } as const;
     const { input, model } = params;
-    this.hooks?.onApiResponse?.forEach((hook) =>
-      hook({
-        timestamp: new Date().toISOString(),
-        modelType: this.modelType,
-        modelProvider: this.modelProvider,
-        params: { input: [input], model },
-        response: vector,
-        latency,
-        context,
-      })
+    await Promise.allSettled(
+      this.events?.onApiResponse?.map((event) =>
+        Promise.resolve(
+          event({
+            timestamp: new Date().toISOString(),
+            modelType: this.modelType,
+            modelProvider: this.modelProvider,
+            params: { input: [input], model },
+            response: vector,
+            latency,
+            context,
+          })
+        )
+      ) ?? []
     );
 
     return { vector, tokens };
@@ -102,14 +106,14 @@ export class SparseVectorModel
 
   /** Clone the model and merge/orverride the given properties. */
   clone(args?: SparseVectorModelArgs): this {
-    const { cache, context, debug, params, hooks } = args ?? {};
+    const { cache, context, debug, params, events } = args ?? {};
     // @ts-ignore
     return new SparseVectorModel({
       cache: cache || this.cache,
       context: this.mergeContext(this.context, context),
       debug: debug || this.debug,
       params: this.mergeParams(this.params, params ?? {}),
-      hooks: this.mergeHooks(this.hooks, hooks || {}),
+      events: this.mergeEvents(this.events, events || {}),
     });
   }
 }

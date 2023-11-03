@@ -48,50 +48,50 @@ describe('AbstractModel', () => {
     });
   });
 
-  it('triggers onStart hooks', async () => {
-    const startHook = vi.fn();
-    const startHook2 = vi.fn();
+  it('triggers onStart events', async () => {
+    const startEvent = vi.fn();
+    const startEvent2 = vi.fn();
     const test = new Test({
       params: { model: 'testmodel' },
       client: false,
-      hooks: {
-        onStart: [startHook, startHook2],
+      events: {
+        onStart: [startEvent, startEvent2],
       },
     });
     await test.run({ input: 'fooin' });
-    expect(startHook).toHaveBeenCalledOnce();
-    expect(startHook2).toHaveBeenCalledOnce();
+    expect(startEvent).toHaveBeenCalledOnce();
+    expect(startEvent2).toHaveBeenCalledOnce();
   });
 
-  it('triggers onError hook', async () => {
-    const errorHook = vi.fn();
+  it('triggers onError event', async () => {
+    const errorEvent = vi.fn();
     const test = new Test({
       params: { model: 'testmodel' },
       client: false,
-      hooks: { onError: [errorHook] },
+      events: { onError: [errorEvent] },
     });
     try {
       await test.run({ input: 'throw error' });
     } catch (e) {}
-    expect(errorHook).toHaveBeenCalledOnce();
+    expect(errorEvent).toHaveBeenCalledOnce();
   });
 
   it('can cache responses', async () => {
-    const completeHook = vi.fn();
+    const completeEvent = vi.fn();
     const testModel = new Test({
       client: false,
       cache: getMemoryCache(),
       params: { model: 'gpt-fake' },
-      hooks: { onComplete: [completeHook] },
+      events: { onComplete: [completeEvent] },
       context: { userId: '123' },
     });
     await testModel.run({ input: 'foo' });
-    expect(completeHook).toHaveBeenCalledOnce();
-    expect(completeHook.mock.lastCall[0].cached).toBe(false);
+    expect(completeEvent).toHaveBeenCalledOnce();
+    expect(completeEvent.mock.lastCall[0].cached).toBe(false);
     // Make the same request that should be cached
     await testModel.run({ input: 'foo' });
     // onComplete is called for cached responses
-    expect(completeHook).toHaveBeenCalledTimes(2);
-    expect(completeHook.mock.lastCall[0].cached).toBe(true);
+    expect(completeEvent).toHaveBeenCalledTimes(2);
+    expect(completeEvent.mock.lastCall[0].cached).toBe(true);
   });
 });

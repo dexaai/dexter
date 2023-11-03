@@ -46,25 +46,25 @@ describe('EmbeddingModel', () => {
     expect(response).toEqual(FAKE_RESPONSE);
   });
 
-  it('triggers hooks', async () => {
-    const startHook = vi.fn();
-    const apiResponseHook = vi.fn();
-    const completeHook = vi.fn();
+  it('triggers events', async () => {
+    const startEvent = vi.fn();
+    const apiResponseEvent = vi.fn();
+    const completeEvent = vi.fn();
     const model = new EmbeddingModel({
       client: Client,
       params: { model: 'gpt-fake' },
-      hooks: {
-        onStart: [startHook],
-        onApiResponse: [apiResponseHook],
-        onComplete: [completeHook],
+      events: {
+        onStart: [startEvent],
+        onApiResponse: [apiResponseEvent],
+        onComplete: [completeEvent],
       },
       context: { userId: '123' },
     });
     await model.run({ input: ['foo'] });
-    expect(startHook).toHaveBeenCalledOnce();
-    expect(apiResponseHook).toHaveBeenCalledOnce();
-    expect(completeHook).toHaveBeenCalledOnce();
-    expect(apiResponseHook).toHaveBeenCalledWith({
+    expect(startEvent).toHaveBeenCalledOnce();
+    expect(apiResponseEvent).toHaveBeenCalledOnce();
+    expect(completeEvent).toHaveBeenCalledOnce();
+    expect(apiResponseEvent).toHaveBeenCalledWith({
       timestamp: new Date().toISOString(),
       modelType: 'embedding',
       modelProvider: 'openai',
@@ -83,12 +83,12 @@ describe('EmbeddingModel', () => {
       client: Client,
       context: { userId: '123' },
       params: { model: 'gpt-fake' },
-      hooks: { onApiResponse: [() => {}] },
+      events: { onApiResponse: [() => {}] },
     });
     const clonedModel = model.clone({
       context: { cloned: true },
       params: { model: 'gpt-fake-cloned' },
-      hooks: { onApiResponse: [() => {}] },
+      events: { onApiResponse: [() => {}] },
     });
     expect(clonedModel.getContext()).toEqual({
       userId: '123',
@@ -97,29 +97,32 @@ describe('EmbeddingModel', () => {
     expect(clonedModel.getParams()).toEqual({
       model: 'gpt-fake-cloned',
     });
-    expect(clonedModel.getHooks()?.onApiResponse?.length).toBe(2);
+    expect(clonedModel.getEvents()?.onApiResponse?.length).toBe(2);
   });
 
   it('can cache responses', async () => {
-    const apiResponseHook = vi.fn();
-    const completeHook = vi.fn();
+    const apiResponseEvent = vi.fn();
+    const completeEvent = vi.fn();
     const model = new EmbeddingModel({
       cache: getMemoryCache(),
       client: Client,
       params: { model: 'gpt-fake' },
-      hooks: { onApiResponse: [apiResponseHook], onComplete: [completeHook] },
+      events: {
+        onApiResponse: [apiResponseEvent],
+        onComplete: [completeEvent],
+      },
       context: { userId: '123' },
     });
     await model.run({ input: ['foo'] });
-    expect(apiResponseHook).toHaveBeenCalledOnce();
-    expect(completeHook).toHaveBeenCalledOnce();
+    expect(apiResponseEvent).toHaveBeenCalledOnce();
+    expect(completeEvent).toHaveBeenCalledOnce();
     expect(Client.createEmbeddings).toHaveBeenCalledOnce();
     // Make the same request that should be cached
     await model.run({ input: ['foo'] });
-    // onApiResponse hook isn't triggered for cached responses
-    expect(apiResponseHook).toHaveBeenCalledOnce();
+    // onApiResponse event isn't triggered for cached responses
+    expect(apiResponseEvent).toHaveBeenCalledOnce();
     // onComplete is called for cached responses
-    expect(completeHook).toHaveBeenCalledTimes(2);
+    expect(completeEvent).toHaveBeenCalledTimes(2);
     expect(Client.createEmbeddings).toHaveBeenCalledOnce();
   });
 });

@@ -25,7 +25,7 @@ export abstract class AbstractDatastore<
   protected contentKey: keyof DocMeta;
   protected embeddingModel: Model.Embedding.IModel;
   protected cache?: Dstore.Cache<DocMeta, Filter>;
-  protected hooks: Dstore.Hooks<DocMeta, Filter>;
+  protected events: Dstore.Events<DocMeta, Filter>;
   protected context: Dstore.Ctx;
 
   constructor(args: Dstore.Opts<DocMeta, Filter>) {
@@ -34,9 +34,9 @@ export abstract class AbstractDatastore<
     this.embeddingModel = args.embeddingModel;
     this.cache = args.cache;
     this.context = args.context ?? {};
-    this.hooks = args.hooks ?? {};
+    this.events = args.events ?? {};
     if (args.debug) {
-      this.mergeHooks(args.hooks ?? {}, {
+      this.mergeEvents(args.events ?? {}, {
         onQueryStart: [console.debug],
         onQueryComplete: [console.debug],
         onError: [console.error],
@@ -51,30 +51,38 @@ export abstract class AbstractDatastore<
     const start = Date.now();
     const mergedContext = { ...this.context, ...context };
 
-    this.hooks?.onQueryStart?.forEach((hook) =>
-      hook({
-        timestamp: new Date().toISOString(),
-        datastoreType: this.datastoreType,
-        datastoreProvider: this.datastoreProvider,
-        query,
-        context: mergedContext,
-      })
+    await Promise.allSettled(
+      this.events?.onQueryStart?.map((event) =>
+        Promise.resolve(
+          event({
+            timestamp: new Date().toISOString(),
+            datastoreType: this.datastoreType,
+            datastoreProvider: this.datastoreProvider,
+            query,
+            context: mergedContext,
+          })
+        )
+      ) ?? []
     );
 
     // Return cached response if available
     const cached = await this?.cache?.get(query);
     if (cached) {
-      this.hooks?.onQueryComplete?.forEach((hook) =>
-        hook({
-          timestamp: new Date().toISOString(),
-          datastoreType: this.datastoreType,
-          datastoreProvider: this.datastoreProvider,
-          query,
-          response: cached,
-          cached: true,
-          context: mergedContext,
-          latency: Date.now() - start,
-        })
+      await Promise.allSettled(
+        this.events?.onQueryComplete?.map((event) =>
+          Promise.resolve(
+            event({
+              timestamp: new Date().toISOString(),
+              datastoreType: this.datastoreType,
+              datastoreProvider: this.datastoreProvider,
+              query,
+              response: cached,
+              cached: true,
+              context: mergedContext,
+              latency: Date.now() - start,
+            })
+          )
+        ) ?? []
       );
       return cached;
     }
@@ -83,17 +91,21 @@ export abstract class AbstractDatastore<
       // Run the query
       const response = await this.runQuery(query, context);
 
-      this.hooks?.onQueryComplete?.forEach((hook) =>
-        hook({
-          timestamp: new Date().toISOString(),
-          datastoreType: this.datastoreType,
-          datastoreProvider: this.datastoreProvider,
-          query,
-          response,
-          cached: true,
-          context: mergedContext,
-          latency: Date.now() - start,
-        })
+      await Promise.allSettled(
+        this.events?.onQueryComplete?.map((event) =>
+          Promise.resolve(
+            event({
+              timestamp: new Date().toISOString(),
+              datastoreType: this.datastoreType,
+              datastoreProvider: this.datastoreProvider,
+              query,
+              response,
+              cached: true,
+              context: mergedContext,
+              latency: Date.now() - start,
+            })
+          )
+        ) ?? []
       );
 
       // Update the cache
@@ -101,23 +113,27 @@ export abstract class AbstractDatastore<
 
       return response;
     } catch (error) {
-      this.hooks?.onError?.forEach((hook) =>
-        hook({
-          timestamp: new Date().toISOString(),
-          datastoreType: this.datastoreType,
-          datastoreProvider: this.datastoreProvider,
-          error,
-          context: mergedContext,
-        })
+      await Promise.allSettled(
+        this.events?.onError?.map((event) =>
+          Promise.resolve(
+            event({
+              timestamp: new Date().toISOString(),
+              datastoreType: this.datastoreType,
+              datastoreProvider: this.datastoreProvider,
+              error,
+              context: mergedContext,
+            })
+          )
+        ) ?? []
       );
       throw error;
     }
   }
 
-  protected mergeHooks(
-    existingHooks: typeof this.hooks,
-    newHooks: typeof this.hooks
-  ): typeof this.hooks {
-    return deepMerge(existingHooks, newHooks);
+  protected mergeEvents(
+    existingEvents: typeof this.events,
+    newEvents: typeof this.events
+  ): typeof this.events {
+    return deepMerge(existingEvents, newEvents);
   }
 }

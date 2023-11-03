@@ -164,9 +164,9 @@ export namespace Model {
   }
 
   /**
-   * Hooks for logging and debugging
+   * Event handlers for logging and debugging
    */
-  export interface Hooks<
+  export interface Events<
     MParams extends Base.Params,
     MResponse extends Base.Response,
     AResponse extends any = any

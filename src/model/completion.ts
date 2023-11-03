@@ -46,16 +46,20 @@ export class CompletionModel
     // Make the OpenAI API request
     const response = await this.client.createCompletions(params);
 
-    this.hooks?.onApiResponse?.forEach((hook) =>
-      hook({
-        timestamp: new Date().toISOString(),
-        modelType: this.modelType,
-        modelProvider: this.modelProvider,
-        params,
-        response,
-        latency: Date.now() - start,
-        context,
-      })
+    await Promise.allSettled(
+      this.events?.onApiResponse?.map((event) =>
+        Promise.resolve(
+          event({
+            timestamp: new Date().toISOString(),
+            modelType: this.modelType,
+            modelProvider: this.modelProvider,
+            params,
+            response,
+            latency: Date.now() - start,
+            context,
+          })
+        )
+      ) ?? []
     );
 
     const modelResponse: Model.Completion.Response = {
@@ -70,7 +74,7 @@ export class CompletionModel
 
   /** Clone the model and merge/orverride the given properties. */
   clone(args?: CompletionModelArgs): this {
-    const { cache, client, context, debug, params, hooks } = args ?? {};
+    const { cache, client, context, debug, params, events } = args ?? {};
     // @ts-ignore
     return new CompletionModel({
       cache: cache || this.cache,
@@ -78,7 +82,7 @@ export class CompletionModel
       context: this.mergeContext(this.context, context),
       debug: debug || this.debug,
       params: this.mergeParams(this.params, params ?? {}),
-      hooks: this.mergeHooks(this.hooks, hooks || {}),
+      events: this.mergeEvents(this.events, events || {}),
     });
   }
 }
