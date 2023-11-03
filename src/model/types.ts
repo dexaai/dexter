@@ -7,8 +7,8 @@ import type {
   CompletionResponse,
   EmbeddingParams,
   EmbeddingResponse,
+  OpenAIClient,
 } from 'openai-fetch';
-import type { OpenAIClient } from 'openai-fetch';
 import type { AbstractModel } from './model.js';
 import type { ChatModel } from './chat.js';
 import type { CompletionModel } from './completion.js';
