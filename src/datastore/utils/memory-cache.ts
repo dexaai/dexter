@@ -1,7 +1,7 @@
 import type { Dstore } from '../types.js';
 
 /** A simple in-memory cache for model responses */
-export function getMemoryCache<
+export function getDatastoreMemoryCache<
   DocMeta extends Dstore.BaseMeta,
   Filter extends Dstore.BaseFilter<DocMeta>
 >() {

@@ -2,7 +2,7 @@ import { PineconeClient } from 'pinecone-client';
 import { describe, expect, it } from 'vitest';
 import { SparseVectorModel } from '../../model/index.js';
 import { EmbeddingModel } from '../../model/index.js';
-import { getMemoryCache } from '../index.js';
+import { getDatastoreMemoryCache } from '../index.js';
 import { Datastore } from './datastore.js';
 import { HybridDatastore } from './hybrid-datastore.js';
 
@@ -317,7 +317,7 @@ describe('HybridDatastore', () => {
       embeddingModel,
       spladeModel,
       pinecone: pineconeClient,
-      cache: getMemoryCache(),
+      cache: getDatastoreMemoryCache(),
     });
     await datastore.query({ query: 'test' });
     expect(pineconeClient.query).toHaveBeenCalledOnce();

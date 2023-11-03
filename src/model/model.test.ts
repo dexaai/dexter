@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { AbstractModel } from './model.js';
 import type { Model } from './types.js';
-import { getMemoryCache } from './utils/memory-cache.js';
+import { getModelMemoryCache } from './utils/memory-cache.js';
 
 /** Simple class for testing */
 class Test extends AbstractModel<
@@ -80,7 +80,7 @@ describe('AbstractModel', () => {
     const completeEvent = vi.fn();
     const testModel = new Test({
       client: false,
-      cache: getMemoryCache(),
+      cache: getModelMemoryCache(),
       params: { model: 'gpt-fake' },
       events: { onComplete: [completeEvent] },
       context: { userId: '123' },

@@ -1,7 +1,7 @@
 import type { Model } from '../types.js';
 
 /** A simple in-memory cache for model responses */
-export function getMemoryCache<
+export function getModelMemoryCache<
   Config extends Model.Base.Config,
   Response extends Model.Base.Response
 >() {

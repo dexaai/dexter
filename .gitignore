@@ -16,3 +16,5 @@ todo.md
 .env.local
 .local-files
 .vscode
+.next
+.vercel

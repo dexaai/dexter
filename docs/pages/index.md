@@ -5,10 +5,6 @@
   <a href="https://prettier.io"><img alt="Prettier Code Formatting" src="https://img.shields.io/badge/code_style-prettier-brightgreen.svg" /></a>
 </p>
 
-# LLM Tools
+## Intro
 
 TODO
-
-## License
-
-This project is licensed under MIT © [Dexa AI](https://dexa.ai).
