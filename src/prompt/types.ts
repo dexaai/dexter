@@ -2,7 +2,7 @@ import type { z } from 'zod';
 
 export namespace Prompt {
   /**
-   * A prompt chain that cooredinates the template, functions, and validator.
+   * A prompt chain that coordinates the template, functions, and validator.
    */
   export type Chain<Args extends Record<string, any>, Result extends any> = (
     args: Args
