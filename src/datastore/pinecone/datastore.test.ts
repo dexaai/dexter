@@ -1,5 +1,5 @@
 import { PineconeClient } from 'pinecone-client';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { SparseVectorModel } from '../../model/index.js';
 import { EmbeddingModel } from '../../model/index.js';
 import { getDatastoreMemoryCache } from '../index.js';

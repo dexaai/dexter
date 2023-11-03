@@ -19,8 +19,8 @@
     "test": "run-p test:*",
     "test:lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
     "test:format": "prettier --check \"**/*.{js,ts,tsx}\"",
-    "test:unit": "vitest --run",
-    "typecheck": "tsc --noEmit"
+    "test:unit": "dotenv -e .env.example -- vitest",
+    "test:typecheck": "tsc --noEmit"
   },
   "sideEffects": false,
   "files": [
@@ -69,6 +69,7 @@
   "devDependencies": {
     "@dexaai/eslint-config": "^0.4.0",
     "@types/node": "^20.5.9",
+    "dotenv-cli": "^7.3.0",
     "eslint": "^8.48.0",
     "globby": "^13.2.2",
     "np": "^8.0.4",

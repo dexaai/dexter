@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import type { Model } from './types.js';
 import { getModelMemoryCache } from './utils/memory-cache.js';
 import { ChatModel } from './chat.js';
