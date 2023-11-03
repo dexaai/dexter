@@ -6,12 +6,12 @@
   "repository": "dexaai/llm-tools",
   "scripts": {
     "build": "rm -rf dist && tsc --project tsconfig.dist.json",
-    "clean": "rm -rf .turbo node_modules dist",
+    "clean": "rm -rf node_modules dist",
     "dev": "tsc --watch",
     "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
     "prepare": "npm run build",
     "release": "np",
-    "test": "vitest",
+    "test": "dotenv -e .env.example -- vitest",
     "typecheck": "tsc --noEmit"
   },
   "sideEffects": false,
@@ -62,6 +62,7 @@
   "devDependencies": {
     "@dexaai/eslint-config": "^0.4.0",
     "@types/node": "^20.5.9",
+    "dotenv-cli": "^7.3.0",
     "eslint": "^8.48.0",
     "np": "^8.0.4",
     "type-fest": "4.3.1",
