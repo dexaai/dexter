@@ -2,7 +2,7 @@ import type { SetOptional } from 'type-fest';
 import type { ModelArgs } from './model.js';
 import type { Model } from './types.js';
 import { calculateCost } from './utils/calculate-cost.js';
-import { createOpenAiClient } from './clients/openai.js';
+import { createOpenAIClient } from './clients/openai.js';
 import { AbstractModel } from './model.js';
 
 export type CompletionModelArgs = SetOptional<
@@ -28,7 +28,7 @@ export class CompletionModel extends AbstractModel<
   constructor(args?: CompletionModelArgs) {
     let { client, params, ...rest } = args ?? {};
     // Add a default client if none is provided
-    client = client ?? createOpenAiClient();
+    client = client ?? createOpenAIClient();
     // Set default model if no params are provided
     params = params ?? { model: 'gpt-3.5-turbo-instruct' };
     super({ client, params, ...rest });

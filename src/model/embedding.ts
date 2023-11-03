@@ -4,7 +4,7 @@ import type { SetOptional } from 'type-fest';
 import type { ModelArgs } from './model.js';
 import type { Model } from './types.js';
 import { calculateCost } from './utils/calculate-cost.js';
-import { createOpenAiClient } from './clients/openai.js';
+import { createOpenAIClient } from './clients/openai.js';
 import { AbstractModel } from './model.js';
 import { deepMerge } from './utils/helpers.js';
 
@@ -46,7 +46,7 @@ export class EmbeddingModel extends AbstractModel<
   /** Doesn't accept OpenAIClient because retry needs to be handled at the model level. */
   constructor(args?: EmbeddingModelArgs) {
     let { client, params, ...rest } = args || {};
-    client = client || createOpenAiClient();
+    client = client || createOpenAIClient();
     params = params || { model: 'text-embedding-ada-002' };
     super({ client, params, ...rest });
     const interval = DEFAULTS.throttleInterval;

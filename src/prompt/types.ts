@@ -23,7 +23,7 @@ export namespace Prompt {
   /**
    * A function meant to be used with OpenAI function calling.
    */
-  export interface AiFunction<
+  export interface AIFunction<
     Schema extends z.ZodObject<any> = z.ZodObject<any>,
     Return extends any = any
   > {

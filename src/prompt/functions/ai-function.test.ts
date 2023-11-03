@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { z } from 'zod';
-import { createAiFunction } from './ai-function.js';
+import { createAIFunction } from './ai-function.js';
 
-const fullName = createAiFunction(
+const fullName = createAIFunction(
   {
     name: 'fullName',
     description: 'Returns the full name of a person.',
@@ -16,7 +16,7 @@ const fullName = createAiFunction(
   }
 );
 
-describe('createAiFunction()', () => {
+describe('createAIFunction()', () => {
   it('exposes OpenAI function calling spec', () => {
     expect(fullName.spec.name).toEqual('fullName');
     expect(fullName.spec.description).toEqual(
