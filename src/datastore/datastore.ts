@@ -1,33 +1,33 @@
 import type { Model } from '../model/index.js';
-import type { Dstore } from './types.js';
+import type { Datastore } from './types.js';
 import { deepMerge } from './utils/helpers.js';
 
 export abstract class AbstractDatastore<
-  DocMeta extends Dstore.BaseMeta,
-  Filter extends Dstore.BaseFilter<DocMeta>
+  DocMeta extends Datastore.BaseMeta,
+  Filter extends Datastore.BaseFilter<DocMeta>
 > {
   protected abstract runQuery(
-    query: Dstore.Query<DocMeta, Filter>,
-    context?: Dstore.Ctx
-  ): Promise<Dstore.QueryResult<DocMeta>>;
+    query: Datastore.Query<DocMeta, Filter>,
+    context?: Datastore.Ctx
+  ): Promise<Datastore.QueryResult<DocMeta>>;
   abstract upsert(
-    docs: Dstore.Doc<DocMeta>[],
-    context?: Dstore.Ctx
+    docs: Datastore.Doc<DocMeta>[],
+    context?: Datastore.Ctx
   ): Promise<void>;
   abstract delete(docIds: string[]): Promise<void>;
   abstract deleteAll(): Promise<void>;
 
-  abstract datastoreType: Dstore.Type;
-  abstract datastoreProvider: Dstore.Provider;
+  abstract datastoreType: Datastore.Type;
+  abstract datastoreProvider: Datastore.Provider;
 
   protected namespace: string;
   protected contentKey: keyof DocMeta;
   protected embeddingModel: Model.Embedding.Model;
-  protected cache?: Dstore.Cache<DocMeta, Filter>;
-  protected events: Dstore.Events<DocMeta, Filter>;
-  protected context: Dstore.Ctx;
+  protected cache?: Datastore.Cache<DocMeta, Filter>;
+  protected events: Datastore.Events<DocMeta, Filter>;
+  protected context: Datastore.Ctx;
 
-  constructor(args: Dstore.Opts<DocMeta, Filter>) {
+  constructor(args: Datastore.Opts<DocMeta, Filter>) {
     this.namespace = args.namespace;
     this.contentKey = args.contentKey;
     this.embeddingModel = args.embeddingModel;
@@ -44,9 +44,9 @@ export abstract class AbstractDatastore<
   }
 
   async query(
-    query: Dstore.Query<DocMeta, Filter>,
-    context?: Dstore.Ctx
-  ): Promise<Dstore.QueryResult<DocMeta>> {
+    query: Datastore.Query<DocMeta, Filter>,
+    context?: Datastore.Ctx
+  ): Promise<Datastore.QueryResult<DocMeta>> {
     const start = Date.now();
     const mergedContext = { ...this.context, ...context };
 

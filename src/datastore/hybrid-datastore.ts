@@ -1,14 +1,14 @@
 import type { Model } from '../model/index.js';
 import { AbstractDatastore } from './datastore.js';
-import type { Dstore } from './types.js';
+import type { Datastore } from './types.js';
 
 export abstract class AbstractHybridDatastore<
-  DocMeta extends Dstore.BaseMeta,
-  Filter extends Dstore.BaseFilter<DocMeta>
+  DocMeta extends Datastore.BaseMeta,
+  Filter extends Datastore.BaseFilter<DocMeta>
 > extends AbstractDatastore<DocMeta, Filter> {
   protected spladeModel: Model.SparseVector.Model;
 
-  constructor(args: Dstore.OptsHybrid<DocMeta, Filter>) {
+  constructor(args: Datastore.OptsHybrid<DocMeta, Filter>) {
     const { spladeModel, ...rest } = args;
     super(rest);
     this.spladeModel = args.spladeModel;

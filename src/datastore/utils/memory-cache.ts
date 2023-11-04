@@ -1,13 +1,13 @@
-import type { Dstore } from '../types.js';
+import type { Datastore } from '../types.js';
 
 /** A simple in-memory cache for model responses */
 export function getDatastoreMemoryCache<
-  DocMeta extends Dstore.BaseMeta,
-  Filter extends Dstore.BaseFilter<DocMeta>
+  DocMeta extends Datastore.BaseMeta,
+  Filter extends Datastore.BaseFilter<DocMeta>
 >() {
-  const cache = new Map<string, Dstore.QueryResult<DocMeta>>();
+  const cache = new Map<string, Datastore.QueryResult<DocMeta>>();
 
-  const MemoryCache: Dstore.Cache<DocMeta, Filter> = {
+  const MemoryCache: Datastore.Cache<DocMeta, Filter> = {
     get: async (params) => {
       const key = JSON.stringify(params);
       const cachedResponse = cache.get(key);

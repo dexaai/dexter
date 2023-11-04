@@ -1,11 +1,11 @@
 import { AbstractDatastore } from '../datastore.js';
-import type { Dstore, Prettify } from '../types.js';
+import type { Datastore, Prettify } from '../types.js';
 import type { PineconeClient } from './client.js';
 import { createPineconeClient } from './client.js';
 import type { Pinecone } from './types.js';
 
 export class PineconeDatastore<
-  DocMeta extends Dstore.BaseMeta
+  DocMeta extends Datastore.BaseMeta
 > extends AbstractDatastore<DocMeta, Pinecone.QueryFilter<DocMeta>> {
   datastoreType = 'embedding' as const;
   datastoreProvider = 'pinecone' as const;
@@ -13,7 +13,7 @@ export class PineconeDatastore<
 
   constructor(
     args: Prettify<
-      Dstore.Opts<DocMeta, Pinecone.QueryFilter<DocMeta>> & {
+      Datastore.Opts<DocMeta, Pinecone.QueryFilter<DocMeta>> & {
         pinecone?: PineconeClient<DocMeta>;
       }
     >
@@ -28,9 +28,9 @@ export class PineconeDatastore<
   }
 
   async runQuery(
-    query: Dstore.Query<DocMeta, Pinecone.QueryFilter<DocMeta>>,
-    context?: Dstore.Ctx
-  ): Promise<Dstore.QueryResult<DocMeta>> {
+    query: Datastore.Query<DocMeta, Pinecone.QueryFilter<DocMeta>>,
+    context?: Datastore.Ctx
+  ): Promise<Datastore.QueryResult<DocMeta>> {
     const mergedContext = { ...this.context, ...context };
 
     // Get the query embedding
@@ -63,7 +63,7 @@ export class PineconeDatastore<
       vector: queryEmbedding,
     });
 
-    const queryResult: Dstore.QueryResult<DocMeta> = {
+    const queryResult: Datastore.QueryResult<DocMeta> = {
       query: query.query,
       docs: response.matches,
     };
@@ -72,8 +72,8 @@ export class PineconeDatastore<
   }
 
   async upsert(
-    docs: Dstore.Doc<DocMeta>[],
-    context?: Dstore.Ctx
+    docs: Datastore.Doc<DocMeta>[],
+    context?: Datastore.Ctx
   ): Promise<void> {
     const mergedContext = { ...this.context, ...context };
     try {

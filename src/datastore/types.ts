@@ -7,7 +7,7 @@ export type Prettify<T> = { [K in keyof T]: T[K] } & {};
 /**
  * Generic Datastore extended by provider-specific implementations.
  */
-export namespace Dstore {
+export namespace Datastore {
   /** Base document metadata to be extended */
   export type BaseMeta = {};
 
@@ -71,7 +71,7 @@ export namespace Dstore {
   }
 
   /**
-   * Datastore interface implemented by provider specific implementations.
+   * Abstract Datastore extended by provider specific implementations.
    */
   export type Datastore<
     DocMeta extends BaseMeta,

@@ -1,12 +1,12 @@
 import type { Model } from '../../model/index.js';
 import { AbstractHybridDatastore } from '../hybrid-datastore.js';
-import type { Dstore, Prettify } from '../types.js';
+import type { Datastore, Prettify } from '../types.js';
 import type { PineconeClient } from './client.js';
 import { createPineconeClient } from './client.js';
 import type { Pinecone } from './types.js';
 
 export class PineconeHybridDatastore<
-  DocMeta extends Dstore.BaseMeta
+  DocMeta extends Datastore.BaseMeta
 > extends AbstractHybridDatastore<DocMeta, Pinecone.QueryFilter<DocMeta>> {
   datastoreType = 'hybrid' as const;
   datastoreProvider = 'pinecone' as const;
@@ -14,7 +14,7 @@ export class PineconeHybridDatastore<
 
   constructor(
     args: Prettify<
-      Dstore.OptsHybrid<DocMeta, Pinecone.QueryFilter<DocMeta>> & {
+      Datastore.OptsHybrid<DocMeta, Pinecone.QueryFilter<DocMeta>> & {
         pinecone?: PineconeClient<DocMeta>;
       }
     >
@@ -29,9 +29,9 @@ export class PineconeHybridDatastore<
   }
 
   async runQuery(
-    query: Dstore.Query<DocMeta, Pinecone.QueryFilter<DocMeta>>,
-    context?: Dstore.Ctx
-  ): Promise<Dstore.QueryResult<DocMeta>> {
+    query: Datastore.Query<DocMeta, Pinecone.QueryFilter<DocMeta>>,
+    context?: Datastore.Ctx
+  ): Promise<Datastore.QueryResult<DocMeta>> {
     const mergedContext = { ...this.context, ...context };
 
     // Get the query embedding and sparse vector
@@ -78,7 +78,7 @@ export class PineconeHybridDatastore<
       sparseVector: sparseVector,
     });
 
-    const queryResult: Dstore.QueryResult<DocMeta> = {
+    const queryResult: Datastore.QueryResult<DocMeta> = {
       query: query.query,
       docs: response.matches,
     };
@@ -87,8 +87,8 @@ export class PineconeHybridDatastore<
   }
 
   async upsert(
-    docs: Dstore.Doc<DocMeta>[],
-    context?: Dstore.Ctx
+    docs: Datastore.Doc<DocMeta>[],
+    context?: Datastore.Ctx
   ): Promise<void> {
     const mergedContext = { ...this.context, ...context };
     try {
