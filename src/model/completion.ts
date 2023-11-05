@@ -2,7 +2,7 @@ import type { SetOptional } from 'type-fest';
 import type { ModelArgs } from './model.js';
 import type { Model } from './types.js';
 import { calculateCost } from './utils/calculate-cost.js';
-import { createOpenAiClient } from './clients/openai.js';
+import { createOpenAIClient } from './clients/openai.js';
 import { AbstractModel } from './model.js';
 
 export type CompletionModelArgs = SetOptional<
@@ -15,23 +15,20 @@ export type CompletionModelArgs = SetOptional<
   'client' | 'params'
 >;
 
-export class CompletionModel
-  extends AbstractModel<
-    Model.Completion.Client,
-    Model.Completion.Config,
-    Model.Completion.Run,
-    Model.Completion.Response,
-    Model.Completion.ApiResponse
-  >
-  implements Model.Completion.IModel
-{
+export class CompletionModel extends AbstractModel<
+  Model.Completion.Client,
+  Model.Completion.Config,
+  Model.Completion.Run,
+  Model.Completion.Response,
+  Model.Completion.ApiResponse
+> {
   modelType = 'completion' as const;
   modelProvider = 'openai' as const;
 
   constructor(args?: CompletionModelArgs) {
     let { client, params, ...rest } = args ?? {};
     // Add a default client if none is provided
-    client = client ?? createOpenAiClient();
+    client = client ?? createOpenAIClient();
     // Set default model if no params are provided
     params = params ?? { model: 'gpt-3.5-turbo-instruct' };
     super({ client, params, ...rest });
@@ -46,16 +43,20 @@ export class CompletionModel
     // Make the OpenAI API request
     const response = await this.client.createCompletions(params);
 
-    this.hooks?.onApiResponse?.forEach((hook) =>
-      hook({
-        timestamp: new Date().toISOString(),
-        modelType: this.modelType,
-        modelProvider: this.modelProvider,
-        params,
-        response,
-        latency: Date.now() - start,
-        context,
-      })
+    await Promise.allSettled(
+      this.events?.onApiResponse?.map((event) =>
+        Promise.resolve(
+          event({
+            timestamp: new Date().toISOString(),
+            modelType: this.modelType,
+            modelProvider: this.modelProvider,
+            params,
+            response,
+            latency: Date.now() - start,
+            context,
+          })
+        )
+      ) ?? []
     );
 
     const modelResponse: Model.Completion.Response = {
@@ -70,7 +71,7 @@ export class CompletionModel
 
   /** Clone the model and merge/orverride the given properties. */
   clone(args?: CompletionModelArgs): this {
-    const { cache, client, context, debug, params, hooks } = args ?? {};
+    const { cache, client, context, debug, params, events } = args ?? {};
     // @ts-ignore
     return new CompletionModel({
       cache: cache || this.cache,
@@ -78,7 +79,7 @@ export class CompletionModel
       context: this.mergeContext(this.context, context),
       debug: debug || this.debug,
       params: this.mergeParams(this.params, params ?? {}),
-      hooks: this.mergeHooks(this.hooks, hooks || {}),
+      events: this.mergeEvents(this.events, events || {}),
     });
   }
 }

@@ -2,7 +2,7 @@ import type { z } from 'zod';
 
 export namespace Prompt {
   /**
-   * A prompt chain that cooredinates the template, functions, and validator.
+   * A prompt chain that coordinates the template, functions, and validator.
    */
   export type Chain<Args extends Record<string, any>, Result extends any> = (
     args: Args
@@ -23,7 +23,7 @@ export namespace Prompt {
   /**
    * A function meant to be used with OpenAI function calling.
    */
-  export interface AiFunction<
+  export interface AIFunction<
     Schema extends z.ZodObject<any> = z.ZodObject<any>,
     Return extends any = any
   > {

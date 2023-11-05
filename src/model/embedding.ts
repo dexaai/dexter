@@ -4,7 +4,7 @@ import type { SetOptional } from 'type-fest';
 import type { ModelArgs } from './model.js';
 import type { Model } from './types.js';
 import { calculateCost } from './utils/calculate-cost.js';
-import { createOpenAiClient } from './clients/openai.js';
+import { createOpenAIClient } from './clients/openai.js';
 import { AbstractModel } from './model.js';
 import { deepMerge } from './utils/helpers.js';
 
@@ -32,16 +32,13 @@ const DEFAULTS = {
   maxRequestsPerMin: 3500,
 } as const;
 
-export class EmbeddingModel
-  extends AbstractModel<
-    Model.Embedding.Client,
-    Model.Embedding.Config,
-    Model.Embedding.Run,
-    Model.Embedding.Response,
-    Model.Embedding.ApiResponse
-  >
-  implements Model.Embedding.IModel
-{
+export class EmbeddingModel extends AbstractModel<
+  Model.Embedding.Client,
+  Model.Embedding.Config,
+  Model.Embedding.Run,
+  Model.Embedding.Response,
+  Model.Embedding.ApiResponse
+> {
   modelType = 'embedding' as const;
   modelProvider = 'openai' as const;
   throttledModel: BulkEmbedder;
@@ -49,7 +46,7 @@ export class EmbeddingModel
   /** Doesn't accept OpenAIClient because retry needs to be handled at the model level. */
   constructor(args?: EmbeddingModelArgs) {
     let { client, params, ...rest } = args || {};
-    client = client || createOpenAiClient();
+    client = client || createOpenAIClient();
     params = params || { model: 'text-embedding-ada-002' };
     super({ client, params, ...rest });
     const interval = DEFAULTS.throttleInterval;
@@ -70,16 +67,20 @@ export class EmbeddingModel
           input: params.input,
         });
 
-        this.hooks?.onApiResponse?.forEach((hook) =>
-          hook({
-            timestamp: new Date().toISOString(),
-            modelType: this.modelType,
-            modelProvider: this.modelProvider,
-            params,
-            response,
-            latency: Date.now() - start,
-            context,
-          })
+        await Promise.allSettled(
+          this.events?.onApiResponse?.map((event) =>
+            Promise.resolve(
+              event({
+                timestamp: new Date().toISOString(),
+                modelType: this.modelType,
+                modelProvider: this.modelProvider,
+                params,
+                response,
+                latency: Date.now() - start,
+                context,
+              })
+            )
+          ) ?? []
         );
 
         const modelResponse: Model.Embedding.Response = {
@@ -150,7 +151,7 @@ export class EmbeddingModel
 
   /** Clone the model and merge/orverride the given properties. */
   clone(args?: EmbeddingModelArgs): this {
-    const { cache, client, context, debug, params, hooks } = args ?? {};
+    const { cache, client, context, debug, params, events } = args ?? {};
     // @ts-ignore
     return new EmbeddingModel({
       cache: cache || this.cache,
@@ -158,7 +159,7 @@ export class EmbeddingModel
       context: this.mergeContext(this.context, context),
       debug: debug || this.debug,
       params: this.mergeParams(this.params, params ?? {}),
-      hooks: this.mergeHooks(this.hooks, hooks || {}),
+      events: this.mergeEvents(this.events, events || {}),
     });
   }
 }

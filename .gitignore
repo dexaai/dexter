@@ -11,6 +11,10 @@ node_modules
 temp
 todo.md
 .env*
+!.env.example
 .dev*
 .env.local
 .local-files
+.vscode
+.next
+.vercel

@@ -13,7 +13,7 @@ export interface ModelArgs<
   client: MClient;
   context?: Model.Ctx;
   params: MConfig & Partial<MRun>;
-  hooks?: Model.Hooks<MRun & MConfig, MResponse>;
+  events?: Model.Events<MRun & MConfig, MResponse>;
   debug?: boolean;
 }
 
@@ -23,8 +23,7 @@ export abstract class AbstractModel<
   MRun extends Model.Base.Run,
   MResponse extends Model.Base.Response,
   AResponse extends any = any
-> implements Model.Base.IModel<MConfig, MRun, MResponse>
-{
+> {
   /** This is used to implement specific model calls */
   protected abstract runModel(
     params: Prettify<MRun & MConfig>,
@@ -43,7 +42,7 @@ export abstract class AbstractModel<
   protected context: Model.Ctx;
   protected debug: boolean;
   protected params: MConfig & Partial<MRun>;
-  protected hooks: Model.Hooks<MRun & MConfig, MResponse, AResponse>;
+  protected events: Model.Events<MRun & MConfig, MResponse, AResponse>;
   public tokenizer: Model.ITokenizer;
 
   constructor(args: ModelArgs<MClient, MConfig, MRun, MResponse>) {
@@ -52,7 +51,7 @@ export abstract class AbstractModel<
     this.context = args.context ?? {};
     this.debug = args.debug ?? false;
     this.params = args.params;
-    this.hooks = args.hooks || {};
+    this.events = args.events || {};
     this.tokenizer = createTokenizer(args.params.model);
   }
 
@@ -64,14 +63,18 @@ export abstract class AbstractModel<
     const mergedContext = this.mergeContext(this.context, context);
     const mergedParams = deepMerge(this.params, params) as MRun & MConfig;
 
-    this.hooks.onStart?.forEach((hook) =>
-      hook({
-        timestamp: new Date().toISOString(),
-        modelType: this.modelType,
-        modelProvider: this.modelProvider,
-        params: mergedParams,
-        context: mergedContext,
-      })
+    await Promise.allSettled(
+      this.events.onStart?.map((event) =>
+        Promise.resolve(
+          event({
+            timestamp: new Date().toISOString(),
+            modelType: this.modelType,
+            modelProvider: this.modelProvider,
+            params: mergedParams,
+            context: mergedContext,
+          })
+        )
+      ) ?? []
     );
 
     try {
@@ -84,16 +87,20 @@ export abstract class AbstractModel<
           cost: 0,
           latency: Date.now() - start,
         };
-        this.hooks.onComplete?.forEach((hook) =>
-          hook({
-            timestamp: new Date().toISOString(),
-            modelType: this.modelType,
-            modelProvider: this.modelProvider,
-            params: mergedParams,
-            response,
-            context: mergedContext,
-            cached: true,
-          })
+        await Promise.allSettled(
+          this.events.onComplete?.map((event) =>
+            Promise.resolve(
+              event({
+                timestamp: new Date().toISOString(),
+                modelType: this.modelType,
+                modelProvider: this.modelProvider,
+                params: mergedParams,
+                response,
+                context: mergedContext,
+                cached: true,
+              })
+            )
+          ) ?? []
         );
         return response;
       }
@@ -101,16 +108,20 @@ export abstract class AbstractModel<
       // Run the model (e.g. make the API request)
       const response = await this.runModel(mergedParams, mergedContext);
 
-      this.hooks.onComplete?.forEach((hook) =>
-        hook({
-          timestamp: new Date().toISOString(),
-          modelType: this.modelType,
-          modelProvider: this.modelProvider,
-          params: mergedParams,
-          response,
-          context: mergedContext,
-          cached: false,
-        })
+      await Promise.allSettled(
+        this.events.onComplete?.map((event) =>
+          Promise.resolve(
+            event({
+              timestamp: new Date().toISOString(),
+              modelType: this.modelType,
+              modelProvider: this.modelProvider,
+              params: mergedParams,
+              response,
+              context: mergedContext,
+              cached: false,
+            })
+          )
+        ) ?? []
       );
 
       // Update the cache
@@ -118,15 +129,19 @@ export abstract class AbstractModel<
 
       return response;
     } catch (error) {
-      this.hooks?.onError?.forEach((hook) =>
-        hook({
-          timestamp: new Date().toISOString(),
-          modelType: this.modelType,
-          modelProvider: this.modelProvider,
-          params: mergedParams,
-          error,
-          context: mergedContext,
-        })
+      await Promise.allSettled(
+        this.events?.onError?.map((event) =>
+          Promise.resolve(
+            event({
+              timestamp: new Date().toISOString(),
+              modelType: this.modelType,
+              modelProvider: this.modelProvider,
+              params: mergedParams,
+              error,
+              context: mergedContext,
+            })
+          )
+        ) ?? []
       );
       throw error;
     }
@@ -188,23 +203,23 @@ export abstract class AbstractModel<
     return this;
   }
 
-  /** Get the current hooks */
-  getHooks() {
-    return this.hooks;
+  /** Get the current event handlers */
+  getEvents() {
+    return this.events;
   }
 
-  /** Add hooks to the model. */
-  addHooks(hooks: typeof this.hooks): this {
-    this.hooks = this.mergeHooks(this.hooks, hooks);
+  /** Add event handlers to the model. */
+  addEvents(events: typeof this.events): this {
+    this.events = this.mergeEvents(this.events, events);
     return this;
   }
 
   /**
-   * Set the hooks to a new set of hooks. Removes all existing hooks.
-   * Set to empty object `{}` to remove existing hooks.
+   * Set the event handlers to a new set of events. Removes all existing event handlers.
+   * Set to empty object `{}` to remove all events.
    */
-  setHooks(hooks: typeof this.hooks): this {
-    this.hooks = hooks;
+  setEvents(events: typeof this.events): this {
+    this.events = events;
     return this;
   }
 
@@ -223,10 +238,10 @@ export abstract class AbstractModel<
     return deepMerge(classParams, newParams) as any;
   }
 
-  protected mergeHooks(
-    existingHooks: typeof this.hooks,
-    newHooks: typeof this.hooks
-  ): typeof this.hooks {
-    return deepMerge(existingHooks, newHooks);
+  protected mergeEvents(
+    existingEvents: typeof this.events,
+    newEvents: typeof this.events
+  ): typeof this.events {
+    return deepMerge(existingEvents, newEvents);
   }
 }

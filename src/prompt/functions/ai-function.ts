@@ -13,7 +13,7 @@ import { cleanString } from '../utils/message.js';
  * The `spec` property of the returned function is the spec for adding the
  * function to the OpenAI API `functions` property.
  */
-export function createAiFunction<
+export function createAIFunction<
   Schema extends z.ZodObject<any>,
   Return extends any
 >(
@@ -27,7 +27,7 @@ export function createAiFunction<
   },
   /** Implementation of the function to call with the parsed arguments. */
   implementation: (params: z.infer<Schema>) => Promise<Return>
-): Prompt.AiFunction<Schema, Return> {
+): Prompt.AIFunction<Schema, Return> {
   /** Parse the arguments string, optionally reading from a message. */
   const parseArgs = (input: string | Prompt.Msg) => {
     if (typeof input === 'string') {

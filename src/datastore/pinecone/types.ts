@@ -1,11 +1,11 @@
-import type { Dstore } from '../types.js';
+import type { Datastore } from '../types.js';
 
 export namespace Pinecone {
   /**
    * An object of metadata filters.
    * @see https://www.pinecone.io/docs/metadata-filtering/
    */
-  export type QueryFilter<Metadata extends Dstore.BaseMeta> = {
+  export type QueryFilter<Metadata extends Datastore.BaseMeta> = {
     [key in keyof Metadata | FilterOperator]?:
       | FilterValue
       | {

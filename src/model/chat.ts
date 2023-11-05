@@ -2,7 +2,7 @@ import type { SetOptional } from 'type-fest';
 import type { ModelArgs } from './model.js';
 import type { Model } from './types.js';
 import { calculateCost } from './utils/calculate-cost.js';
-import { createOpenAiClient } from './clients/openai.js';
+import { createOpenAIClient } from './clients/openai.js';
 import { AbstractModel } from './model.js';
 import { deepMerge } from './utils/helpers.js';
 
@@ -16,28 +16,25 @@ export type ChatModelArgs = SetOptional<
   'client' | 'params'
 >;
 
-export class ChatModel
-  extends AbstractModel<
-    Model.Chat.Client,
-    Model.Chat.Config,
-    Model.Chat.Run,
-    Model.Chat.Response,
-    Model.Chat.ApiResponse
-  >
-  implements Model.Chat.IModel
-{
+export class ChatModel extends AbstractModel<
+  Model.Chat.Client,
+  Model.Chat.Config,
+  Model.Chat.Run,
+  Model.Chat.Response,
+  Model.Chat.ApiResponse
+> {
   modelType = 'chat' as const;
   modelProvider = 'openai' as const;
 
   constructor(args?: ChatModelArgs) {
     let { client, params, ...rest } = args ?? {};
     // Add a default client if none is provided
-    client = client ?? createOpenAiClient();
+    client = client ?? createOpenAIClient();
     // Set default model if no params are provided
     params = params ?? { model: 'gpt-3.5-turbo' };
     super({ client, params, ...rest });
     if (args?.debug) {
-      this.mergeHooks(args.hooks || {}, {
+      this.mergeEvents(args.events || {}, {
         onStart: [logInput],
         onComplete: [logResponse],
       });
@@ -55,16 +52,20 @@ export class ChatModel
       // Make the OpenAI API request
       const response = await this.client.createChatCompletion(params);
 
-      this.hooks?.onApiResponse?.forEach((hook) =>
-        hook({
-          timestamp: new Date().toISOString(),
-          modelType: this.modelType,
-          modelProvider: this.modelProvider,
-          params,
-          response,
-          latency: Date.now() - start,
-          context,
-        })
+      await Promise.allSettled(
+        this.events?.onApiResponse?.map((event) =>
+          Promise.resolve(
+            event({
+              timestamp: new Date().toISOString(),
+              modelType: this.modelType,
+              modelProvider: this.modelProvider,
+              params,
+              response,
+              latency: Date.now() - start,
+              context,
+            })
+          )
+        ) ?? []
       );
 
       const modelResponse: Model.Chat.Response = {
@@ -152,16 +153,20 @@ export class ChatModel
         total_tokens: promptTokens + completionTokens,
       };
 
-      this.hooks?.onApiResponse?.forEach((hook) =>
-        hook({
-          timestamp: new Date().toISOString(),
-          modelType: this.modelType,
-          modelProvider: this.modelProvider,
-          params,
-          response,
-          latency: Date.now() - start,
-          context,
-        })
+      await Promise.allSettled(
+        this.events?.onApiResponse?.map((event) =>
+          Promise.resolve(
+            event({
+              timestamp: new Date().toISOString(),
+              modelType: this.modelType,
+              modelProvider: this.modelProvider,
+              params,
+              response,
+              latency: Date.now() - start,
+              context,
+            })
+          )
+        ) ?? []
       );
 
       const modelResponse: Model.Chat.Response = {
@@ -177,7 +182,7 @@ export class ChatModel
 
   /** Clone the model and merge/orverride the given properties. */
   clone(args?: ChatModelArgs): this {
-    const { cache, client, context, debug, params, hooks } = args ?? {};
+    const { cache, client, context, debug, params, events } = args ?? {};
     // @ts-ignore
     return new ChatModel({
       cache: cache || this.cache,
@@ -185,7 +190,7 @@ export class ChatModel
       context: this.mergeContext(this.context, context),
       debug: debug || this.debug,
       params: this.mergeParams(this.params, params ?? {}),
-      hooks: this.mergeHooks(this.hooks, hooks || {}),
+      events: this.mergeEvents(this.events, events || {}),
     });
   }
 }

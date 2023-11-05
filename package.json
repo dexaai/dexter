@@ -2,17 +2,25 @@
   "name": "@dexaai/ai",
   "type": "module",
   "version": "0.0.1",
-  "description": "",
+  "description": "LLM tools used for production RAG at Dexa.ai",
   "repository": "dexaai/llm-tools",
+  "license": "MIT",
   "scripts": {
-    "build": "rm -rf dist && tsc --project tsconfig.dist.json",
-    "clean": "rm -rf .turbo node_modules dist",
+    "build": "tsc --project tsconfig.dist.json",
+    "prebuild": "rimraf dist",
+    "clean": "rimraf node_modules dist",
     "dev": "tsc --watch",
-    "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
-    "prepare": "npm run build",
+    "prepare": "run-s build",
     "release": "np",
-    "test": "vitest",
-    "typecheck": "tsc --noEmit"
+    "predocs": "rimraf docs/pages/docs",
+    "docs": "run-s docs:*",
+    "docs:typedoc": "typedoc",
+    "docs:transform": "tsx docs/bin/transform-docs.ts",
+    "test": "run-p test:*",
+    "test:lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
+    "test:format": "prettier --check \"**/*.{js,ts,tsx}\"",
+    "test:unit": "dotenv -e .env.example -- vitest",
+    "test:typecheck": "tsc --noEmit"
   },
   "sideEffects": false,
   "files": [
@@ -20,10 +28,6 @@
   ],
   "exports": {
     "./package.json": "./package.json",
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
-    },
     "./datastore": {
       "types": "./dist/datastore/index.d.ts",
       "import": "./dist/datastore/index.js"
@@ -48,8 +52,7 @@
     "dedent": "^1.5.1",
     "jsonrepair": "^3.2.0",
     "ky": "^1.1.0",
-    "openai": "^4.14.1",
-    "openai-fetch": "2.0.0-beta.6",
+    "openai-fetch": "^2.0.0-beta.7",
     "p-map": "^6.0.0",
     "p-throttle": "^5.1.0",
     "parse-json": "^7.0.0",
@@ -62,9 +65,17 @@
   "devDependencies": {
     "@dexaai/eslint-config": "^0.4.0",
     "@types/node": "^20.5.9",
+    "dotenv-cli": "^7.3.0",
     "eslint": "^8.48.0",
+    "globby": "^13.2.2",
     "np": "^8.0.4",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^2.8.8",
+    "rimraf": "^5.0.5",
+    "tsx": "^3.14.0",
     "type-fest": "4.3.1",
+    "typedoc": "^0.25.3",
+    "typedoc-plugin-markdown": "^4.0.0-next.25",
     "typescript": "^5.2.2",
     "vite": "^4.3.9",
     "vitest": "^0.34.3"

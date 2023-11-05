@@ -5,7 +5,7 @@ import { OpenAIClient } from 'openai-fetch';
 const cachedClients = new Map<string, OpenAIClient>();
 
 /** Create a new openai-fetch OpenAIClient. */
-export function createOpenAiClient(
+export function createOpenAIClient(
   /** Options to pass to the OpenAI client. */
   opts?: ConstructorParameters<typeof OpenAIClient>[0],
   /** Force a new client to be created. */

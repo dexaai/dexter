@@ -1,4 +1,5 @@
 import type { Model } from '../model/index.js';
+import type { AbstractDatastore } from './datastore.js';
 
 /** Improve preview of union types in autocomplete. */
 export type Prettify<T> = { [K in keyof T]: T[K] } & {};
@@ -6,7 +7,7 @@ export type Prettify<T> = { [K in keyof T]: T[K] } & {};
 /**
  * Generic Datastore extended by provider-specific implementations.
  */
-export namespace Dstore {
+export namespace Datastore {
   /** Base document metadata to be extended */
   export type BaseMeta = {};
 
@@ -37,9 +38,9 @@ export namespace Dstore {
   }
 
   /**
-   * Hooks for logging and debugging
+   * Event handlers for logging and debugging
    */
-  export interface Hooks<
+  export interface Events<
     DocMeta extends BaseMeta,
     Filter extends BaseFilter<DocMeta>
   > {
@@ -70,27 +71,12 @@ export namespace Dstore {
   }
 
   /**
-   * Datastore interface implemented by provider specific implementations.
+   * Abstract Datastore extended by provider specific implementations.
    */
-  export interface IDatastore<
+  export type Datastore<
     DocMeta extends BaseMeta,
     Filter extends BaseFilter<DocMeta>
-  > {
-    /** Query the DataStore for documents. */
-    query(
-      query: Query<DocMeta, Filter>,
-      context?: Ctx
-    ): Promise<QueryResult<DocMeta>>;
-
-    /** Insert or update documents in the DataStore. */
-    upsert(docs: Doc<DocMeta>[], context?: Ctx): Promise<void>;
-
-    /** Delete documents by ID from the DataStore. */
-    delete(docIds: string[]): Promise<void>;
-
-    /** Delete all documents from the DataStore. */
-    deleteAll(): Promise<void>;
-  }
+  > = AbstractDatastore<DocMeta, Filter>;
 
   /**
    * Options for creating a Datastore instance.
@@ -105,9 +91,9 @@ export namespace Dstore {
      */
     contentKey: keyof DocMeta;
     namespace: string;
-    embeddingModel: Model.Embedding.IModel;
+    embeddingModel: Model.Embedding.Model;
     cache?: Cache<DocMeta, Filter>;
-    hooks?: Hooks<DocMeta, Filter>;
+    events?: Events<DocMeta, Filter>;
     context?: Ctx;
     debug?: boolean;
   }
@@ -120,7 +106,7 @@ export namespace Dstore {
     Filter extends BaseFilter<DocMeta>
   > extends Opts<DocMeta, Filter> {
     /** Splade instance for creating sparse vectors */
-    spladeModel: Model.SparseVector.IModel;
+    spladeModel: Model.SparseVector.Model;
   }
 
   /** The provider of the vector database. */
@@ -144,6 +130,7 @@ export namespace Dstore {
   }
 
   // @ts-ignore
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   export type BaseFilter<Meta extends BaseMeta> = any;
 
   /**

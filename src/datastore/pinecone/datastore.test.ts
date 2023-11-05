@@ -1,12 +1,12 @@
 import { PineconeClient } from 'pinecone-client';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { SparseVectorModel } from '../../model/index.js';
 import { EmbeddingModel } from '../../model/index.js';
-import { getMemoryCache } from '../index.js';
-import { Datastore } from './datastore.js';
-import { HybridDatastore } from './hybrid-datastore.js';
+import { getDatastoreMemoryCache } from '../index.js';
+import { PineconeDatastore } from './datastore.js';
+import { PineconeHybridDatastore } from './hybrid-datastore.js';
 
-vi.mock('@dexaai/model', () => {
+vi.mock('../../model/index.js', () => {
   const EmbeddingModel = vi.fn();
   const SparseVectorModel = vi.fn();
   EmbeddingModel.prototype.run = vi
@@ -47,7 +47,7 @@ vi.mock('pinecone-client', () => {
 type Meta = { content: string };
 
 describe('Datastore', () => {
-  let datastore: Datastore<Meta>;
+  let datastore: PineconeDatastore<Meta>;
   let embeddingModel: EmbeddingModel;
   let client: PineconeClient<Meta>;
 
@@ -56,7 +56,7 @@ describe('Datastore', () => {
       params: { model: 'text-embedding-ada-002' },
     });
     client = new PineconeClient({ apiKey: '', baseUrl: '' });
-    datastore = new Datastore<Meta>({
+    datastore = new PineconeDatastore<Meta>({
       namespace: 'test',
       contentKey: 'content',
       embeddingModel,
@@ -170,7 +170,7 @@ describe('Datastore', () => {
 });
 
 describe('HybridDatastore', () => {
-  let datastore: HybridDatastore<Meta>;
+  let datastore: PineconeHybridDatastore<Meta>;
   let embeddingModel: EmbeddingModel;
   let spladeModel: SparseVectorModel;
   let pineconeClient: PineconeClient<Meta>;
@@ -183,7 +183,7 @@ describe('HybridDatastore', () => {
       params: { model: 'naver/splade-cocondenser-ensembledistil' },
     });
     pineconeClient = new PineconeClient({ apiKey: '', baseUrl: '' });
-    datastore = new HybridDatastore<Meta>({
+    datastore = new PineconeHybridDatastore<Meta>({
       namespace: 'test',
       contentKey: 'content',
       embeddingModel,
@@ -311,13 +311,13 @@ describe('HybridDatastore', () => {
   });
 
   it('caches queries', async () => {
-    const datastore = new HybridDatastore<Meta>({
+    const datastore = new PineconeHybridDatastore<Meta>({
       namespace: 'test',
       contentKey: 'content',
       embeddingModel,
       spladeModel,
       pinecone: pineconeClient,
-      cache: getMemoryCache(),
+      cache: getDatastoreMemoryCache(),
     });
     await datastore.query({ query: 'test' });
     expect(pineconeClient.query).toHaveBeenCalledOnce();

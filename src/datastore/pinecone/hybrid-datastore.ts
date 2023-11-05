@@ -1,21 +1,20 @@
 import type { Model } from '../../model/index.js';
 import { AbstractHybridDatastore } from '../hybrid-datastore.js';
-import type { Dstore, Prettify } from '../types.js';
+import type { Datastore, Prettify } from '../types.js';
 import type { PineconeClient } from './client.js';
 import { createPineconeClient } from './client.js';
 import type { Pinecone } from './types.js';
 
-export class HybridDatastore<DocMeta extends Dstore.BaseMeta>
-  extends AbstractHybridDatastore<DocMeta, Pinecone.QueryFilter<DocMeta>>
-  implements Dstore.IDatastore<DocMeta, Pinecone.QueryFilter<DocMeta>>
-{
+export class PineconeHybridDatastore<
+  DocMeta extends Datastore.BaseMeta
+> extends AbstractHybridDatastore<DocMeta, Pinecone.QueryFilter<DocMeta>> {
   datastoreType = 'hybrid' as const;
   datastoreProvider = 'pinecone' as const;
   private readonly pinecone: PineconeClient<DocMeta>;
 
   constructor(
     args: Prettify<
-      Dstore.OptsHybrid<DocMeta, Pinecone.QueryFilter<DocMeta>> & {
+      Datastore.OptsHybrid<DocMeta, Pinecone.QueryFilter<DocMeta>> & {
         pinecone?: PineconeClient<DocMeta>;
       }
     >
@@ -30,9 +29,9 @@ export class HybridDatastore<DocMeta extends Dstore.BaseMeta>
   }
 
   async runQuery(
-    query: Dstore.Query<DocMeta, Pinecone.QueryFilter<DocMeta>>,
-    context?: Dstore.Ctx
-  ): Promise<Dstore.QueryResult<DocMeta>> {
+    query: Datastore.Query<DocMeta, Pinecone.QueryFilter<DocMeta>>,
+    context?: Datastore.Ctx
+  ): Promise<Datastore.QueryResult<DocMeta>> {
     const mergedContext = { ...this.context, ...context };
 
     // Get the query embedding and sparse vector
@@ -79,7 +78,7 @@ export class HybridDatastore<DocMeta extends Dstore.BaseMeta>
       sparseVector: sparseVector,
     });
 
-    const queryResult: Dstore.QueryResult<DocMeta> = {
+    const queryResult: Datastore.QueryResult<DocMeta> = {
       query: query.query,
       docs: response.matches,
     };
@@ -88,8 +87,8 @@ export class HybridDatastore<DocMeta extends Dstore.BaseMeta>
   }
 
   async upsert(
-    docs: Dstore.Doc<DocMeta>[],
-    context?: Dstore.Ctx
+    docs: Datastore.Doc<DocMeta>[],
+    context?: Datastore.Ctx
   ): Promise<void> {
     const mergedContext = { ...this.context, ...context };
     try {
@@ -157,14 +156,18 @@ export class HybridDatastore<DocMeta extends Dstore.BaseMeta>
         })),
       });
     } catch (error) {
-      this.hooks?.onError?.forEach((hook) =>
-        hook({
-          timestamp: new Date().toISOString(),
-          datastoreType: this.datastoreType,
-          datastoreProvider: this.datastoreProvider,
-          error,
-          context: mergedContext,
-        })
+      await Promise.allSettled(
+        this.events?.onError?.map((event) =>
+          Promise.resolve(
+            event({
+              timestamp: new Date().toISOString(),
+              datastoreType: this.datastoreType,
+              datastoreProvider: this.datastoreProvider,
+              error,
+              context: mergedContext,
+            })
+          )
+        ) ?? []
       );
       throw error;
     }
