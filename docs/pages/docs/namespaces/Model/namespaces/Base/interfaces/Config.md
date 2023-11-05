@@ -12,4 +12,4 @@
 
 | Property | Type | Description | Source |
 | :------ | :------ | :------ | :------ |
-| `model` | `string` | - | [src/model/types.ts:31](https://github.com/dexaai/llm-tools/blob/2a387dc/src/model/types.ts#L31) |
+| `model` | `string` | - | [src/model/types.ts:31](https://github.com/dexaai/llm-tools/blob/eeaf162/src/model/types.ts#L31) |

@@ -27,7 +27,7 @@ Cache for storing query responses
 
 #### Source
 
-[src/datastore/types.ts:21](https://github.com/dexaai/llm-tools/blob/2a387dc/src/datastore/types.ts#L21)
+[src/datastore/types.ts:21](https://github.com/dexaai/llm-tools/blob/eeaf162/src/datastore/types.ts#L21)
 
 ***
 
@@ -48,4 +48,4 @@ Cache for storing query responses
 
 #### Source
 
-[src/datastore/types.ts:22](https://github.com/dexaai/llm-tools/blob/2a387dc/src/datastore/types.ts#L22)
+[src/datastore/types.ts:22](https://github.com/dexaai/llm-tools/blob/eeaf162/src/datastore/types.ts#L22)

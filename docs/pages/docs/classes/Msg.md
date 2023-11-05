@@ -35,7 +35,7 @@ Create an assistant message. Cleans indentation and newlines by default.
 
 #### Source
 
-[src/prompt/utils/message.ts:52](https://github.com/dexaai/llm-tools/blob/2a387dc/src/prompt/utils/message.ts#L52)
+[src/prompt/utils/message.ts:52](https://github.com/dexaai/llm-tools/blob/eeaf162/src/prompt/utils/message.ts#L52)
 
 ***
 
@@ -61,7 +61,7 @@ Create a function call message with argumets.
 
 #### Source
 
-[src/prompt/utils/message.ts:70](https://github.com/dexaai/llm-tools/blob/2a387dc/src/prompt/utils/message.ts#L70)
+[src/prompt/utils/message.ts:70](https://github.com/dexaai/llm-tools/blob/eeaf162/src/prompt/utils/message.ts#L70)
 
 ***
 
@@ -84,7 +84,7 @@ Create a function result message.
 
 #### Source
 
-[src/prompt/utils/message.ts:92](https://github.com/dexaai/llm-tools/blob/2a387dc/src/prompt/utils/message.ts#L92)
+[src/prompt/utils/message.ts:92](https://github.com/dexaai/llm-tools/blob/eeaf162/src/prompt/utils/message.ts#L92)
 
 ***
 
@@ -106,7 +106,7 @@ Get the narrowed message from an EnrichedResponse.
 
 #### Source
 
-[src/prompt/utils/message.ts:102](https://github.com/dexaai/llm-tools/blob/2a387dc/src/prompt/utils/message.ts#L102)
+[src/prompt/utils/message.ts:102](https://github.com/dexaai/llm-tools/blob/eeaf162/src/prompt/utils/message.ts#L102)
 
 ***
 
@@ -128,7 +128,7 @@ Check if a message is an assistant message.
 
 #### Source
 
-[src/prompt/utils/message.ts:135](https://github.com/dexaai/llm-tools/blob/2a387dc/src/prompt/utils/message.ts#L135)
+[src/prompt/utils/message.ts:135](https://github.com/dexaai/llm-tools/blob/eeaf162/src/prompt/utils/message.ts#L135)
 
 ***
 
@@ -150,7 +150,7 @@ Check if a message is a function call message with arguments.
 
 #### Source
 
-[src/prompt/utils/message.ts:139](https://github.com/dexaai/llm-tools/blob/2a387dc/src/prompt/utils/message.ts#L139)
+[src/prompt/utils/message.ts:139](https://github.com/dexaai/llm-tools/blob/eeaf162/src/prompt/utils/message.ts#L139)
 
 ***
 
@@ -172,7 +172,7 @@ Check if a message is a function result message.
 
 #### Source
 
-[src/prompt/utils/message.ts:143](https://github.com/dexaai/llm-tools/blob/2a387dc/src/prompt/utils/message.ts#L143)
+[src/prompt/utils/message.ts:143](https://github.com/dexaai/llm-tools/blob/eeaf162/src/prompt/utils/message.ts#L143)
 
 ***
 
@@ -194,7 +194,7 @@ Check if a message is a system message.
 
 #### Source
 
-[src/prompt/utils/message.ts:127](https://github.com/dexaai/llm-tools/blob/2a387dc/src/prompt/utils/message.ts#L127)
+[src/prompt/utils/message.ts:127](https://github.com/dexaai/llm-tools/blob/eeaf162/src/prompt/utils/message.ts#L127)
 
 ***
 
@@ -216,7 +216,7 @@ Check if a message is a user message.
 
 #### Source
 
-[src/prompt/utils/message.ts:131](https://github.com/dexaai/llm-tools/blob/2a387dc/src/prompt/utils/message.ts#L131)
+[src/prompt/utils/message.ts:131](https://github.com/dexaai/llm-tools/blob/eeaf162/src/prompt/utils/message.ts#L131)
 
 ***
 
@@ -240,7 +240,7 @@ Narrow a ChatModel.Message to a specific type.
 
 ##### Source
 
-[src/prompt/utils/message.ts:148](https://github.com/dexaai/llm-tools/blob/2a387dc/src/prompt/utils/message.ts#L148)
+[src/prompt/utils/message.ts:148](https://github.com/dexaai/llm-tools/blob/eeaf162/src/prompt/utils/message.ts#L148)
 
 #### narrow(message)
 
@@ -258,7 +258,7 @@ Narrow a ChatModel.Message to a specific type.
 
 ##### Source
 
-[src/prompt/utils/message.ts:149](https://github.com/dexaai/llm-tools/blob/2a387dc/src/prompt/utils/message.ts#L149)
+[src/prompt/utils/message.ts:149](https://github.com/dexaai/llm-tools/blob/eeaf162/src/prompt/utils/message.ts#L149)
 
 #### narrow(message)
 
@@ -276,7 +276,7 @@ Narrow a ChatModel.Message to a specific type.
 
 ##### Source
 
-[src/prompt/utils/message.ts:150](https://github.com/dexaai/llm-tools/blob/2a387dc/src/prompt/utils/message.ts#L150)
+[src/prompt/utils/message.ts:150](https://github.com/dexaai/llm-tools/blob/eeaf162/src/prompt/utils/message.ts#L150)
 
 #### narrow(message)
 
@@ -294,7 +294,7 @@ Narrow a ChatModel.Message to a specific type.
 
 ##### Source
 
-[src/prompt/utils/message.ts:151](https://github.com/dexaai/llm-tools/blob/2a387dc/src/prompt/utils/message.ts#L151)
+[src/prompt/utils/message.ts:151](https://github.com/dexaai/llm-tools/blob/eeaf162/src/prompt/utils/message.ts#L151)
 
 #### narrow(message)
 
@@ -312,7 +312,7 @@ Narrow a ChatModel.Message to a specific type.
 
 ##### Source
 
-[src/prompt/utils/message.ts:152](https://github.com/dexaai/llm-tools/blob/2a387dc/src/prompt/utils/message.ts#L152)
+[src/prompt/utils/message.ts:152](https://github.com/dexaai/llm-tools/blob/eeaf162/src/prompt/utils/message.ts#L152)
 
 ***
 
@@ -334,7 +334,7 @@ Narrow a message received from the API. It only responds with role=assistant
 
 #### Source
 
-[src/prompt/utils/message.ts:112](https://github.com/dexaai/llm-tools/blob/2a387dc/src/prompt/utils/message.ts#L112)
+[src/prompt/utils/message.ts:112](https://github.com/dexaai/llm-tools/blob/eeaf162/src/prompt/utils/message.ts#L112)
 
 ***
 
@@ -359,7 +359,7 @@ Create a system message. Cleans indentation and newlines by default.
 
 #### Source
 
-[src/prompt/utils/message.ts:16](https://github.com/dexaai/llm-tools/blob/2a387dc/src/prompt/utils/message.ts#L16)
+[src/prompt/utils/message.ts:16](https://github.com/dexaai/llm-tools/blob/eeaf162/src/prompt/utils/message.ts#L16)
 
 ***
 
@@ -384,4 +384,4 @@ Create a user message. Cleans indentation and newlines by default.
 
 #### Source
 
-[src/prompt/utils/message.ts:34](https://github.com/dexaai/llm-tools/blob/2a387dc/src/prompt/utils/message.ts#L34)
+[src/prompt/utils/message.ts:34](https://github.com/dexaai/llm-tools/blob/eeaf162/src/prompt/utils/message.ts#L34)

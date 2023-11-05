@@ -2,7 +2,7 @@
 
 > **Datastore**\<`DocMeta`, `Filter`\>: [`AbstractDatastore`](../../../classes/AbstractDatastore.md)\<`DocMeta`, `Filter`\>
 
-Datastore interface implemented by provider specific implementations.
+Abstract Datastore extended by provider specific implementations.
 
 ## Type parameters
 
@@ -13,4 +13,4 @@ Datastore interface implemented by provider specific implementations.
 
 ## Source
 
-[src/datastore/types.ts:76](https://github.com/dexaai/llm-tools/blob/2a387dc/src/datastore/types.ts#L76)
+[src/datastore/types.ts:76](https://github.com/dexaai/llm-tools/blob/eeaf162/src/datastore/types.ts#L76)

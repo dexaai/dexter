@@ -6,4 +6,4 @@ Client for making API calls. Extended by specific model clients.
 
 ## Source
 
-[src/model/types.ts:29](https://github.com/dexaai/llm-tools/blob/2a387dc/src/model/types.ts#L29)
+[src/model/types.ts:29](https://github.com/dexaai/llm-tools/blob/eeaf162/src/model/types.ts#L29)

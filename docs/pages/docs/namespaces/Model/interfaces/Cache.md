@@ -27,7 +27,7 @@ Cache for storing model responses
 
 #### Source
 
-[src/model/types.ts:46](https://github.com/dexaai/llm-tools/blob/2a387dc/src/model/types.ts#L46)
+[src/model/types.ts:46](https://github.com/dexaai/llm-tools/blob/eeaf162/src/model/types.ts#L46)
 
 ***
 
@@ -48,4 +48,4 @@ Cache for storing model responses
 
 #### Source
 
-[src/model/types.ts:47](https://github.com/dexaai/llm-tools/blob/2a387dc/src/model/types.ts#L47)
+[src/model/types.ts:47](https://github.com/dexaai/llm-tools/blob/eeaf162/src/model/types.ts#L47)

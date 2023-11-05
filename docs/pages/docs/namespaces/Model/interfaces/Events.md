@@ -14,7 +14,7 @@ Event handlers for logging and debugging
 
 | Property | Type | Description | Source |
 | :------ | :------ | :------ | :------ |
-| `onApiResponse`? | (`event`) => `void` \| `Promise`\<`void`\>[] | - | [src/model/types.ts:165](https://github.com/dexaai/llm-tools/blob/2a387dc/src/model/types.ts#L165) |
-| `onComplete`? | (`event`) => `void` \| `Promise`\<`void`\>[] | - | [src/model/types.ts:174](https://github.com/dexaai/llm-tools/blob/2a387dc/src/model/types.ts#L174) |
-| `onError`? | (`event`) => `void` \| `Promise`\<`void`\>[] | - | [src/model/types.ts:183](https://github.com/dexaai/llm-tools/blob/2a387dc/src/model/types.ts#L183) |
-| `onStart`? | (`event`) => `void` \| `Promise`\<`void`\>[] | - | [src/model/types.ts:158](https://github.com/dexaai/llm-tools/blob/2a387dc/src/model/types.ts#L158) |
+| `onApiResponse`? | (`event`) => `void` \| `Promise`\<`void`\>[] | - | [src/model/types.ts:165](https://github.com/dexaai/llm-tools/blob/eeaf162/src/model/types.ts#L165) |
+| `onComplete`? | (`event`) => `void` \| `Promise`\<`void`\>[] | - | [src/model/types.ts:174](https://github.com/dexaai/llm-tools/blob/eeaf162/src/model/types.ts#L174) |
+| `onError`? | (`event`) => `void` \| `Promise`\<`void`\>[] | - | [src/model/types.ts:183](https://github.com/dexaai/llm-tools/blob/eeaf162/src/model/types.ts#L183) |
+| `onStart`? | (`event`) => `void` \| `Promise`\<`void`\>[] | - | [src/model/types.ts:158](https://github.com/dexaai/llm-tools/blob/eeaf162/src/model/types.ts#L158) |

@@ -1,4 +1,4 @@
-# Namespace: Dstore
+# Namespace: Datastore
 
 Generic Datastore extended by provider-specific implementations.
 

@@ -4,7 +4,7 @@
 
 ### Namespaces
 
-- [Dstore](namespaces/Dstore/README.md)
+- [Datastore](namespaces/Datastore/README.md)
 - [Model](namespaces/Model/README.md)
 - [Prompt](namespaces/Prompt/README.md)
 

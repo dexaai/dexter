@@ -4,4 +4,4 @@
 
 ## Source
 
-[src/model/sparse-vector.ts:9](https://github.com/dexaai/llm-tools/blob/2a387dc/src/model/sparse-vector.ts#L9)
+[src/model/sparse-vector.ts:9](https://github.com/dexaai/llm-tools/blob/eeaf162/src/model/sparse-vector.ts#L9)

@@ -8,8 +8,8 @@
 
 | Parameter |
 | :------ |
-| `DocMeta` extends [`BaseMeta`](../namespaces/Dstore/type-aliases/BaseMeta.md) |
-| `Filter` extends [`BaseFilter`](../namespaces/Dstore/type-aliases/BaseFilter.md)\<`DocMeta`\> |
+| `DocMeta` extends [`BaseMeta`](../namespaces/Datastore/type-aliases/BaseMeta.md) |
+| `Filter` extends [`BaseFilter`](../namespaces/Datastore/type-aliases/BaseFilter.md)\<`DocMeta`\> |
 
 ## Constructors
 
@@ -21,7 +21,7 @@
 
 | Parameter | Type |
 | :------ | :------ |
-| `args` | [`Opts`](../namespaces/Dstore/interfaces/Opts.md)\<`DocMeta`, `Filter`\> |
+| `args` | [`Opts`](../namespaces/Datastore/interfaces/Opts.md)\<`DocMeta`, `Filter`\> |
 
 #### Returns
 
@@ -29,14 +29,14 @@
 
 #### Source
 
-[src/datastore/datastore.ts:30](https://github.com/dexaai/llm-tools/blob/2a387dc/src/datastore/datastore.ts#L30)
+[src/datastore/datastore.ts:30](https://github.com/dexaai/llm-tools/blob/eeaf162/src/datastore/datastore.ts#L30)
 
 ## Properties
 
 | Modifier | Property | Type | Description | Source |
 | :------ | :------ | :------ | :------ | :------ |
-| `abstract` | `datastoreProvider` | [`Provider`](../namespaces/Dstore/type-aliases/Provider.md) | - | [src/datastore/datastore.ts:21](https://github.com/dexaai/llm-tools/blob/2a387dc/src/datastore/datastore.ts#L21) |
-| `abstract` | `datastoreType` | [`Type`](../namespaces/Dstore/type-aliases/Type.md) | - | [src/datastore/datastore.ts:20](https://github.com/dexaai/llm-tools/blob/2a387dc/src/datastore/datastore.ts#L20) |
+| `abstract` | `datastoreProvider` | [`Provider`](../namespaces/Datastore/type-aliases/Provider.md) | - | [src/datastore/datastore.ts:21](https://github.com/dexaai/llm-tools/blob/eeaf162/src/datastore/datastore.ts#L21) |
+| `abstract` | `datastoreType` | [`Type`](../namespaces/Datastore/type-aliases/Type.md) | - | [src/datastore/datastore.ts:20](https://github.com/dexaai/llm-tools/blob/eeaf162/src/datastore/datastore.ts#L20) |
 
 ## Methods
 
@@ -56,7 +56,7 @@
 
 #### Source
 
-[src/datastore/datastore.ts:17](https://github.com/dexaai/llm-tools/blob/2a387dc/src/datastore/datastore.ts#L17)
+[src/datastore/datastore.ts:17](https://github.com/dexaai/llm-tools/blob/eeaf162/src/datastore/datastore.ts#L17)
 
 ***
 
@@ -70,28 +70,28 @@
 
 #### Source
 
-[src/datastore/datastore.ts:18](https://github.com/dexaai/llm-tools/blob/2a387dc/src/datastore/datastore.ts#L18)
+[src/datastore/datastore.ts:18](https://github.com/dexaai/llm-tools/blob/eeaf162/src/datastore/datastore.ts#L18)
 
 ***
 
 ### query()
 
-> **query**(`query`, `context`?): `Promise`\<[`QueryResult`](../namespaces/Dstore/interfaces/QueryResult.md)\<`DocMeta`\>\>
+> **query**(`query`, `context`?): `Promise`\<[`QueryResult`](../namespaces/Datastore/interfaces/QueryResult.md)\<`DocMeta`\>\>
 
 #### Parameters
 
 | Parameter | Type |
 | :------ | :------ |
-| `query` | [`Query`](../namespaces/Dstore/interfaces/Query.md)\<`DocMeta`, `Filter`\> |
-| `context`? | [`Ctx`](../namespaces/Dstore/type-aliases/Ctx.md) |
+| `query` | [`Query`](../namespaces/Datastore/interfaces/Query.md)\<`DocMeta`, `Filter`\> |
+| `context`? | [`Ctx`](../namespaces/Datastore/type-aliases/Ctx.md) |
 
 #### Returns
 
-`Promise`\<[`QueryResult`](../namespaces/Dstore/interfaces/QueryResult.md)\<`DocMeta`\>\>
+`Promise`\<[`QueryResult`](../namespaces/Datastore/interfaces/QueryResult.md)\<`DocMeta`\>\>
 
 #### Source
 
-[src/datastore/datastore.ts:46](https://github.com/dexaai/llm-tools/blob/2a387dc/src/datastore/datastore.ts#L46)
+[src/datastore/datastore.ts:46](https://github.com/dexaai/llm-tools/blob/eeaf162/src/datastore/datastore.ts#L46)
 
 ***
 
@@ -103,8 +103,8 @@
 
 | Parameter | Type |
 | :------ | :------ |
-| `docs` | [`Doc`](../namespaces/Dstore/interfaces/Doc.md)\<`DocMeta`\>[] |
-| `context`? | [`Ctx`](../namespaces/Dstore/type-aliases/Ctx.md) |
+| `docs` | [`Doc`](../namespaces/Datastore/interfaces/Doc.md)\<`DocMeta`\>[] |
+| `context`? | [`Ctx`](../namespaces/Datastore/type-aliases/Ctx.md) |
 
 #### Returns
 
@@ -112,4 +112,4 @@
 
 #### Source
 
-[src/datastore/datastore.ts:13](https://github.com/dexaai/llm-tools/blob/2a387dc/src/datastore/datastore.ts#L13)
+[src/datastore/datastore.ts:13](https://github.com/dexaai/llm-tools/blob/eeaf162/src/datastore/datastore.ts#L13)

@@ -1,6 +1,6 @@
 # Function: getDatastoreMemoryCache()
 
-> **getDatastoreMemoryCache**\<`DocMeta`, `Filter`\>(): [`Cache`](../namespaces/Dstore/interfaces/Cache.md)\<`DocMeta`, `Filter`\>
+> **getDatastoreMemoryCache**\<`DocMeta`, `Filter`\>(): [`Cache`](../namespaces/Datastore/interfaces/Cache.md)\<`DocMeta`, `Filter`\>
 
 A simple in-memory cache for model responses
 
@@ -8,13 +8,13 @@ A simple in-memory cache for model responses
 
 | Parameter |
 | :------ |
-| `DocMeta` extends [`BaseMeta`](../namespaces/Dstore/type-aliases/BaseMeta.md) |
+| `DocMeta` extends [`BaseMeta`](../namespaces/Datastore/type-aliases/BaseMeta.md) |
 | `Filter` extends `unknown` |
 
 ## Returns
 
-[`Cache`](../namespaces/Dstore/interfaces/Cache.md)\<`DocMeta`, `Filter`\>
+[`Cache`](../namespaces/Datastore/interfaces/Cache.md)\<`DocMeta`, `Filter`\>
 
 ## Source
 
-[src/datastore/utils/memory-cache.ts:4](https://github.com/dexaai/llm-tools/blob/2a387dc/src/datastore/utils/memory-cache.ts#L4)
+[src/datastore/utils/memory-cache.ts:4](https://github.com/dexaai/llm-tools/blob/eeaf162/src/datastore/utils/memory-cache.ts#L4)
