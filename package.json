@@ -28,10 +28,6 @@
   ],
   "exports": {
     "./package.json": "./package.json",
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
-    },
     "./datastore": {
       "types": "./dist/datastore/index.d.ts",
       "import": "./dist/datastore/index.js"
