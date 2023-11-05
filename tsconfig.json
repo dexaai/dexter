@@ -1,5 +1,5 @@
 {
-  "include": ["./src/**/*"],
+  "include": ["./src/**/*", "./example/**/*"],
   "exclude": ["**/node_modules", "**/.*/"],
   "compilerOptions": {
     "types": ["vitest/globals", "node"],
