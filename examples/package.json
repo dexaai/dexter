@@ -1,0 +1,10 @@
+{
+  "private": true,
+  "type": "module",
+  "name": "dexa-ai-examples",
+  "license": "MIT",
+  "dependencies": {
+    "dexa-ai": "workspace:*",
+    "dotenv": "^16.3.1"
+  }
+}

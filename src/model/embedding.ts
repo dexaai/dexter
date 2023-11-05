@@ -30,6 +30,7 @@ const DEFAULTS = {
   maxTokensPerBatch: 20000,
   maxConcurrentRequests: 1,
   maxRequestsPerMin: 3500,
+  model: 'text-embedding-ada-002',
 } as const;
 
 export class EmbeddingModel extends AbstractModel<
@@ -47,7 +48,7 @@ export class EmbeddingModel extends AbstractModel<
   constructor(args?: EmbeddingModelArgs) {
     let { client, params, ...rest } = args || {};
     client = client || createOpenAIClient();
-    params = params || { model: 'text-embedding-ada-002' };
+    params = params || { model: DEFAULTS.model };
     super({ client, params, ...rest });
     const interval = DEFAULTS.throttleInterval;
     const limit =
@@ -154,10 +155,10 @@ export class EmbeddingModel extends AbstractModel<
     const { cache, client, context, debug, params, events } = args ?? {};
     // @ts-ignore
     return new EmbeddingModel({
-      cache: cache || this.cache,
-      client: client || this.client,
+      cache: cache ?? this.cache,
+      client: client ?? this.client,
       context: this.mergeContext(this.context, context),
-      debug: debug || this.debug,
+      debug: debug ?? this.debug,
       params: this.mergeParams(this.params, params ?? {}),
       events: this.mergeEvents(this.events, events || {}),
     });

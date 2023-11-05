@@ -185,10 +185,10 @@ export class ChatModel extends AbstractModel<
     const { cache, client, context, debug, params, events } = args ?? {};
     // @ts-ignore
     return new ChatModel({
-      cache: cache || this.cache,
-      client: client || this.client,
+      cache: cache ?? this.cache,
+      client: client ?? this.client,
       context: this.mergeContext(this.context, context),
-      debug: debug || this.debug,
+      debug: debug ?? this.debug,
       params: this.mergeParams(this.params, params ?? {}),
       events: this.mergeEvents(this.events, events || {}),
     });

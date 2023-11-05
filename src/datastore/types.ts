@@ -90,7 +90,7 @@ export namespace Datastore {
      * The value associated with the key must be a string.
      */
     contentKey: keyof DocMeta;
-    namespace: string;
+    namespace?: string;
     embeddingModel: Model.Embedding.Model;
     cache?: Cache<DocMeta, Filter>;
     events?: Events<DocMeta, Filter>;
@@ -139,6 +139,7 @@ export namespace Datastore {
   export interface QueryResult<Meta extends BaseMeta> {
     query: string;
     docs: ScoredDoc<Meta>[];
+    cached?: boolean;
   }
 
   /**

@@ -20,9 +20,9 @@ export abstract class AbstractDatastore<
   abstract datastoreType: Datastore.Type;
   abstract datastoreProvider: Datastore.Provider;
 
-  protected namespace: string;
   protected contentKey: keyof DocMeta;
   protected embeddingModel: Model.Embedding.Model;
+  protected namespace?: string;
   protected cache?: Datastore.Cache<DocMeta, Filter>;
   protected events: Datastore.Events<DocMeta, Filter>;
   protected context: Datastore.Ctx;
@@ -83,7 +83,10 @@ export abstract class AbstractDatastore<
           )
         ) ?? []
       );
-      return cached;
+      return {
+        ...cached,
+        cached: true,
+      };
     }
 
     try {
@@ -99,7 +102,7 @@ export abstract class AbstractDatastore<
               datastoreProvider: this.datastoreProvider,
               query,
               response,
-              cached: true,
+              cached: false,
               context: mergedContext,
               latency: Date.now() - start,
             })
@@ -110,7 +113,10 @@ export abstract class AbstractDatastore<
       // Update the cache
       await this?.cache?.set(query, response);
 
-      return response;
+      return {
+        ...response,
+        cached: false,
+      };
     } catch (error) {
       await Promise.allSettled(
         this.events?.onError?.map((event) =>

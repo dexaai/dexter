@@ -1,7 +1,3 @@
-## Prequisites
-
-- `node >= 18`
-
 ## Install
 
 ```

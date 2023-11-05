@@ -79,7 +79,7 @@ export class PineconeDatastore<
     try {
       // Get the text from the docs that are missing an embedding
       const textsToEmbed = docs
-        .filter((doc) => doc.embedding == null)
+        .filter((doc) => !doc.embedding)
         .map((doc) => {
           const content = doc.metadata[this.contentKey];
           if (typeof content !== 'string') {
@@ -114,16 +114,16 @@ export class PineconeDatastore<
       const docsWithEmbeddings = docs.map((doc) => {
         let embedding = doc.embedding;
         // If the doc was missing an embedding, use the generated one
-        if (embedding == null) {
+        if (!embedding) {
           embedding = embeddings.shift();
-          if (embedding == null) {
+          if (!embedding) {
             throw new Error('Unexpected missing embedding');
           }
         }
         return { ...doc, embedding };
       });
 
-      // Combine the results into Pinecones vector format and upsert
+      // Combine the results into Pinecone's vector format and upsert
       // The Pinecone client will handle batching and throttling
       return this.pinecone.upsert({
         vectors: docs.map((doc, i) => ({

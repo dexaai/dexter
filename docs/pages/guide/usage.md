@@ -19,14 +19,14 @@ import { EmbeddingModel, PineconeDatastore } from '@dexaai/ai';
       },
     },
     context: { test: 'test' },
-    hooks: { onComplete: [console.log] },
+    events: { onComplete: [console.log] },
   });
 
   const store = new PineconeDatastore({
     namespace: 'test',
     contentKey: 'content',
     embeddingModel,
-    hooks: { onQueryComplete: [console.log] },
+    events: { onQueryComplete: [console.log] },
   });
 
   await store.upsert([
