@@ -1,8 +1,6 @@
-import 'dotenv/config.js';
-import { readFile } from 'fs/promises';
+import 'dotenv/config';
+import { readFile } from 'node:fs/promises';
 import { chunkDatastore, type Chunk } from './tools.js';
-
-main();
 
 async function main() {
   const chunks = await loadChunks();
@@ -10,15 +8,21 @@ async function main() {
     id: chunk.chunkId,
     metadata: chunk,
   }));
+
+  console.log(`Upserting ${chunks.length} chunks...`);
+
   const start = Date.now();
   await chunkDatastore.upsert(docs);
   const end = Date.now();
+
   console.log(`Upserted ${chunks.length} chunks in ${end - start}ms`);
 }
 
 // From: https://huggingface.co/datasets/dexaai/huberman_on_exercise
 async function loadChunks(): Promise<Chunk[]> {
-  const json = JSON.parse(await readFile('./example/data.json', 'utf8'));
+  const json = JSON.parse(
+    await readFile('./examples/advanced/data.json', 'utf8')
+  );
   const rows = json.rows.map((row: any) => row.row);
   const chunks: Chunk[] = rows.map((row: any) => ({
     chunkId: row.id,
@@ -31,3 +35,5 @@ async function loadChunks(): Promise<Chunk[]> {
   }));
   return chunks;
 }
+
+main();

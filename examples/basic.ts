@@ -2,6 +2,9 @@ import 'dotenv/config';
 import { EmbeddingModel } from 'dexa-ai/model';
 import { PineconeDatastore } from 'dexa-ai/datastore/pinecone';
 
+/**
+ * npx tsx examples/basic.ts
+ */
 async function main() {
   // Create a default OpenAI 'text-embedding-ada-002' embedding model
   // Requires process.env.OPENAI_API_KEY

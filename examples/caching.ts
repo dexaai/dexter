@@ -3,6 +3,9 @@ import { EmbeddingModel, getModelMemoryCache } from 'dexa-ai/model';
 import { getDatastoreMemoryCache } from 'dexa-ai/datastore';
 import { PineconeDatastore } from 'dexa-ai/datastore/pinecone';
 
+/**
+ * npx tsx examples/caching.ts
+ */
 async function main() {
   // OpenAI embedding model with cache
   const embeddingModel = new EmbeddingModel({

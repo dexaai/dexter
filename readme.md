@@ -1,7 +1,7 @@
 <p align="center">
   <a href="https://www.npmjs.com/package/dexa-ai"><img alt="NPM" src="https://img.shields.io/npm/v/dexa-ai.svg" /></a>
-  <a href="https://github.com/dexaai/llm-tools/actions/workflows/test.yml"><img alt="Build Status" src="https://github.com/dexaai/llm-tools/actions/workflows/main.yml/badge.svg" /></a>
-  <a href="https://github.com/dexaai/llm-tools/blob/main/license"><img alt="MIT License" src="https://img.shields.io/badge/license-MIT-blue" /></a>
+  <a href="https://github.com/dexaai/dexa-ai/actions/workflows/test.yml"><img alt="Build Status" src="https://github.com/dexaai/dexa-ai/actions/workflows/main.yml/badge.svg" /></a>
+  <a href="https://github.com/dexaai/dexa-ai/blob/main/license"><img alt="MIT License" src="https://img.shields.io/badge/license-MIT-blue" /></a>
   <a href="https://prettier.io"><img alt="Prettier Code Formatting" src="https://img.shields.io/badge/code_style-prettier-brightgreen.svg" /></a>
 </p>
 
@@ -74,7 +74,7 @@ function example() {
 - You want to use a vector DB other than Pinecone
   - _We'll be adding support for more vector DBs soon_
 - You want to use a programming language other than JS/TS
-  - _What even is Python?_ 🤔
+  - _What even is Python?_ 😂
 
 ## License
 

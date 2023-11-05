@@ -1,7 +1,7 @@
-import 'dotenv/config.js';
-import readline from 'readline';
+import 'dotenv/config';
+import readline from 'node:readline';
+import type { Prompt } from 'dexa-ai/prompt';
 import { generateAnswer } from './answer.js';
-import type { Prompt } from '../src/prompt/types.js';
 
 const history: Prompt.Msg[] = [];
 const rl = readline.createInterface({

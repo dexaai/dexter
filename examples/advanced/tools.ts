@@ -1,7 +1,5 @@
-import { PineconeHybridDatastore } from '../src/datastore/pinecone/hybrid-datastore.js';
-import { ChatModel } from '../src/model/chat.js';
-import { EmbeddingModel } from '../src/model/embedding.js';
-import { SparseVectorModel } from '../src/model/sparse-vector.js';
+import { PineconeHybridDatastore } from 'dexa-ai/datastore/pinecone';
+import { ChatModel, EmbeddingModel, SparseVectorModel } from 'dexa-ai/model';
 
 export interface Chunk {
   chunkId: string;

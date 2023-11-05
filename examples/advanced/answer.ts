@@ -1,6 +1,5 @@
+import { type Prompt, Msg } from 'dexa-ai/prompt';
 import { chatModel, chunkDatastore } from './tools.js';
-import type { Prompt } from '../src/prompt/index.js';
-import { Msg } from '../src/prompt/index.js';
 
 const system = Msg.system(`
   You are a helpful and accurate Q&A bot.
