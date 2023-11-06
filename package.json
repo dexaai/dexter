@@ -1,9 +1,9 @@
 {
-  "name": "dexa-ai",
+  "name": "dexter",
   "type": "module",
   "version": "0.0.1",
   "description": "LLM tools used for production RAG at Dexa.",
-  "repository": "dexaai/dexa-ai",
+  "repository": "dexaai/dexter",
   "license": "MIT",
   "scripts": {
     "build": "tsc --project tsconfig.dist.json",

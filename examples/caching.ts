@@ -1,7 +1,7 @@
 import 'dotenv/config';
-import { EmbeddingModel, getModelMemoryCache } from 'dexa-ai/model';
-import { getDatastoreMemoryCache } from 'dexa-ai/datastore';
-import { PineconeDatastore } from 'dexa-ai/datastore/pinecone';
+import { EmbeddingModel, getModelMemoryCache } from 'dexter/model';
+import { getDatastoreMemoryCache } from 'dexter/datastore';
+import { PineconeDatastore } from 'dexter/datastore/pinecone';
 
 /**
  * npx tsx examples/caching.ts

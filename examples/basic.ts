@@ -1,6 +1,6 @@
 import 'dotenv/config';
-import { EmbeddingModel } from 'dexa-ai/model';
-import { PineconeDatastore } from 'dexa-ai/datastore/pinecone';
+import { EmbeddingModel } from 'dexter/model';
+import { PineconeDatastore } from 'dexter/datastore/pinecone';
 
 /**
  * npx tsx examples/basic.ts

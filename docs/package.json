@@ -1,6 +1,6 @@
 {
   "private": true,
-  "name": "dexa-ai-docs",
+  "name": "dexter-docs",
   "scripts": {
     "dev": "next",
     "build": "next build",

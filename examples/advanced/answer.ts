@@ -1,4 +1,4 @@
-import { type Prompt, Msg } from 'dexa-ai/prompt';
+import { type Prompt, Msg } from 'dexter/prompt';
 import { chatModel, chunkDatastore } from './tools.js';
 
 const system = Msg.system(`
