@@ -1,6 +1,6 @@
 # Examples
 
-To run the included examples, clone this repo, run `pnpm install`, set up your `.env` file, and then run an example file using `tsx`.
+To run the included examples, clone [this repo](https://github.com/dexaai/dexter), run `pnpm install`, set up your `.env` file, and then run an example file using `tsx`.
 
 Environment variables required to run the examples:
 
