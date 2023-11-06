@@ -6,7 +6,7 @@ By default, caching is not enabled on any of the classes.
 
 **To enable caching, pass in a `cache` object**, which must implement `.get(key)` and `.set(key, value)`, both of which can be either sync or async.
 
-The `cache` object is designed to work with `new Map()`, [quick-lru](https://github.com/sindresorhus/quick-lru), [any keyv adaptor[(https://github.com/jaredwray/keyv), or any other key-value store.
+The `cache` object is designed to work with `new Map()`, [quick-lru](https://github.com/sindresorhus/quick-lru), [any keyv adaptor](https://github.com/jaredwray/keyv), or any other key-value store.
 
 `cacheKey` is an optional function which takes in a params object and returns the cache key **string** to use for that request. A simple example would be: `(params) => JSON.stringify(params)`. The default `cacheKey` function uses [hash-obj](https://github.com/sindresorhus/hash-obj) to create a stable sha256 hash of the params.
 
