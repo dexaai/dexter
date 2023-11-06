@@ -2,9 +2,9 @@
 
 LLMs, embedding models, and datastores all work with the same `cache` and `cacheKey` parameters and support basically any caching strategy you can think of.
 
-**By default, caching is not enabled on any of the classes**.
+By default, caching is not enabled on any of the classes.
 
-To enable caching, pass in a `cache` object, which must implement `.get(key)` and `.set(key, value)`, both of which can be either sync or async.
+**To enable caching, pass in a `cache` object**, which must implement `.get(key)` and `.set(key, value)`, both of which can be either sync or async.
 
 The `cache` object is designed to work with `new Map()`, [quick-lru](https://github.com/sindresorhus/quick-lru), [any keyv adaptor[(https://github.com/jaredwray/keyv), or any other key-value store.
 
@@ -65,7 +65,8 @@ import { ChatModel } from '@dexaai/dexter/model';
 import { pick } from '@dexaai/utils';
 import hashObject from 'hash-obj';
 
-// Create an OpenAI chat completion model w/ an in-memory cache using a custom cache key
+// Create an OpenAI chat completion model w/ an in-memory cache using a
+// custom cache key
 const chatModel = new ChatModel({
   cacheKey: (params) => hashObject(pick(params, 'model', 'messages')),
   cache: new Map(),
