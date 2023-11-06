@@ -1,4 +1,4 @@
-# Contents
+# API Reference
 
 ## Exports
 

@@ -22,4 +22,4 @@ Turn structured data into a message.
 
 ## Source
 
-[src/prompt/types.ts:14](https://github.com/dexaai/llm-tools/blob/5018eae/src/prompt/types.ts#L14)
+[src/prompt/types.ts:14](https://github.com/dexaai/llm-tools/blob/1257af6/src/prompt/types.ts#L14)

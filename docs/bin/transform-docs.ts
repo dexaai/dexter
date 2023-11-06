@@ -54,7 +54,7 @@ async function main() {
   {
     // top-level nextra _meta.json file
     const docsMeta = {
-      exports: 'Contents',
+      exports: 'API Reference',
       namespaces: 'Namespaces',
       classes: 'Classes',
       interfaces: 'Interfaces',

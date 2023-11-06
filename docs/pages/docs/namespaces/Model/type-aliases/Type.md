@@ -6,4 +6,4 @@ The type of data returned by the model
 
 ## Source
 
-[src/model/types.ts:249](https://github.com/dexaai/llm-tools/blob/5018eae/src/model/types.ts#L249)
+[src/model/types.ts:249](https://github.com/dexaai/llm-tools/blob/1257af6/src/model/types.ts#L249)

@@ -33,4 +33,4 @@ function to the OpenAI API `functions` property.
 
 ## Source
 
-[src/prompt/functions/ai-function.ts:16](https://github.com/dexaai/llm-tools/blob/5018eae/src/prompt/functions/ai-function.ts#L16)
+[src/prompt/functions/ai-function.ts:16](https://github.com/dexaai/llm-tools/blob/1257af6/src/prompt/functions/ai-function.ts#L16)

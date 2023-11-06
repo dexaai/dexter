@@ -12,6 +12,6 @@ The results of running a query.
 
 | Property | Type | Description | Source |
 | :------ | :------ | :------ | :------ |
-| `cached`? | `boolean` | - | [src/datastore/types.ts:143](https://github.com/dexaai/llm-tools/blob/5018eae/src/datastore/types.ts#L143) |
-| `docs` | [`ScoredDoc`](ScoredDoc.md)\<`Meta`\>[] | - | [src/datastore/types.ts:142](https://github.com/dexaai/llm-tools/blob/5018eae/src/datastore/types.ts#L142) |
-| `query` | `string` | - | [src/datastore/types.ts:141](https://github.com/dexaai/llm-tools/blob/5018eae/src/datastore/types.ts#L141) |
+| `cached`? | `boolean` | - | [src/datastore/types.ts:143](https://github.com/dexaai/llm-tools/blob/1257af6/src/datastore/types.ts#L143) |
+| `docs` | [`ScoredDoc`](ScoredDoc.md)\<`Meta`\>[] | - | [src/datastore/types.ts:142](https://github.com/dexaai/llm-tools/blob/1257af6/src/datastore/types.ts#L142) |
+| `query` | `string` | - | [src/datastore/types.ts:141](https://github.com/dexaai/llm-tools/blob/1257af6/src/datastore/types.ts#L141) |
