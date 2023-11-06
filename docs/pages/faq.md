@@ -2,7 +2,7 @@
 
 ### Why should I consider using Dexter?
 
-- Dozens of the world's top podcasters trust Dexa's RAG to represent them
+- **Dozens of the world's top podcasters trust Dexa's RAG to represent them**
 - Optimized for real production-quality RAG
 - We've spent thousands of hours testing this package in production
 - We only use best-in-class third-parties like [OpenAI](https://openai.com) and [Pinecone](https://www.pinecone.io)
@@ -12,17 +12,17 @@
 
 ### Don't use Dexter if...
 
-- You need to use an embedding model other than OpenAI's
+- **You need to use an embedding model other than OpenAI's**
   - Popular alternatives include [Sentence Transformers](https://www.sbert.net) and [Cohere Embed v3](https://txt.cohere.com/introducing-embed-v3/)
   - _We'll be adding support for more embedding model providers soon_, but we will never sacrifice DX for breadth
-- You need to use a vector DB other than Pinecone
+- **You need to use a vector DB other than Pinecone**
   - _We'll be adding support for more vector DBs soon_, but we will never sacrifice DX for breadth
-- You need to use a programming language other than JS/TS
+- **You need to use a programming language other than JS/TS**
   - _What even is Python?_ 😂
 
 ### How does Dexter compare to LangChain?
 
-- Dexter is much more minimal
+- Dexter is much more **minimal**
 - Dexter is focused solely on RAG
 - Dexter only supports TypeScript
 
