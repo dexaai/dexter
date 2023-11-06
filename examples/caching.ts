@@ -1,6 +1,6 @@
 import 'dotenv/config';
-import { EmbeddingModel } from 'dexter/model';
-import { PineconeDatastore } from 'dexter/datastore/pinecone';
+import { EmbeddingModel } from '@dexaai/dexter/model';
+import { PineconeDatastore } from '@dexaai/dexter/datastore/pinecone';
 import QuickLRU from 'quick-lru';
 
 /**

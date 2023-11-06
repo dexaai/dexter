@@ -4,7 +4,7 @@
   "name": "dexter-examples",
   "license": "MIT",
   "dependencies": {
-    "dexter": "workspace:*",
+    "@dexaai/dexter": "workspace:*",
     "dotenv": "^16.3.1",
     "quick-lru": "^7.0.0"
   }

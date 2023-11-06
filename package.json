@@ -1,5 +1,5 @@
 {
-  "name": "dexter",
+  "name": "@dexaai/dexter",
   "type": "module",
   "version": "0.0.1",
   "description": "LLM tools used for production RAG at Dexa.",

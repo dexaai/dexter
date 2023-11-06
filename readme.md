@@ -12,7 +12,7 @@
   - [Examples](#examples)
     - [Basic](#basic)
     - [Caching](#caching)
-    - [Advanced](#advanced)
+    - [Chatbot](#chatbot)
   - [FAQ](#faq)
     - [Why should I use this package?](#why-should-i-use-this-package)
     - [Don't use Dexter if...](#dont-use-dexter-if)
@@ -37,7 +37,7 @@
 ## Install
 
 ```bash
-npm install dexter
+npm install @dexaai/dexter
 ```
 
 This package requires `node >= 18` or an environment with `fetch` support.
@@ -48,8 +48,8 @@ This package only exports [ESM](https://developer.mozilla.org/en-US/docs/Web/Jav
 
 ```ts
 import 'dotenv/config';
-import { EmbeddingModel } from 'dexter/model';
-import { PineconeDatastore } from 'dexter/datastore/pinecone';
+import { EmbeddingModel } from '@dexaai/dexter/model';
+import { PineconeDatastore } from '@dexaai/dexter/datastore/pinecone';
 
 async function example() {
   const embeddingModel = new EmbeddingModel({
@@ -86,9 +86,9 @@ Environment variables required to run the examples:
 - `OPENAI_API_KEY` - OpenAI API key
 - `PINECONE_API_KEY` - Pinecone API key
 - `PINECONE_BASE_URL` - Pinecone index's base URL
-  - You should be able to use a free-tier "starter" index for most of the examples, but you'll need to upgrade to a paid index to run the advanced example which uses hybrid search.
+  - You should be able to use a free-tier "starter" index for most of the examples, but you'll need to upgrade to a paid index to run the any of the hybrid search examples
   - Note that Pinecone's free starter index doesn't support namespaces, `deleteAll`, or hybrid search :sigh:
-- `SPLADE_SERVICE_URL` - optional; only used for the advanced hybrid search example
+- `SPLADE_SERVICE_URL` - optional; only used for the chatbot hybrid search example
 
 #### Basic
 
@@ -102,18 +102,18 @@ npx tsx examples/basic.ts
 npx tsx examples/caching.ts
 ```
 
-#### Advanced
+#### Chatbot
 
 This is a more involved example of a chatbot using RAG. It indexes 100 transcript chunks from the [Huberman Lab Podcast](https://hubermanlab.com) into a [hybrid Pinecone datastore](https://docs.pinecone.io/docs/hybrid-search) using [OpenAI ada-002 embeddings](https://platform.openai.com/docs/guides/embeddings) for the dense vectors and a [HuggingFace SPLADE model](https://huggingface.co/naver/splade-cocondenser-ensembledistil) for the sparse embeddings.
 
-See the [advanced example readme](./examples/advanced/readme.md) for more details.
+See the [chatbot example readme](./examples/chatbot/readme.md) for more details.
 
 ```bash
-npx tsx examples/advanced/ingest.ts
+npx tsx examples/chatbot/ingest.ts
 ```
 
 ```bash
-npx tsx examples/advanced/cli.ts
+npx tsx examples/chatbot/cli.ts
 ```
 
 ## FAQ

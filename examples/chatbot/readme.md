@@ -14,11 +14,11 @@ This is a more involved example using `dexter` to build a basic chatbot using RA
 ## Usage
 
 ```bash
-tsx examples/advanced/ingest.ts
+tsx examples/chatbot/ingest.ts
 ```
 
 ```bash
-tsx examples/advanced/cli.ts
+tsx examples/chatbot/cli.ts
 ```
 
 ## License

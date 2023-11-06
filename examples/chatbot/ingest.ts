@@ -21,7 +21,7 @@ async function main() {
 // From: https://huggingface.co/datasets/dexaai/huberman_on_exercise
 async function loadChunks(): Promise<Chunk[]> {
   const json = JSON.parse(
-    await readFile('./examples/advanced/data.json', 'utf8')
+    await readFile('./examples/chatbot/data.json', 'utf8')
   );
   const rows = json.rows.map((row: any) => row.row);
   const chunks: Chunk[] = rows.map((row: any) => ({

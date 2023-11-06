@@ -123,7 +123,7 @@ importers:
 
   examples:
     dependencies:
-      dexter:
+      '@dexaai/dexter':
         specifier: workspace:*
         version: link:..
       dotenv:
