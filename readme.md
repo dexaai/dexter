@@ -1,22 +1,21 @@
-<p align="center">
+<p>
   <a href="https://www.npmjs.com/package/@dexaai/dexter"><img alt="NPM" src="https://img.shields.io/npm/v/@dexaai/dexter.svg" /></a>
   <a href="https://github.com/dexaai/dexter/actions/workflows/test.yml"><img alt="Build Status" src="https://github.com/dexaai/dexter/actions/workflows/main.yml/badge.svg" /></a>
   <a href="https://github.com/dexaai/dexter/blob/main/license"><img alt="MIT License" src="https://img.shields.io/badge/license-MIT-blue" /></a>
   <a href="https://prettier.io"><img alt="Prettier Code Formatting" src="https://img.shields.io/badge/code_style-prettier-brightgreen.svg" /></a>
 </p>
 
-- [Dexter](#dexter)
-  - [Features](#features)
-  - [Install](#install)
-  - [Usage](#usage)
-  - [Docs](#docs)
-  - [License](#license)
-
-# Dexter
+# Dexter <!-- omit from toc -->
 
 Dexter is a set of mature LLM tools used in production at [Dexa](https://dexa.ai), with a focus on real-world RAG ([Retrieval Augmented Generation](https://arxiv.org/abs/2005.11401)).
 
 _If you're a TypeScript AI engineer, check it out!_ 😊
+
+- [Features](#features)
+- [Install](#install)
+- [Usage](#usage)
+- [Docs](#docs)
+- [License](#license)
 
 ## Features
 
