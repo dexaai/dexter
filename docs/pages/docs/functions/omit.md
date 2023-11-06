@@ -30,4 +30,4 @@ omit({ a: 1, b: 2, c: 3 }, 'a', 'c') // { b: 2 }
 
 ## Source
 
-[src/utils/helpers.ts:17](https://github.com/dexaai/llm-tools/blob/1257af6/src/utils/helpers.ts#L17)
+[src/utils/helpers.ts:17](https://github.com/dexaai/llm-tools/blob/98f7fd5/src/utils/helpers.ts#L17)

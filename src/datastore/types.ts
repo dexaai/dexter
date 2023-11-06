@@ -90,7 +90,7 @@ export namespace Datastore {
     /**
      * Enables caching for queries. Must implement `.get(key)` and `.set(key, value)`, both of which can be either sync or async.
      *
-     * Some examples include: `new Map()`, [quick-lru](https://github.com/sindresorhus/quick-lru), or any [keyv adaptor[(https://github.com/jaredwray/keyv).
+     * Some examples include: `new Map()`, [quick-lru](https://github.com/sindresorhus/quick-lru), or any [keyv adaptor](https://github.com/jaredwray/keyv).
      */
     cache?: CacheStorage<string, QueryResult<DocMeta>>;
     events?: Events<DocMeta, Filter>;

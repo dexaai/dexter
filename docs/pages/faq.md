@@ -1,6 +1,6 @@
 # FAQ
 
-### Why should I use Dexter?
+### Why should I consider using Dexter?
 
 - Dozens of the world's top podcasters trust Dexa's RAG to represent them
 - Optimized for real production-quality RAG

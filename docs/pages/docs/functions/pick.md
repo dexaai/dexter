@@ -30,4 +30,4 @@ pick({ a: 1, b: 2, c: 3 }, 'a', 'c') // { a: 1, c: 3 }
 
 ## Source
 
-[src/utils/helpers.ts:33](https://github.com/dexaai/llm-tools/blob/1257af6/src/utils/helpers.ts#L33)
+[src/utils/helpers.ts:33](https://github.com/dexaai/llm-tools/blob/98f7fd5/src/utils/helpers.ts#L33)
