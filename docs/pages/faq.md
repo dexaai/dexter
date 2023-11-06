@@ -44,7 +44,7 @@ Yes, but we do not provide loaders for each of these out of the box, as Dexter i
 
 For loaders and chunking, we recommend that you use one of the following solutions:
 
-- [LangChain Loaders](https://js.langchain.com/docs/modules/data_connection/document_loaders/) with
+- [LangChain Loaders](https://js.langchain.com/docs/modules/data_connection/document_loaders/)
 - [LlamaIndex](https://www.llamaindex.ai) via [LlamaHub](https://llamahub.ai)
 - [Unstructured](https://unstructured.io)
 - Roll your own –– YOLO!
