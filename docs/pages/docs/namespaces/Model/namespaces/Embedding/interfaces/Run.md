@@ -8,4 +8,4 @@
 
 | Property | Type | Description | Source |
 | :------ | :------ | :------ | :------ |
-| `input` | `string`[] | - | [src/model/types.ts:124](https://github.com/dexaai/llm-tools/blob/eeaf162/src/model/types.ts#L124) |
+| `input` | `string`[] | - | [src/model/types.ts:116](https://github.com/dexaai/llm-tools/blob/2b78745/src/model/types.ts#L116) |

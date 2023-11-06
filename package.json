@@ -10,23 +10,11 @@
     "Riley Tomasek <riley@dexa.ai>",
     "Travis Fischer <travis@transitivebullsh.it>"
   ],
-  "scripts": {
-    "build": "tsc --project tsconfig.dist.json",
-    "prebuild": "rimraf dist",
-    "clean": "rimraf node_modules dist",
-    "dev": "tsc --watch",
-    "prepare": "run-s build",
-    "release": "np",
-    "predocs": "rimraf docs/pages/docs",
-    "docs": "run-s docs:*",
-    "docs:typedoc": "typedoc",
-    "docs:transform": "tsx docs/bin/transform-docs.ts",
-    "test": "run-p test:*",
-    "test:lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
-    "test:format": "prettier --check \"**/*.{js,ts,tsx}\"",
-    "test:unit": "dotenv -e .env.example -- vitest",
-    "test:typecheck": "tsc --noEmit"
+  "engines": {
+    "node": ">= 18"
   },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "sideEffects": false,
   "files": [
     "dist"
@@ -54,8 +42,23 @@
       "import": "./dist/utils/index.js"
     }
   },
-  "types": "./dist/index.d.ts",
-  "main": "./dist/index.js",
+  "scripts": {
+    "build": "tsc --project tsconfig.dist.json",
+    "prebuild": "rimraf dist",
+    "clean": "rimraf node_modules dist",
+    "dev": "tsc --watch",
+    "prepare": "run-s build",
+    "release": "np",
+    "predocs": "rimraf docs/pages/docs",
+    "docs": "run-s docs:*",
+    "docs:typedoc": "typedoc",
+    "docs:transform": "tsx docs/bin/transform-docs.ts",
+    "test": "run-p test:*",
+    "test:lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
+    "test:format": "prettier --check \"**/*.{js,ts,tsx}\"",
+    "test:unit": "dotenv -e .env.example -- vitest",
+    "test:typecheck": "tsc --noEmit"
+  },
   "dependencies": {
     "@fastify/deepmerge": "^1.3.0",
     "dedent": "^1.5.1",
@@ -89,8 +92,5 @@
     "typescript": "^5.2.2",
     "vite": "^4.3.9",
     "vitest": "^0.34.3"
-  },
-  "engines": {
-    "node": ">= 18"
   }
 }

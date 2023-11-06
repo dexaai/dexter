@@ -6,7 +6,6 @@ Generic Datastore extended by provider-specific implementations.
 
 ### Interfaces
 
-- [Cache](interfaces/Cache.md)
 - [Doc](interfaces/Doc.md)
 - [Events](interfaces/Events.md)
 - [Opts](interfaces/Opts.md)

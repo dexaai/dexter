@@ -3,9 +3,11 @@
   "createAIFunction": "createAIFunction",
   "createOpenAIClient": "createOpenAIClient",
   "createTokenizer": "createTokenizer",
+  "deepMerge": "deepMerge",
+  "defaultCacheKey": "defaultCacheKey",
   "extractJsonObject": "extractJsonObject",
   "extractZodObject": "extractZodObject",
-  "getDatastoreMemoryCache": "getDatastoreMemoryCache",
-  "getModelMemoryCache": "getModelMemoryCache",
+  "omit": "omit",
+  "pick": "pick",
   "zodToJsonSchema": "zodToJsonSchema"
 }

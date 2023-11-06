@@ -13,4 +13,4 @@ Abstract Datastore extended by provider specific implementations.
 
 ## Source
 
-[src/datastore/types.ts:76](https://github.com/dexaai/llm-tools/blob/eeaf162/src/datastore/types.ts#L76)
+[src/datastore/types.ts:63](https://github.com/dexaai/llm-tools/blob/2b78745/src/datastore/types.ts#L63)

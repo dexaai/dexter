@@ -26,9 +26,12 @@
 
 ### Type Aliases
 
+- [CacheKey](type-aliases/CacheKey.md)
+- [CacheStorage](type-aliases/CacheStorage.md)
 - [ChatModelArgs](type-aliases/ChatModelArgs.md)
 - [CompletionModelArgs](type-aliases/CompletionModelArgs.md)
 - [EmbeddingModelArgs](type-aliases/EmbeddingModelArgs.md)
+- [Prettify](type-aliases/Prettify.md)
 - [SparseVectorModelArgs](type-aliases/SparseVectorModelArgs.md)
 
 ### Functions
@@ -37,8 +40,10 @@
 - [createAIFunction](functions/createAIFunction.md)
 - [createOpenAIClient](functions/createOpenAIClient.md)
 - [createTokenizer](functions/createTokenizer.md)
+- [deepMerge](functions/deepMerge.md)
+- [defaultCacheKey](functions/defaultCacheKey.md)
 - [extractJsonObject](functions/extractJsonObject.md)
 - [extractZodObject](functions/extractZodObject.md)
-- [getDatastoreMemoryCache](functions/getDatastoreMemoryCache.md)
-- [getModelMemoryCache](functions/getModelMemoryCache.md)
+- [omit](functions/omit.md)
+- [pick](functions/pick.md)
 - [zodToJsonSchema](functions/zodToJsonSchema.md)

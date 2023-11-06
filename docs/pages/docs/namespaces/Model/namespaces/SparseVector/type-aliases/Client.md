@@ -23,4 +23,4 @@
 
 ## Source
 
-[src/model/types.ts:228](https://github.com/dexaai/llm-tools/blob/eeaf162/src/model/types.ts#L228)
+[src/model/types.ts:220](https://github.com/dexaai/llm-tools/blob/2b78745/src/model/types.ts#L220)

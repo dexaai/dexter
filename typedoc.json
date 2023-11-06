@@ -1,11 +1,6 @@
 {
   "$schema": "https://typedoc.org/schema.json",
-  "entryPoints": [
-    "./src/model/index.ts",
-    "./src/prompt/index.ts",
-    "./src/datastore/index.ts",
-    "./src/utils/index.ts"
-  ],
+  "entryPoints": ["./src/index.ts"],
   "exclude": ["**/*.test.ts"],
   "plugin": ["typedoc-plugin-markdown"],
   "out": "./docs/pages/docs",

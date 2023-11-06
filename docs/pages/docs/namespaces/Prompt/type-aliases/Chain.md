@@ -23,4 +23,4 @@ A prompt chain that coordinates the template, functions, and validator.
 
 ## Source
 
-[src/prompt/types.ts:7](https://github.com/dexaai/llm-tools/blob/eeaf162/src/prompt/types.ts#L7)
+[src/prompt/types.ts:7](https://github.com/dexaai/llm-tools/blob/2b78745/src/prompt/types.ts#L7)

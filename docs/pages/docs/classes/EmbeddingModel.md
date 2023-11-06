@@ -14,15 +14,16 @@ Doesn't accept OpenAIClient because retry needs to be handled at the model level
 
 #### Parameters
 
-| Parameter | Type |
-| :------ | :------ |
-| `args`? | `object` |
-| `args.cache`? | [`Cache`](../namespaces/Model/interfaces/Cache.md)\<[`Run`](../namespaces/Model/namespaces/Embedding/interfaces/Run.md) & [`Config`](../namespaces/Model/namespaces/Embedding/interfaces/Config.md), [`Response`](../namespaces/Model/namespaces/Embedding/interfaces/Response.md)\> |
-| `args.client`? | [`Client`](../namespaces/Model/namespaces/Embedding/type-aliases/Client.md) |
-| `args.context`? | [`Ctx`](../namespaces/Model/type-aliases/Ctx.md) |
-| `args.debug`? | `boolean` |
-| `args.events`? | [`Events`](../namespaces/Model/interfaces/Events.md)\<[`Run`](../namespaces/Model/namespaces/Embedding/interfaces/Run.md) & [`Config`](../namespaces/Model/namespaces/Embedding/interfaces/Config.md), [`Response`](../namespaces/Model/namespaces/Embedding/interfaces/Response.md), `any`\> |
-| `args.params`? | [`Config`](../namespaces/Model/namespaces/Embedding/interfaces/Config.md) & `Partial`\<[`Run`](../namespaces/Model/namespaces/Embedding/interfaces/Run.md)\> |
+| Parameter | Type | Description |
+| :------ | :------ | :------ |
+| `args`? | `object` | - |
+| `args.cache`? | [`CacheStorage`](../type-aliases/CacheStorage.md)\<`string`, [`Response`](../namespaces/Model/namespaces/Embedding/interfaces/Response.md)\> | Enables caching for model responses. Must implement `.get(key)` and `.set(key, value)`, both of which can be either sync or async.<br /><br />Some examples include: `new Map()`, [quick-lru](https://github.com/sindresorhus/quick-lru), or any [keyv adaptor[(https://github.com/jaredwray/keyv). |
+| `args.cacheKey`? | [`CacheKey`](../type-aliases/CacheKey.md)\<[`Run`](../namespaces/Model/namespaces/Embedding/interfaces/Run.md) & [`Config`](../namespaces/Model/namespaces/Embedding/interfaces/Config.md), `string`\> | A function that returns a cache key for the given params.<br /><br />A simple example would be: `(params) => JSON.stringify(params)`<br /><br />The default `cacheKey` function uses [hash-obj](https://github.com/sindresorhus/hash-obj) to create a stable sha256 hash of the params. |
+| `args.client`? | [`Client`](../namespaces/Model/namespaces/Embedding/type-aliases/Client.md) | - |
+| `args.context`? | [`Ctx`](../namespaces/Model/type-aliases/Ctx.md) | - |
+| `args.debug`? | `boolean` | Whether or not to add default `console.log` event handlers |
+| `args.events`? | [`Events`](../namespaces/Model/interfaces/Events.md)\<[`Run`](../namespaces/Model/namespaces/Embedding/interfaces/Run.md) & [`Config`](../namespaces/Model/namespaces/Embedding/interfaces/Config.md), [`Response`](../namespaces/Model/namespaces/Embedding/interfaces/Response.md), `any`\> | - |
+| `args.params`? | [`Config`](../namespaces/Model/namespaces/Embedding/interfaces/Config.md) & `Partial`\<[`Run`](../namespaces/Model/namespaces/Embedding/interfaces/Run.md)\> | - |
 
 #### Returns
 
@@ -34,16 +35,16 @@ Doesn't accept OpenAIClient because retry needs to be handled at the model level
 
 #### Source
 
-[src/model/embedding.ts:47](https://github.com/dexaai/llm-tools/blob/eeaf162/src/model/embedding.ts#L47)
+[src/model/embedding.ts:48](https://github.com/dexaai/llm-tools/blob/2b78745/src/model/embedding.ts#L48)
 
 ## Properties
 
 | Property | Type | Description | Inheritance | Source |
 | :------ | :------ | :------ | :------ | :------ |
-| `modelProvider` | `"openai"` | - | [`AbstractModel`](AbstractModel.md).`modelProvider` | [src/model/embedding.ts:43](https://github.com/dexaai/llm-tools/blob/eeaf162/src/model/embedding.ts#L43) |
-| `modelType` | `"embedding"` | - | [`AbstractModel`](AbstractModel.md).`modelType` | [src/model/embedding.ts:42](https://github.com/dexaai/llm-tools/blob/eeaf162/src/model/embedding.ts#L42) |
-| `throttledModel` | `BulkEmbedder` | - | - | [src/model/embedding.ts:44](https://github.com/dexaai/llm-tools/blob/eeaf162/src/model/embedding.ts#L44) |
-| `tokenizer` | [`ITokenizer`](../namespaces/Model/interfaces/ITokenizer.md) | - | [`AbstractModel`](AbstractModel.md).`tokenizer` | [src/model/model.ts:46](https://github.com/dexaai/llm-tools/blob/eeaf162/src/model/model.ts#L46) |
+| `modelProvider` | `"openai"` | - | [`AbstractModel`](AbstractModel.md).`modelProvider` | [src/model/embedding.ts:44](https://github.com/dexaai/llm-tools/blob/2b78745/src/model/embedding.ts#L44) |
+| `modelType` | `"embedding"` | - | [`AbstractModel`](AbstractModel.md).`modelType` | [src/model/embedding.ts:43](https://github.com/dexaai/llm-tools/blob/2b78745/src/model/embedding.ts#L43) |
+| `throttledModel` | `BulkEmbedder` | - | - | [src/model/embedding.ts:45](https://github.com/dexaai/llm-tools/blob/2b78745/src/model/embedding.ts#L45) |
+| `tokenizer` | [`ITokenizer`](../namespaces/Model/interfaces/ITokenizer.md) | - | [`AbstractModel`](AbstractModel.md).`tokenizer` | [src/model/model.ts:65](https://github.com/dexaai/llm-tools/blob/2b78745/src/model/model.ts#L65) |
 
 ## Methods
 
@@ -69,7 +70,7 @@ Add event handlers to the model.
 
 #### Source
 
-[src/model/model.ts:212](https://github.com/dexaai/llm-tools/blob/eeaf162/src/model/model.ts#L212)
+[src/model/model.ts:235](https://github.com/dexaai/llm-tools/blob/2b78745/src/model/model.ts#L235)
 
 ***
 
@@ -95,7 +96,7 @@ Add the params. Overrides existing keys.
 
 #### Source
 
-[src/model/model.ts:190](https://github.com/dexaai/llm-tools/blob/eeaf162/src/model/model.ts#L190)
+[src/model/model.ts:213](https://github.com/dexaai/llm-tools/blob/2b78745/src/model/model.ts#L213)
 
 ***
 
@@ -107,15 +108,16 @@ Clone the model and merge/orverride the given properties.
 
 #### Parameters
 
-| Parameter | Type |
-| :------ | :------ |
-| `args`? | `object` |
-| `args.cache`? | [`Cache`](../namespaces/Model/interfaces/Cache.md)\<[`Run`](../namespaces/Model/namespaces/Embedding/interfaces/Run.md) & [`Config`](../namespaces/Model/namespaces/Embedding/interfaces/Config.md), [`Response`](../namespaces/Model/namespaces/Embedding/interfaces/Response.md)\> |
-| `args.client`? | [`Client`](../namespaces/Model/namespaces/Embedding/type-aliases/Client.md) |
-| `args.context`? | [`Ctx`](../namespaces/Model/type-aliases/Ctx.md) |
-| `args.debug`? | `boolean` |
-| `args.events`? | [`Events`](../namespaces/Model/interfaces/Events.md)\<[`Run`](../namespaces/Model/namespaces/Embedding/interfaces/Run.md) & [`Config`](../namespaces/Model/namespaces/Embedding/interfaces/Config.md), [`Response`](../namespaces/Model/namespaces/Embedding/interfaces/Response.md), `any`\> |
-| `args.params`? | [`Config`](../namespaces/Model/namespaces/Embedding/interfaces/Config.md) & `Partial`\<[`Run`](../namespaces/Model/namespaces/Embedding/interfaces/Run.md)\> |
+| Parameter | Type | Description |
+| :------ | :------ | :------ |
+| `args`? | `object` | - |
+| `args.cache`? | [`CacheStorage`](../type-aliases/CacheStorage.md)\<`string`, [`Response`](../namespaces/Model/namespaces/Embedding/interfaces/Response.md)\> | Enables caching for model responses. Must implement `.get(key)` and `.set(key, value)`, both of which can be either sync or async.<br /><br />Some examples include: `new Map()`, [quick-lru](https://github.com/sindresorhus/quick-lru), or any [keyv adaptor[(https://github.com/jaredwray/keyv). |
+| `args.cacheKey`? | [`CacheKey`](../type-aliases/CacheKey.md)\<[`Run`](../namespaces/Model/namespaces/Embedding/interfaces/Run.md) & [`Config`](../namespaces/Model/namespaces/Embedding/interfaces/Config.md), `string`\> | A function that returns a cache key for the given params.<br /><br />A simple example would be: `(params) => JSON.stringify(params)`<br /><br />The default `cacheKey` function uses [hash-obj](https://github.com/sindresorhus/hash-obj) to create a stable sha256 hash of the params. |
+| `args.client`? | [`Client`](../namespaces/Model/namespaces/Embedding/type-aliases/Client.md) | - |
+| `args.context`? | [`Ctx`](../namespaces/Model/type-aliases/Ctx.md) | - |
+| `args.debug`? | `boolean` | Whether or not to add default `console.log` event handlers |
+| `args.events`? | [`Events`](../namespaces/Model/interfaces/Events.md)\<[`Run`](../namespaces/Model/namespaces/Embedding/interfaces/Run.md) & [`Config`](../namespaces/Model/namespaces/Embedding/interfaces/Config.md), [`Response`](../namespaces/Model/namespaces/Embedding/interfaces/Response.md), `any`\> | - |
+| `args.params`? | [`Config`](../namespaces/Model/namespaces/Embedding/interfaces/Config.md) & `Partial`\<[`Run`](../namespaces/Model/namespaces/Embedding/interfaces/Run.md)\> | - |
 
 #### Returns
 
@@ -127,7 +129,7 @@ Clone the model and merge/orverride the given properties.
 
 #### Source
 
-[src/model/embedding.ts:153](https://github.com/dexaai/llm-tools/blob/eeaf162/src/model/embedding.ts#L153)
+[src/model/embedding.ts:154](https://github.com/dexaai/llm-tools/blob/2b78745/src/model/embedding.ts#L154)
 
 ***
 
@@ -147,7 +149,7 @@ Get the current client
 
 #### Source
 
-[src/model/model.ts:157](https://github.com/dexaai/llm-tools/blob/eeaf162/src/model/model.ts#L157)
+[src/model/model.ts:180](https://github.com/dexaai/llm-tools/blob/2b78745/src/model/model.ts#L180)
 
 ***
 
@@ -167,7 +169,7 @@ Get the current context
 
 #### Source
 
-[src/model/model.ts:168](https://github.com/dexaai/llm-tools/blob/eeaf162/src/model/model.ts#L168)
+[src/model/model.ts:191](https://github.com/dexaai/llm-tools/blob/2b78745/src/model/model.ts#L191)
 
 ***
 
@@ -187,7 +189,7 @@ Get the current event handlers
 
 #### Source
 
-[src/model/model.ts:207](https://github.com/dexaai/llm-tools/blob/eeaf162/src/model/model.ts#L207)
+[src/model/model.ts:230](https://github.com/dexaai/llm-tools/blob/2b78745/src/model/model.ts#L230)
 
 ***
 
@@ -207,7 +209,7 @@ Get the current params
 
 #### Source
 
-[src/model/model.ts:185](https://github.com/dexaai/llm-tools/blob/eeaf162/src/model/model.ts#L185)
+[src/model/model.ts:208](https://github.com/dexaai/llm-tools/blob/2b78745/src/model/model.ts#L208)
 
 ***
 
@@ -236,7 +238,7 @@ Get the current params
 
 #### Source
 
-[src/model/model.ts:58](https://github.com/dexaai/llm-tools/blob/eeaf162/src/model/model.ts#L58)
+[src/model/model.ts:78](https://github.com/dexaai/llm-tools/blob/2b78745/src/model/model.ts#L78)
 
 ***
 
@@ -250,7 +252,7 @@ Set the cache to a new cache. Set to undefined to remove existing.
 
 | Parameter | Type |
 | :------ | :------ |
-| `cache` | `undefined` \| [`Cache`](../namespaces/Model/interfaces/Cache.md)\<[`Run`](../namespaces/Model/namespaces/Embedding/interfaces/Run.md) & [`Config`](../namespaces/Model/namespaces/Embedding/interfaces/Config.md), [`Response`](../namespaces/Model/namespaces/Embedding/interfaces/Response.md)\> |
+| `cache` | `undefined` \| [`CacheStorage`](../type-aliases/CacheStorage.md)\<`string`, [`Response`](../namespaces/Model/namespaces/Embedding/interfaces/Response.md)\> |
 
 #### Returns
 
@@ -262,7 +264,7 @@ Set the cache to a new cache. Set to undefined to remove existing.
 
 #### Source
 
-[src/model/model.ts:151](https://github.com/dexaai/llm-tools/blob/eeaf162/src/model/model.ts#L151)
+[src/model/model.ts:174](https://github.com/dexaai/llm-tools/blob/2b78745/src/model/model.ts#L174)
 
 ***
 
@@ -288,7 +290,7 @@ Set the client to a new OpenAI API client.
 
 #### Source
 
-[src/model/model.ts:162](https://github.com/dexaai/llm-tools/blob/eeaf162/src/model/model.ts#L162)
+[src/model/model.ts:185](https://github.com/dexaai/llm-tools/blob/2b78745/src/model/model.ts#L185)
 
 ***
 
@@ -314,7 +316,7 @@ Set the context to a new context. Removes all existing values.
 
 #### Source
 
-[src/model/model.ts:179](https://github.com/dexaai/llm-tools/blob/eeaf162/src/model/model.ts#L179)
+[src/model/model.ts:202](https://github.com/dexaai/llm-tools/blob/2b78745/src/model/model.ts#L202)
 
 ***
 
@@ -341,7 +343,7 @@ Set to empty object `{}` to remove all events.
 
 #### Source
 
-[src/model/model.ts:221](https://github.com/dexaai/llm-tools/blob/eeaf162/src/model/model.ts#L221)
+[src/model/model.ts:244](https://github.com/dexaai/llm-tools/blob/2b78745/src/model/model.ts#L244)
 
 ***
 
@@ -367,7 +369,7 @@ Set the params to a new params. Removes all existing values.
 
 #### Source
 
-[src/model/model.ts:200](https://github.com/dexaai/llm-tools/blob/eeaf162/src/model/model.ts#L200)
+[src/model/model.ts:223](https://github.com/dexaai/llm-tools/blob/2b78745/src/model/model.ts#L223)
 
 ***
 
@@ -393,4 +395,4 @@ Add the context. Overrides existing keys.
 
 #### Source
 
-[src/model/model.ts:173](https://github.com/dexaai/llm-tools/blob/eeaf162/src/model/model.ts#L173)
+[src/model/model.ts:196](https://github.com/dexaai/llm-tools/blob/2b78745/src/model/model.ts#L196)
