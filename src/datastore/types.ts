@@ -95,6 +95,7 @@ export namespace Datastore {
     cache?: CacheStorage<string, QueryResult<DocMeta>>;
     events?: Events<DocMeta, Filter>;
     context?: Ctx;
+    /** Whether or not to add default `console.log` event handlers */
     debug?: boolean;
   }
 

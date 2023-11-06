@@ -1,32 +1,20 @@
 # Usage
 
+This example shows how to use the OpenAI [text-embedding-ada-002](https://platform.openai.com/docs/guides/embeddings) embedding model and a [Pinecone](https://www.pinecone.io/) datastore to index and query a set of documents.
+
 ```ts
 import 'dotenv/config';
-import { EmbeddingModel, PineconeDatastore } from '@dexaai/ai';
+import { EmbeddingModel } from '@dexaai/dexter/model';
+import { PineconeDatastore } from '@dexaai/dexter/datastore/pinecone';
 
-// Base Pinecone Datastore with OpenAI embeddings
-(async () => {
+async function example() {
   const embeddingModel = new EmbeddingModel({
-    params: {
-      model: 'text-embedding-ada-002',
-      batch: {
-        maxBatchSize: 30,
-        maxTokensPerBatch: 10000,
-      },
-      throttle: {
-        maxConcurrentRequests: 1,
-        maxRequestsPerMin: 1000,
-      },
-    },
-    context: { test: 'test' },
-    events: { onComplete: [console.log] },
+    params: { model: 'text-embedding-ada-002' },
   });
 
   const store = new PineconeDatastore({
-    namespace: 'test',
     contentKey: 'content',
     embeddingModel,
-    events: { onQueryComplete: [console.log] },
   });
 
   await store.upsert([
@@ -40,19 +28,9 @@ import { EmbeddingModel, PineconeDatastore } from '@dexaai/ai';
     { id: '8', metadata: { content: 'tablet' } },
   ]);
 
-  const result = await store.query({
-    query: 'dolphin',
-  });
-  console.log(JSON.stringify(result, null, 2));
-
-  const result2 = await store.query({
-    query: 'fox',
-  });
-  console.log(JSON.stringify(result2, null, 2));
-
-  const result3 = await store.query({
-    query: 'keyboard',
-  });
-  console.log(JSON.stringify(result3, null, 2));
-})();
+  const result = await store.query({ query: 'dolphin' });
+  console.log(result);
+}
 ```
+
+You can run this example by cloning this repo by following [these instructions](./examples.md).

@@ -2,11 +2,11 @@ import { useRouter } from 'next/router';
 import { type DocsThemeConfig, useConfig } from 'nextra-theme-docs';
 import React from 'react';
 
-const siteHost = 'llm-tools.dexa.ai';
+const siteHost = 'dexter.dexa.ai';
 const siteUrl = `https://${siteHost}`;
 const siteSocialUrl = `${siteUrl}/social.png`; // TODO
-const siteDesc = `TODO`;
-const siteTitle = 'Dexa LLM Tools';
+const siteDesc = `LLM tools used in production at Dexa, with a focus on real-world RAG.`;
+const siteTitle = 'Dexter';
 
 const config: DocsThemeConfig = {
   logo: (

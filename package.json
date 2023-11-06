@@ -2,9 +2,14 @@
   "name": "@dexaai/dexter",
   "type": "module",
   "version": "0.0.1",
-  "description": "LLM tools used for production RAG at Dexa.",
+  "description": "LLM tools used in production at Dexa, with a focus on real-world RAG.",
   "repository": "dexaai/dexter",
   "license": "MIT",
+  "author": "Riley Tomasek <riley@dexa.ai>",
+  "contributors": [
+    "Riley Tomasek <riley@dexa.ai>",
+    "Travis Fischer <travis@transitivebullsh.it>"
+  ],
   "scripts": {
     "build": "tsc --project tsconfig.dist.json",
     "prebuild": "rimraf dist",
@@ -43,6 +48,10 @@
     "./model": {
       "types": "./dist/model/index.d.ts",
       "import": "./dist/model/index.js"
+    },
+    "./utils": {
+      "types": "./dist/utils/index.d.ts",
+      "import": "./dist/utils/index.js"
     }
   },
   "types": "./dist/index.d.ts",
@@ -80,9 +89,6 @@
     "typescript": "^5.2.2",
     "vite": "^4.3.9",
     "vitest": "^0.34.3"
-  },
-  "publishConfig": {
-    "access": "restricted"
   },
   "engines": {
     "node": ">= 18"

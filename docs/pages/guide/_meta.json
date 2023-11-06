@@ -1,6 +1,7 @@
 {
   "install": "Install",
   "usage": "Usage",
+  "caching": "Caching",
   "examples": "Examples",
-  "use-cases": "Use Cases"
+  "faq": "FAQ"
 }
