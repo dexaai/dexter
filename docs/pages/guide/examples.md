@@ -29,7 +29,7 @@ npx tsx examples/caching.ts
 
 ### Redis Caching
 
-This example requires a valid `REDIS_URL` env var and shows how you can use any [keyv](https://github.com/jaredwray/keyv) adaptor for caching.
+This example requires a valid `REDIS_URL` env var.
 
 ```bash
 npx tsx examples/caching-redis.ts
