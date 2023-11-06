@@ -1,6 +1,6 @@
 # Contributing
 
-Suggestions and pull requests are very welcome.
+Suggestions and pull requests are very welcome. 😊
 
 ## Development
 
