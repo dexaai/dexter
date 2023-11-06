@@ -18,7 +18,7 @@ _If you're a TypeScript AI engineer, check it out!_ 😊
 - [Examples](#examples)
   - [Basic](#basic)
   - [Caching](#caching)
-    - [Redis Caching](#redis-caching)
+  - [Redis Caching](#redis-caching)
   - [Chatbot](#chatbot)
 - [License](#license)
 
@@ -112,7 +112,7 @@ npx tsx examples/caching.ts
 
 [source](./examples/caching.ts)
 
-#### Redis Caching
+### Redis Caching
 
 This example requires a valid `REDIS_URL` env var.
 

@@ -11,7 +11,7 @@ Environment variables required to run the examples:
   - Note that Pinecone's free starter index doesn't support namespaces, `deleteAll`, or hybrid search _:sigh:_
 - `SPLADE_SERVICE_URL` - optional; only used for the chatbot hybrid search example
 
-## Basic
+### Basic
 
 ```bash
 npx tsx examples/basic.ts
@@ -19,7 +19,7 @@ npx tsx examples/basic.ts
 
 [source](https://github.com/dexaai/dexter/tree/master/examples/basic.ts)
 
-## Caching
+### Caching
 
 ```bash
 npx tsx examples/caching.ts
@@ -27,7 +27,7 @@ npx tsx examples/caching.ts
 
 [source](https://github.com/dexaai/dexter/tree/master/examples/caching.ts)
 
-#### Redis Caching
+### Redis Caching
 
 This example requires a valid `REDIS_URL` env var.
 
@@ -37,7 +37,7 @@ npx tsx examples/caching-redis.ts
 
 [source](https://github.com/dexaai/dexter/tree/master/examples/caching-redis.ts)
 
-## Chatbot
+### Chatbot
 
 This is a more involved example of a chatbot using RAG. It indexes 100 transcript chunks from the [Huberman Lab Podcast](https://hubermanlab.com) into a [hybrid Pinecone datastore](https://docs.pinecone.io/docs/hybrid-search) using [OpenAI ada-002 embeddings](https://platform.openai.com/docs/guides/embeddings) for the dense vectors and a [HuggingFace SPLADE model](https://huggingface.co/naver/splade-cocondenser-ensembledistil) for the sparse embeddings.
 
