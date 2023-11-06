@@ -33,15 +33,15 @@
 
 #### Source
 
-[src/model/completion.ts:28](https://github.com/dexaai/llm-tools/blob/2b78745/src/model/completion.ts#L28)
+[src/model/completion.ts:28](https://github.com/dexaai/llm-tools/blob/5018eae/src/model/completion.ts#L28)
 
 ## Properties
 
 | Property | Type | Description | Inheritance | Source |
 | :------ | :------ | :------ | :------ | :------ |
-| `modelProvider` | `"openai"` | - | [`AbstractModel`](AbstractModel.md).`modelProvider` | [src/model/completion.ts:26](https://github.com/dexaai/llm-tools/blob/2b78745/src/model/completion.ts#L26) |
-| `modelType` | `"completion"` | - | [`AbstractModel`](AbstractModel.md).`modelType` | [src/model/completion.ts:25](https://github.com/dexaai/llm-tools/blob/2b78745/src/model/completion.ts#L25) |
-| `tokenizer` | [`ITokenizer`](../namespaces/Model/interfaces/ITokenizer.md) | - | [`AbstractModel`](AbstractModel.md).`tokenizer` | [src/model/model.ts:65](https://github.com/dexaai/llm-tools/blob/2b78745/src/model/model.ts#L65) |
+| `modelProvider` | `"openai"` | - | [`AbstractModel`](AbstractModel.md).`modelProvider` | [src/model/completion.ts:26](https://github.com/dexaai/llm-tools/blob/5018eae/src/model/completion.ts#L26) |
+| `modelType` | `"completion"` | - | [`AbstractModel`](AbstractModel.md).`modelType` | [src/model/completion.ts:25](https://github.com/dexaai/llm-tools/blob/5018eae/src/model/completion.ts#L25) |
+| `tokenizer` | [`ITokenizer`](../namespaces/Model/interfaces/ITokenizer.md) | - | [`AbstractModel`](AbstractModel.md).`tokenizer` | [src/model/model.ts:65](https://github.com/dexaai/llm-tools/blob/5018eae/src/model/model.ts#L65) |
 
 ## Methods
 
@@ -67,7 +67,7 @@ Add event handlers to the model.
 
 #### Source
 
-[src/model/model.ts:235](https://github.com/dexaai/llm-tools/blob/2b78745/src/model/model.ts#L235)
+[src/model/model.ts:235](https://github.com/dexaai/llm-tools/blob/5018eae/src/model/model.ts#L235)
 
 ***
 
@@ -93,7 +93,7 @@ Add the params. Overrides existing keys.
 
 #### Source
 
-[src/model/model.ts:213](https://github.com/dexaai/llm-tools/blob/2b78745/src/model/model.ts#L213)
+[src/model/model.ts:213](https://github.com/dexaai/llm-tools/blob/5018eae/src/model/model.ts#L213)
 
 ***
 
@@ -126,7 +126,7 @@ Clone the model and merge/orverride the given properties.
 
 #### Source
 
-[src/model/completion.ts:73](https://github.com/dexaai/llm-tools/blob/2b78745/src/model/completion.ts#L73)
+[src/model/completion.ts:73](https://github.com/dexaai/llm-tools/blob/5018eae/src/model/completion.ts#L73)
 
 ***
 
@@ -146,7 +146,7 @@ Get the current client
 
 #### Source
 
-[src/model/model.ts:180](https://github.com/dexaai/llm-tools/blob/2b78745/src/model/model.ts#L180)
+[src/model/model.ts:180](https://github.com/dexaai/llm-tools/blob/5018eae/src/model/model.ts#L180)
 
 ***
 
@@ -166,7 +166,7 @@ Get the current context
 
 #### Source
 
-[src/model/model.ts:191](https://github.com/dexaai/llm-tools/blob/2b78745/src/model/model.ts#L191)
+[src/model/model.ts:191](https://github.com/dexaai/llm-tools/blob/5018eae/src/model/model.ts#L191)
 
 ***
 
@@ -186,7 +186,7 @@ Get the current event handlers
 
 #### Source
 
-[src/model/model.ts:230](https://github.com/dexaai/llm-tools/blob/2b78745/src/model/model.ts#L230)
+[src/model/model.ts:230](https://github.com/dexaai/llm-tools/blob/5018eae/src/model/model.ts#L230)
 
 ***
 
@@ -206,7 +206,7 @@ Get the current params
 
 #### Source
 
-[src/model/model.ts:208](https://github.com/dexaai/llm-tools/blob/2b78745/src/model/model.ts#L208)
+[src/model/model.ts:208](https://github.com/dexaai/llm-tools/blob/5018eae/src/model/model.ts#L208)
 
 ***
 
@@ -233,7 +233,7 @@ Get the current params
 
 #### Source
 
-[src/model/model.ts:78](https://github.com/dexaai/llm-tools/blob/2b78745/src/model/model.ts#L78)
+[src/model/model.ts:78](https://github.com/dexaai/llm-tools/blob/5018eae/src/model/model.ts#L78)
 
 ***
 
@@ -259,7 +259,7 @@ Set the cache to a new cache. Set to undefined to remove existing.
 
 #### Source
 
-[src/model/model.ts:174](https://github.com/dexaai/llm-tools/blob/2b78745/src/model/model.ts#L174)
+[src/model/model.ts:174](https://github.com/dexaai/llm-tools/blob/5018eae/src/model/model.ts#L174)
 
 ***
 
@@ -285,7 +285,7 @@ Set the client to a new OpenAI API client.
 
 #### Source
 
-[src/model/model.ts:185](https://github.com/dexaai/llm-tools/blob/2b78745/src/model/model.ts#L185)
+[src/model/model.ts:185](https://github.com/dexaai/llm-tools/blob/5018eae/src/model/model.ts#L185)
 
 ***
 
@@ -311,7 +311,7 @@ Set the context to a new context. Removes all existing values.
 
 #### Source
 
-[src/model/model.ts:202](https://github.com/dexaai/llm-tools/blob/2b78745/src/model/model.ts#L202)
+[src/model/model.ts:202](https://github.com/dexaai/llm-tools/blob/5018eae/src/model/model.ts#L202)
 
 ***
 
@@ -338,7 +338,7 @@ Set to empty object `{}` to remove all events.
 
 #### Source
 
-[src/model/model.ts:244](https://github.com/dexaai/llm-tools/blob/2b78745/src/model/model.ts#L244)
+[src/model/model.ts:244](https://github.com/dexaai/llm-tools/blob/5018eae/src/model/model.ts#L244)
 
 ***
 
@@ -364,7 +364,7 @@ Set the params to a new params. Removes all existing values.
 
 #### Source
 
-[src/model/model.ts:223](https://github.com/dexaai/llm-tools/blob/2b78745/src/model/model.ts#L223)
+[src/model/model.ts:223](https://github.com/dexaai/llm-tools/blob/5018eae/src/model/model.ts#L223)
 
 ***
 
@@ -390,4 +390,4 @@ Add the context. Overrides existing keys.
 
 #### Source
 
-[src/model/model.ts:196](https://github.com/dexaai/llm-tools/blob/2b78745/src/model/model.ts#L196)
+[src/model/model.ts:196](https://github.com/dexaai/llm-tools/blob/5018eae/src/model/model.ts#L196)

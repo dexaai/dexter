@@ -11,5 +11,5 @@
 
 | Property | Type | Description | Source |
 | :------ | :------ | :------ | :------ |
-| `cached` | `boolean` | - | [src/model/types.ts:36](https://github.com/dexaai/llm-tools/blob/2b78745/src/model/types.ts#L36) |
-| `cost`? | `number` | - | [src/model/types.ts:37](https://github.com/dexaai/llm-tools/blob/2b78745/src/model/types.ts#L37) |
+| `cached` | `boolean` | - | [src/model/types.ts:36](https://github.com/dexaai/llm-tools/blob/5018eae/src/model/types.ts#L36) |
+| `cost`? | `number` | - | [src/model/types.ts:37](https://github.com/dexaai/llm-tools/blob/5018eae/src/model/types.ts#L37) |

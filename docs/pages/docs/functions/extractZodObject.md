@@ -25,4 +25,4 @@ Throws an error with a message optimized for GPT readability if it fails.
 
 ## Source
 
-[src/prompt/functions/extract-zod-object.ts:9](https://github.com/dexaai/llm-tools/blob/2b78745/src/prompt/functions/extract-zod-object.ts#L9)
+[src/prompt/functions/extract-zod-object.ts:9](https://github.com/dexaai/llm-tools/blob/5018eae/src/prompt/functions/extract-zod-object.ts#L9)

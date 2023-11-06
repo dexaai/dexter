@@ -8,6 +8,6 @@
 
 | Property | Type | Description | Inheritance | Source |
 | :------ | :------ | :------ | :------ | :------ |
-| `cached` | `boolean` | - | [`Response`](../../Base/interfaces/Response.md).`cached` | [src/model/types.ts:36](https://github.com/dexaai/llm-tools/blob/2b78745/src/model/types.ts#L36) |
-| `cost`? | `number` | - | [`Response`](../../Base/interfaces/Response.md).`cost` | [src/model/types.ts:37](https://github.com/dexaai/llm-tools/blob/2b78745/src/model/types.ts#L37) |
-| `message` | `ChatCompletionMessageParam` | - | - | [src/model/types.ts:68](https://github.com/dexaai/llm-tools/blob/2b78745/src/model/types.ts#L68) |
+| `cached` | `boolean` | - | [`Response`](../../Base/interfaces/Response.md).`cached` | [src/model/types.ts:36](https://github.com/dexaai/llm-tools/blob/5018eae/src/model/types.ts#L36) |
+| `cost`? | `number` | - | [`Response`](../../Base/interfaces/Response.md).`cost` | [src/model/types.ts:37](https://github.com/dexaai/llm-tools/blob/5018eae/src/model/types.ts#L37) |
+| `message` | `ChatCompletionMessageParam` | - | - | [src/model/types.ts:68](https://github.com/dexaai/llm-tools/blob/5018eae/src/model/types.ts#L68) |

@@ -16,4 +16,4 @@ Sparse vector from SPLADE models.
 
 ## Source
 
-[src/model/types.ts:230](https://github.com/dexaai/llm-tools/blob/2b78745/src/model/types.ts#L230)
+[src/model/types.ts:230](https://github.com/dexaai/llm-tools/blob/5018eae/src/model/types.ts#L230)
