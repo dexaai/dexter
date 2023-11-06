@@ -40,14 +40,6 @@ export namespace Model {
   }
 
   /**
-   * Cache for storing model responses
-   */
-  export interface Cache<MParams extends Base.Params, MResponse extends any> {
-    get(key: MParams): Promise<MResponse | null | undefined>;
-    set(key: MParams, value: MResponse): Promise<boolean>;
-  }
-
-  /**
    * Chat Model
    */
   export namespace Chat {

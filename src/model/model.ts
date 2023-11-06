@@ -1,7 +1,11 @@
 import { createTokenizer } from './utils/tokenizer.js';
 import type { Model } from './types.js';
-import type { Prettify } from './utils/helpers.js';
-import { deepMerge } from './utils/helpers.js';
+import { type Prettify, deepMerge } from '../utils/helpers.js';
+import {
+  type CacheKey,
+  type CacheStorage,
+  defaultCacheKey,
+} from '../utils/cache.js';
 
 export interface ModelArgs<
   MClient extends Model.Base.Client,
@@ -9,11 +13,25 @@ export interface ModelArgs<
   MRun extends Model.Base.Run,
   MResponse extends Model.Base.Response
 > {
-  cache?: Model.Cache<MRun & MConfig, MResponse>;
+  /**
+   * A function that returns a cache key for the given params.
+   *
+   * A simple example would be: `(params) => JSON.stringify(params)`
+   *
+   * The default `cacheKey` function uses [hash-obj](https://github.com/sindresorhus/hash-obj) to create a stable sha256 hash of the params.
+   */
+  cacheKey?: CacheKey<MRun & MConfig, string>;
+  /**
+   * Enables caching for model responses. Must implement `.get(key)` and `.set(key, value)`, both of which can be either sync or async.
+   *
+   * Some examples include: `new Map()`, [quick-lru](https://github.com/sindresorhus/quick-lru), or any [keyv adaptor[(https://github.com/jaredwray/keyv).
+   */
+  cache?: CacheStorage<string, MResponse>;
   client: MClient;
   context?: Model.Ctx;
   params: MConfig & Partial<MRun>;
   events?: Model.Events<MRun & MConfig, MResponse>;
+  /** Whether or not to add default `console.log` event handlers */
   debug?: boolean;
 }
 
@@ -37,7 +55,8 @@ export abstract class AbstractModel<
 
   abstract modelType: Model.Type;
   abstract modelProvider: Model.Provider;
-  protected cache?: Model.Cache<MRun & MConfig, MResponse>;
+  protected cacheKey: CacheKey<MRun & MConfig, string>;
+  protected cache?: CacheStorage<string, MResponse>;
   protected client: MClient;
   protected context: Model.Ctx;
   protected debug: boolean;
@@ -46,6 +65,7 @@ export abstract class AbstractModel<
   public tokenizer: Model.ITokenizer;
 
   constructor(args: ModelArgs<MClient, MConfig, MRun, MResponse>) {
+    this.cacheKey = args.cacheKey ?? defaultCacheKey;
     this.cache = args.cache;
     this.client = args.client;
     this.context = args.context ?? {};
@@ -77,9 +97,12 @@ export abstract class AbstractModel<
       ) ?? []
     );
 
+    const cacheKey = this.cacheKey(mergedParams);
+
     try {
       // Check the cache
-      const cachedResponse = this.cache && (await this.cache.get(mergedParams));
+      const cachedResponse =
+        this.cache && (await Promise.resolve(this.cache.get(cacheKey)));
       if (cachedResponse) {
         const response: MResponse = {
           ...cachedResponse,
@@ -125,7 +148,7 @@ export abstract class AbstractModel<
       );
 
       // Update the cache
-      await this?.cache?.set(mergedParams, response);
+      await Promise.resolve(this.cache?.set(cacheKey, response));
 
       return response;
     } catch (error) {

@@ -18,4 +18,3 @@ export { SparseVectorModel } from './sparse-vector.js';
 export { calculateCost } from './utils/calculate-cost.js';
 export { createOpenAIClient } from './clients/openai.js';
 export { createTokenizer } from './utils/tokenizer.js';
-export { getModelMemoryCache } from './utils/memory-cache.js';

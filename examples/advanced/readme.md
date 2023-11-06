@@ -1,6 +1,6 @@
 # Chatbot Example with RAG from the Huberman Lab Podcast
 
-This is an example using `dexter` to build a basic RAG chatbot. For RAG, it indexes 100 transcript chunks from the [Huberman Lab Podcast](https://hubermanlab.com) into a [hybrid Pinecone datastore](https://docs.pinecone.io/docs/hybrid-search) using [OpenAI ada-002 embeddings](https://platform.openai.com/docs/guides/embeddings) for the dense vectors and a [HuggingFace SPLADE model](https://huggingface.co/naver/splade-cocondenser-ensembledistil) for the sparse embeddings.
+This is a more involved example using `dexter` to build a basic chatbot using RAG. It indexes 100 transcript chunks from the [Huberman Lab Podcast](https://hubermanlab.com) into a [hybrid Pinecone datastore](https://docs.pinecone.io/docs/hybrid-search) using [OpenAI ada-002 embeddings](https://platform.openai.com/docs/guides/embeddings) for the dense vectors and a [HuggingFace SPLADE model](https://huggingface.co/naver/splade-cocondenser-ensembledistil) for the sparse embeddings.
 
 ## Prequisites
 
@@ -20,3 +20,7 @@ tsx examples/advanced/ingest.ts
 ```bash
 tsx examples/advanced/cli.ts
 ```
+
+## License
+
+MIT © [Dexa](https://dexa.ai)

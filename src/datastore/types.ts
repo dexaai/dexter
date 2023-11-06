@@ -1,5 +1,6 @@
 import type { Model } from '../model/index.js';
 import type { AbstractDatastore } from './datastore.js';
+import { type CacheKey, type CacheStorage } from '../utils/cache.js';
 
 /** Improve preview of union types in autocomplete. */
 export type Prettify<T> = { [K in keyof T]: T[K] } & {};
@@ -10,20 +11,6 @@ export type Prettify<T> = { [K in keyof T]: T[K] } & {};
 export namespace Datastore {
   /** Base document metadata to be extended */
   export type BaseMeta = {};
-
-  /**
-   * Cache for storing query responses
-   */
-  export interface Cache<
-    DocMeta extends BaseMeta,
-    Filter extends BaseFilter<DocMeta>
-  > {
-    get(key: Query<DocMeta, Filter>): Promise<QueryResult<DocMeta> | null>;
-    set(
-      key: Query<DocMeta, Filter>,
-      value: QueryResult<DocMeta>
-    ): Promise<boolean>;
-  }
 
   /** Generic metadata object. */
   export type Ctx = { [key: string]: any };
@@ -92,7 +79,20 @@ export namespace Datastore {
     contentKey: keyof DocMeta;
     namespace?: string;
     embeddingModel: Model.Embedding.Model;
-    cache?: Cache<DocMeta, Filter>;
+    /**
+     * A function that returns a cache key for the given params.
+     *
+     * A simple example would be: `(params) => JSON.stringify(params)`
+     *
+     * The default `cacheKey` function uses [hash-obj](https://github.com/sindresorhus/hash-obj) to create a stable sha256 hash of the params.
+     */
+    cacheKey?: CacheKey<Query<DocMeta, Filter>, string>;
+    /**
+     * Enables caching for queries. Must implement `.get(key)` and `.set(key, value)`, both of which can be either sync or async.
+     *
+     * Some examples include: `new Map()`, [quick-lru](https://github.com/sindresorhus/quick-lru), or any [keyv adaptor[(https://github.com/jaredwray/keyv).
+     */
+    cache?: CacheStorage<string, QueryResult<DocMeta>>;
     events?: Events<DocMeta, Filter>;
     context?: Ctx;
     debug?: boolean;

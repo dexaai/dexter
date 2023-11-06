@@ -1,7 +1,7 @@
 import 'dotenv/config';
-import { EmbeddingModel, getModelMemoryCache } from 'dexter/model';
-import { getDatastoreMemoryCache } from 'dexter/datastore';
+import { EmbeddingModel } from 'dexter/model';
 import { PineconeDatastore } from 'dexter/datastore/pinecone';
+import QuickLRU from 'quick-lru';
 
 /**
  * npx tsx examples/caching.ts
@@ -12,7 +12,7 @@ async function main() {
     params: { model: 'text-embedding-ada-002' },
     context: { test: 'test' },
     events: { onApiResponse: [console.log] },
-    cache: getModelMemoryCache(),
+    cache: new QuickLRU({ maxSize: 10000 }),
   });
   await embeddingModel.run({ input: ['cat'] });
   // This should be cached
@@ -23,7 +23,7 @@ async function main() {
     contentKey: 'content',
     embeddingModel,
     events: { onQueryComplete: [console.log] },
-    cache: getDatastoreMemoryCache(),
+    cache: new Map(),
   });
   await store.upsert([
     { id: '1', metadata: { content: 'cat' } },

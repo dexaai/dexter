@@ -31,7 +31,7 @@
 - handles caching, throttling, and batching for ingesting large datasets
 - optional hybrid search w/ dense + sparse SPLADE embeddings
 - supports arbitrary reranking strategies
-- minimal TS package w/ full typings
+- minimal TS package w/ full typing
 - uses `fetch` everywhere
 
 ## Install
@@ -52,8 +52,9 @@ import { EmbeddingModel } from 'dexter/model';
 import { PineconeDatastore } from 'dexter/datastore/pinecone';
 
 async function example() {
-  // Create a default OpenAI 'text-embedding-ada-002' embedding model
-  const embeddingModel = new EmbeddingModel();
+  const embeddingModel = new EmbeddingModel({
+    params: { model: 'text-embedding-ada-002' },
+  });
 
   const store = new PineconeDatastore({
     contentKey: 'content',
@@ -103,7 +104,7 @@ npx tsx examples/caching.ts
 
 #### Advanced
 
-This is a more involved example of a RAG chatbot. For RAG, it indexes 100 transcript chunks from the [Huberman Lab Podcast](https://hubermanlab.com) into a [hybrid Pinecone datastore](https://docs.pinecone.io/docs/hybrid-search) using [OpenAI ada-002 embeddings](https://platform.openai.com/docs/guides/embeddings) for the dense vectors and a [HuggingFace SPLADE model](https://huggingface.co/naver/splade-cocondenser-ensembledistil) for the sparse embeddings.
+This is a more involved example of a chatbot using RAG. It indexes 100 transcript chunks from the [Huberman Lab Podcast](https://hubermanlab.com) into a [hybrid Pinecone datastore](https://docs.pinecone.io/docs/hybrid-search) using [OpenAI ada-002 embeddings](https://platform.openai.com/docs/guides/embeddings) for the dense vectors and a [HuggingFace SPLADE model](https://huggingface.co/naver/splade-cocondenser-ensembledistil) for the sparse embeddings.
 
 See the [advanced example readme](./examples/advanced/readme.md) for more details.
 
@@ -149,7 +150,7 @@ npx tsx examples/advanced/cli.ts
 
 ### How does Dexter compare to LlamaIndex?
 
-Dexter and LlamaIndex are both focused on RAG.
+Dexter and LlamaIndex are both focused on RAG. LlamaIndex supports many more loaders, embedding providers, and vector DBs.
 
 ## License
 

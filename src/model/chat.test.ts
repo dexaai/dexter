@@ -1,6 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
 import type { Model } from './types.js';
-import { getModelMemoryCache } from './utils/memory-cache.js';
 import { ChatModel } from './chat.js';
 
 const FAKE_RESPONSE: Model.Chat.Response = {
@@ -115,7 +114,7 @@ describe('ChatModel', () => {
     const apiResponseEvent = vi.fn();
     const completeEvent = vi.fn();
     const chatModel = new ChatModel({
-      cache: getModelMemoryCache(),
+      cache: new Map(),
       client: Client,
       params: { model: 'gpt-fake' },
       events: {

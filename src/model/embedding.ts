@@ -6,7 +6,7 @@ import type { Model } from './types.js';
 import { calculateCost } from './utils/calculate-cost.js';
 import { createOpenAIClient } from './clients/openai.js';
 import { AbstractModel } from './model.js';
-import { deepMerge } from './utils/helpers.js';
+import { deepMerge } from '../utils/helpers.js';
 
 export type EmbeddingModelArgs = SetOptional<
   ModelArgs<
@@ -152,9 +152,12 @@ export class EmbeddingModel extends AbstractModel<
 
   /** Clone the model and merge/orverride the given properties. */
   clone(args?: EmbeddingModelArgs): this {
-    const { cache, client, context, debug, params, events } = args ?? {};
+    const { cacheKey, cache, client, context, debug, params, events } =
+      args ?? {};
+
     // @ts-ignore
     return new EmbeddingModel({
+      cacheKey: cacheKey ?? this.cacheKey,
       cache: cache ?? this.cache,
       client: client ?? this.client,
       context: this.mergeContext(this.context, context),

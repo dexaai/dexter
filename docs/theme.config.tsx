@@ -12,7 +12,7 @@ const config: DocsThemeConfig = {
   logo: (
     <img
       src="/logo.png"
-      alt="Dexter"
+      alt="Dexa"
       className="logo"
       width="1796"
       height="512"
