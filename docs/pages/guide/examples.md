@@ -8,7 +8,7 @@ Environment variables required to run the examples:
 - `PINECONE_API_KEY` - Pinecone API key
 - `PINECONE_BASE_URL` - Pinecone index's base URL
   - You should be able to use a free-tier "starter" index for most of the examples, but you'll need to upgrade to a paid index to run the any of the hybrid search examples
-  - Note that Pinecone's free starter index doesn't support namespaces, `deleteAll`, or hybrid search :sigh:
+  - Note that Pinecone's free starter index doesn't support namespaces, `deleteAll`, or hybrid search _:sigh:_
 - `SPLADE_SERVICE_URL` - optional; only used for the chatbot hybrid search example
 
 ## Basic
