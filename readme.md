@@ -14,9 +14,9 @@
 
 # Dexter
 
-> Dexter is a set of mature LLM tools used in production at [Dexa](https://dexa.ai), with a focus on real-world RAG ([Retrieval Augmented Generation](https://arxiv.org/abs/2005.11401)).
+Dexter is a set of mature LLM tools used in production at [Dexa](https://dexa.ai), with a focus on real-world RAG ([Retrieval Augmented Generation](https://arxiv.org/abs/2005.11401)).
 
-**If you're a TypeScript AI engineer, check it out!** 😊
+_If you're a TypeScript AI engineer, check it out!_ 😊
 
 ## Features
 
@@ -38,7 +38,7 @@ npm install @dexaai/dexter
 
 This package requires `node >= 18` or an environment with `fetch` support.
 
-This package exports [ESM](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules) only. If your project uses CommonJS, [consider switching to ESM](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c) or use the [dynamic `import()`](https://v8.dev/features/dynamic-import) function.
+This package exports [ESM only](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c). If your project uses CommonJS, consider switching to ESM or use the [dynamic `import()`](https://v8.dev/features/dynamic-import) function.
 
 ## Usage
 

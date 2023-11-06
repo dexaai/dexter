@@ -7,7 +7,9 @@
 
 # Dexter
 
-> Dexter is a mature set of LLM tools used in production at [Dexa](https://dexa.ai), with a focus on real-world RAG ([Retrieval Augmented Generation](https://arxiv.org/abs/2005.11401)).
+Dexter is a mature set of LLM tools used in production at [Dexa](https://dexa.ai), with a focus on real-world RAG ([Retrieval Augmented Generation](https://arxiv.org/abs/2005.11401)).
+
+_If you're a TypeScript AI engineer, check it out!_ 😊
 
 ## Features
 
@@ -19,3 +21,4 @@
 - minimal TS package w/ full typing
 - uses `fetch` everywhere
 - supports Node.js 18+, Deno, Cloudflare Workers, Vercel edge functions, etc
+- [well-documented](https://dexter.dexa.ai)
