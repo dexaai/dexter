@@ -12,16 +12,16 @@
 
 #### Parameters
 
-| Parameter | Type | Description |
-| :------ | :------ | :------ |
-| `args`? | `object` | - |
-| `args.cache`? | [`CacheStorage`](../type-aliases/CacheStorage.md)\<`string`, [`Response`](../namespaces/Model/namespaces/Chat/interfaces/Response.md)\> | Enables caching for model responses. Must implement `.get(key)` and `.set(key, value)`, both of which can be either sync or async.<br /><br />Some examples include: `new Map()`, [quick-lru](https://github.com/sindresorhus/quick-lru), or any [keyv adaptor](https://github.com/jaredwray/keyv). |
-| `args.cacheKey`? | [`CacheKey`](../type-aliases/CacheKey.md)\<[`Run`](../namespaces/Model/namespaces/Chat/interfaces/Run.md) & [`Config`](../namespaces/Model/namespaces/Chat/interfaces/Config.md), `string`\> | A function that returns a cache key for the given params.<br /><br />A simple example would be: `(params) => JSON.stringify(params)`<br /><br />The default `cacheKey` function uses [hash-obj](https://github.com/sindresorhus/hash-obj) to create a stable sha256 hash of the params. |
-| `args.client`? | [`Client`](../namespaces/Model/namespaces/Chat/type-aliases/Client.md) | - |
-| `args.context`? | [`Ctx`](../namespaces/Model/type-aliases/Ctx.md) | - |
-| `args.debug`? | `boolean` | Whether or not to add default `console.log` event handlers |
-| `args.events`? | [`Events`](../namespaces/Model/interfaces/Events.md)\<[`Run`](../namespaces/Model/namespaces/Chat/interfaces/Run.md) & [`Config`](../namespaces/Model/namespaces/Chat/interfaces/Config.md), [`Response`](../namespaces/Model/namespaces/Chat/interfaces/Response.md), `any`\> | - |
-| `args.params`? | [`Config`](../namespaces/Model/namespaces/Chat/interfaces/Config.md) & `Partial`\<[`Run`](../namespaces/Model/namespaces/Chat/interfaces/Run.md)\> | - |
+| Parameter        | Type                                                                                                                                                                                                                                                                           | Description                                                                                                                                                                                                                                                                                         |
+| :--------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `args`?          | `object`                                                                                                                                                                                                                                                                       | -                                                                                                                                                                                                                                                                                                   |
+| `args.cache`?    | [`CacheStorage`](../type-aliases/CacheStorage.md)\<`string`, [`Response`](../namespaces/Model/namespaces/Chat/interfaces/Response.md)\>                                                                                                                                        | Enables caching for model responses. Must implement `.get(key)` and `.set(key, value)`, both of which can be either sync or async.<br /><br />Some examples include: `new Map()`, [quick-lru](https://github.com/sindresorhus/quick-lru), or any [keyv adaptor](https://github.com/jaredwray/keyv). |
+| `args.cacheKey`? | [`CacheKey`](../type-aliases/CacheKey.md)\<[`Run`](../namespaces/Model/namespaces/Chat/interfaces/Run.md) & [`Config`](../namespaces/Model/namespaces/Chat/interfaces/Config.md), `string`\>                                                                                   | A function that returns a cache key for the given params.<br /><br />A simple example would be: `(params) => JSON.stringify(params)`<br /><br />The default `cacheKey` function uses [hash-object](https://github.com/sindresorhus/hash-object) to create a stable sha256 hash of the params.       |
+| `args.client`?   | [`Client`](../namespaces/Model/namespaces/Chat/type-aliases/Client.md)                                                                                                                                                                                                         | -                                                                                                                                                                                                                                                                                                   |
+| `args.context`?  | [`Ctx`](../namespaces/Model/type-aliases/Ctx.md)                                                                                                                                                                                                                               | -                                                                                                                                                                                                                                                                                                   |
+| `args.debug`?    | `boolean`                                                                                                                                                                                                                                                                      | Whether or not to add default `console.log` event handlers                                                                                                                                                                                                                                          |
+| `args.events`?   | [`Events`](../namespaces/Model/interfaces/Events.md)\<[`Run`](../namespaces/Model/namespaces/Chat/interfaces/Run.md) & [`Config`](../namespaces/Model/namespaces/Chat/interfaces/Config.md), [`Response`](../namespaces/Model/namespaces/Chat/interfaces/Response.md), `any`\> | -                                                                                                                                                                                                                                                                                                   |
+| `args.params`?   | [`Config`](../namespaces/Model/namespaces/Chat/interfaces/Config.md) & `Partial`\<[`Run`](../namespaces/Model/namespaces/Chat/interfaces/Run.md)\>                                                                                                                             | -                                                                                                                                                                                                                                                                                                   |
 
 #### Returns
 
@@ -37,11 +37,11 @@
 
 ## Properties
 
-| Property | Type | Description | Inheritance | Source |
-| :------ | :------ | :------ | :------ | :------ |
-| `modelProvider` | `"openai"` | - | [`AbstractModel`](AbstractModel.md).`modelProvider` | [src/model/chat.ts:27](https://github.com/dexaai/llm-tools/blob/5a38bb8/src/model/chat.ts#L27) |
-| `modelType` | `"chat"` | - | [`AbstractModel`](AbstractModel.md).`modelType` | [src/model/chat.ts:26](https://github.com/dexaai/llm-tools/blob/5a38bb8/src/model/chat.ts#L26) |
-| `tokenizer` | [`ITokenizer`](../namespaces/Model/interfaces/ITokenizer.md) | - | [`AbstractModel`](AbstractModel.md).`tokenizer` | [src/model/model.ts:65](https://github.com/dexaai/llm-tools/blob/5a38bb8/src/model/model.ts#L65) |
+| Property        | Type                                                         | Description | Inheritance                                         | Source                                                                                           |
+| :-------------- | :----------------------------------------------------------- | :---------- | :-------------------------------------------------- | :----------------------------------------------------------------------------------------------- |
+| `modelProvider` | `"openai"`                                                   | -           | [`AbstractModel`](AbstractModel.md).`modelProvider` | [src/model/chat.ts:27](https://github.com/dexaai/llm-tools/blob/5a38bb8/src/model/chat.ts#L27)   |
+| `modelType`     | `"chat"`                                                     | -           | [`AbstractModel`](AbstractModel.md).`modelType`     | [src/model/chat.ts:26](https://github.com/dexaai/llm-tools/blob/5a38bb8/src/model/chat.ts#L26)   |
+| `tokenizer`     | [`ITokenizer`](../namespaces/Model/interfaces/ITokenizer.md) | -           | [`AbstractModel`](AbstractModel.md).`tokenizer`     | [src/model/model.ts:65](https://github.com/dexaai/llm-tools/blob/5a38bb8/src/model/model.ts#L65) |
 
 ## Methods
 
@@ -53,9 +53,9 @@ Add event handlers to the model.
 
 #### Parameters
 
-| Parameter | Type |
-| :------ | :------ |
-| `events` | [`Events`](../namespaces/Model/interfaces/Events.md)\<[`Run`](../namespaces/Model/namespaces/Chat/interfaces/Run.md) & [`Config`](../namespaces/Model/namespaces/Chat/interfaces/Config.md), [`Response`](../namespaces/Model/namespaces/Chat/interfaces/Response.md), `ChatCompletion`\> |
+| Parameter | Type                                                                                                                                                                                                                                                                                      |
+| :-------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `events`  | [`Events`](../namespaces/Model/interfaces/Events.md)\<[`Run`](../namespaces/Model/namespaces/Chat/interfaces/Run.md) & [`Config`](../namespaces/Model/namespaces/Chat/interfaces/Config.md), [`Response`](../namespaces/Model/namespaces/Chat/interfaces/Response.md), `ChatCompletion`\> |
 
 #### Returns
 
@@ -69,7 +69,7 @@ Add event handlers to the model.
 
 [src/model/model.ts:235](https://github.com/dexaai/llm-tools/blob/5a38bb8/src/model/model.ts#L235)
 
-***
+---
 
 ### addParams()
 
@@ -79,9 +79,9 @@ Add the params. Overrides existing keys.
 
 #### Parameters
 
-| Parameter | Type |
-| :------ | :------ |
-| `params` | `Partial`\<[`Config`](../namespaces/Model/namespaces/Chat/interfaces/Config.md) & `Partial`\<[`Run`](../namespaces/Model/namespaces/Chat/interfaces/Run.md)\>\> |
+| Parameter | Type                                                                                                                                                            |
+| :-------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `params`  | `Partial`\<[`Config`](../namespaces/Model/namespaces/Chat/interfaces/Config.md) & `Partial`\<[`Run`](../namespaces/Model/namespaces/Chat/interfaces/Run.md)\>\> |
 
 #### Returns
 
@@ -95,7 +95,7 @@ Add the params. Overrides existing keys.
 
 [src/model/model.ts:213](https://github.com/dexaai/llm-tools/blob/5a38bb8/src/model/model.ts#L213)
 
-***
+---
 
 ### clone()
 
@@ -105,16 +105,16 @@ Clone the model and merge/orverride the given properties.
 
 #### Parameters
 
-| Parameter | Type | Description |
-| :------ | :------ | :------ |
-| `args`? | `object` | - |
-| `args.cache`? | [`CacheStorage`](../type-aliases/CacheStorage.md)\<`string`, [`Response`](../namespaces/Model/namespaces/Chat/interfaces/Response.md)\> | Enables caching for model responses. Must implement `.get(key)` and `.set(key, value)`, both of which can be either sync or async.<br /><br />Some examples include: `new Map()`, [quick-lru](https://github.com/sindresorhus/quick-lru), or any [keyv adaptor](https://github.com/jaredwray/keyv). |
-| `args.cacheKey`? | [`CacheKey`](../type-aliases/CacheKey.md)\<[`Run`](../namespaces/Model/namespaces/Chat/interfaces/Run.md) & [`Config`](../namespaces/Model/namespaces/Chat/interfaces/Config.md), `string`\> | A function that returns a cache key for the given params.<br /><br />A simple example would be: `(params) => JSON.stringify(params)`<br /><br />The default `cacheKey` function uses [hash-obj](https://github.com/sindresorhus/hash-obj) to create a stable sha256 hash of the params. |
-| `args.client`? | [`Client`](../namespaces/Model/namespaces/Chat/type-aliases/Client.md) | - |
-| `args.context`? | [`Ctx`](../namespaces/Model/type-aliases/Ctx.md) | - |
-| `args.debug`? | `boolean` | Whether or not to add default `console.log` event handlers |
-| `args.events`? | [`Events`](../namespaces/Model/interfaces/Events.md)\<[`Run`](../namespaces/Model/namespaces/Chat/interfaces/Run.md) & [`Config`](../namespaces/Model/namespaces/Chat/interfaces/Config.md), [`Response`](../namespaces/Model/namespaces/Chat/interfaces/Response.md), `any`\> | - |
-| `args.params`? | [`Config`](../namespaces/Model/namespaces/Chat/interfaces/Config.md) & `Partial`\<[`Run`](../namespaces/Model/namespaces/Chat/interfaces/Run.md)\> | - |
+| Parameter        | Type                                                                                                                                                                                                                                                                           | Description                                                                                                                                                                                                                                                                                         |
+| :--------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `args`?          | `object`                                                                                                                                                                                                                                                                       | -                                                                                                                                                                                                                                                                                                   |
+| `args.cache`?    | [`CacheStorage`](../type-aliases/CacheStorage.md)\<`string`, [`Response`](../namespaces/Model/namespaces/Chat/interfaces/Response.md)\>                                                                                                                                        | Enables caching for model responses. Must implement `.get(key)` and `.set(key, value)`, both of which can be either sync or async.<br /><br />Some examples include: `new Map()`, [quick-lru](https://github.com/sindresorhus/quick-lru), or any [keyv adaptor](https://github.com/jaredwray/keyv). |
+| `args.cacheKey`? | [`CacheKey`](../type-aliases/CacheKey.md)\<[`Run`](../namespaces/Model/namespaces/Chat/interfaces/Run.md) & [`Config`](../namespaces/Model/namespaces/Chat/interfaces/Config.md), `string`\>                                                                                   | A function that returns a cache key for the given params.<br /><br />A simple example would be: `(params) => JSON.stringify(params)`<br /><br />The default `cacheKey` function uses [hash-object](https://github.com/sindresorhus/hash-object) to create a stable sha256 hash of the params.       |
+| `args.client`?   | [`Client`](../namespaces/Model/namespaces/Chat/type-aliases/Client.md)                                                                                                                                                                                                         | -                                                                                                                                                                                                                                                                                                   |
+| `args.context`?  | [`Ctx`](../namespaces/Model/type-aliases/Ctx.md)                                                                                                                                                                                                                               | -                                                                                                                                                                                                                                                                                                   |
+| `args.debug`?    | `boolean`                                                                                                                                                                                                                                                                      | Whether or not to add default `console.log` event handlers                                                                                                                                                                                                                                          |
+| `args.events`?   | [`Events`](../namespaces/Model/interfaces/Events.md)\<[`Run`](../namespaces/Model/namespaces/Chat/interfaces/Run.md) & [`Config`](../namespaces/Model/namespaces/Chat/interfaces/Config.md), [`Response`](../namespaces/Model/namespaces/Chat/interfaces/Response.md), `any`\> | -                                                                                                                                                                                                                                                                                                   |
+| `args.params`?   | [`Config`](../namespaces/Model/namespaces/Chat/interfaces/Config.md) & `Partial`\<[`Run`](../namespaces/Model/namespaces/Chat/interfaces/Run.md)\>                                                                                                                             | -                                                                                                                                                                                                                                                                                                   |
 
 #### Returns
 
@@ -128,7 +128,7 @@ Clone the model and merge/orverride the given properties.
 
 [src/model/chat.ts:184](https://github.com/dexaai/llm-tools/blob/5a38bb8/src/model/chat.ts#L184)
 
-***
+---
 
 ### getClient()
 
@@ -148,7 +148,7 @@ Get the current client
 
 [src/model/model.ts:180](https://github.com/dexaai/llm-tools/blob/5a38bb8/src/model/model.ts#L180)
 
-***
+---
 
 ### getContext()
 
@@ -168,7 +168,7 @@ Get the current context
 
 [src/model/model.ts:191](https://github.com/dexaai/llm-tools/blob/5a38bb8/src/model/model.ts#L191)
 
-***
+---
 
 ### getEvents()
 
@@ -188,7 +188,7 @@ Get the current event handlers
 
 [src/model/model.ts:230](https://github.com/dexaai/llm-tools/blob/5a38bb8/src/model/model.ts#L230)
 
-***
+---
 
 ### getParams()
 
@@ -208,7 +208,7 @@ Get the current params
 
 [src/model/model.ts:208](https://github.com/dexaai/llm-tools/blob/5a38bb8/src/model/model.ts#L208)
 
-***
+---
 
 ### run()
 
@@ -216,22 +216,22 @@ Get the current params
 
 #### Parameters
 
-| Parameter | Type |
-| :------ | :------ |
-| `params` | `object` |
-| `params.frequency_penalty`? | `null` \| `number` |
-| `params.function_call`? | `"none"` \| `"auto"` \| `FunctionCallOption` |
-| `params.functions`? | `Function`[] |
-| `params.handleUpdate`? | (`chunk`) => `void` |
-| `params.logit_bias`? | `null` \| `Record`\<`string`, `number`\> |
-| `params.max_tokens`? | `null` \| `number` |
-| `params.messages`? | `ChatCompletionMessageParam`[] |
-| `params.model`? | `"gpt-4"` \| `"gpt-4-32k"` \| `"gpt-3.5-turbo"` \| `"gpt-3.5-turbo-16k"` \| `string` & `object` \| `"gpt-4-0314"` \| `"gpt-4-0613"` \| `"gpt-4-32k-0314"` \| `"gpt-4-32k-0613"` \| `"gpt-3.5-turbo-0301"` \| `"gpt-3.5-turbo-0613"` \| `"gpt-3.5-turbo-16k-0613"` |
-| `params.presence_penalty`? | `null` \| `number` |
-| `params.stop`? | `null` \| `string` \| `string`[] |
-| `params.temperature`? | `null` \| `number` |
-| `params.top_p`? | `null` \| `number` |
-| `context`? | [`Ctx`](../namespaces/Model/type-aliases/Ctx.md) |
+| Parameter                   | Type                                                                                                                                                                                                                                                              |
+| :-------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `params`                    | `object`                                                                                                                                                                                                                                                          |
+| `params.frequency_penalty`? | `null` \| `number`                                                                                                                                                                                                                                                |
+| `params.function_call`?     | `"none"` \| `"auto"` \| `FunctionCallOption`                                                                                                                                                                                                                      |
+| `params.functions`?         | `Function`[]                                                                                                                                                                                                                                                      |
+| `params.handleUpdate`?      | (`chunk`) => `void`                                                                                                                                                                                                                                               |
+| `params.logit_bias`?        | `null` \| `Record`\<`string`, `number`\>                                                                                                                                                                                                                          |
+| `params.max_tokens`?        | `null` \| `number`                                                                                                                                                                                                                                                |
+| `params.messages`?          | `ChatCompletionMessageParam`[]                                                                                                                                                                                                                                    |
+| `params.model`?             | `"gpt-4"` \| `"gpt-4-32k"` \| `"gpt-3.5-turbo"` \| `"gpt-3.5-turbo-16k"` \| `string` & `object` \| `"gpt-4-0314"` \| `"gpt-4-0613"` \| `"gpt-4-32k-0314"` \| `"gpt-4-32k-0613"` \| `"gpt-3.5-turbo-0301"` \| `"gpt-3.5-turbo-0613"` \| `"gpt-3.5-turbo-16k-0613"` |
+| `params.presence_penalty`?  | `null` \| `number`                                                                                                                                                                                                                                                |
+| `params.stop`?              | `null` \| `string` \| `string`[]                                                                                                                                                                                                                                  |
+| `params.temperature`?       | `null` \| `number`                                                                                                                                                                                                                                                |
+| `params.top_p`?             | `null` \| `number`                                                                                                                                                                                                                                                |
+| `context`?                  | [`Ctx`](../namespaces/Model/type-aliases/Ctx.md)                                                                                                                                                                                                                  |
 
 #### Returns
 
@@ -245,7 +245,7 @@ Get the current params
 
 [src/model/model.ts:78](https://github.com/dexaai/llm-tools/blob/5a38bb8/src/model/model.ts#L78)
 
-***
+---
 
 ### setCache()
 
@@ -255,9 +255,9 @@ Set the cache to a new cache. Set to undefined to remove existing.
 
 #### Parameters
 
-| Parameter | Type |
-| :------ | :------ |
-| `cache` | `undefined` \| [`CacheStorage`](../type-aliases/CacheStorage.md)\<`string`, [`Response`](../namespaces/Model/namespaces/Chat/interfaces/Response.md)\> |
+| Parameter | Type                                                                                                                                                   |
+| :-------- | :----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `cache`   | `undefined` \| [`CacheStorage`](../type-aliases/CacheStorage.md)\<`string`, [`Response`](../namespaces/Model/namespaces/Chat/interfaces/Response.md)\> |
 
 #### Returns
 
@@ -271,7 +271,7 @@ Set the cache to a new cache. Set to undefined to remove existing.
 
 [src/model/model.ts:174](https://github.com/dexaai/llm-tools/blob/5a38bb8/src/model/model.ts#L174)
 
-***
+---
 
 ### setClient()
 
@@ -281,9 +281,9 @@ Set the client to a new OpenAI API client.
 
 #### Parameters
 
-| Parameter | Type |
-| :------ | :------ |
-| `client` | [`Client`](../namespaces/Model/namespaces/Chat/type-aliases/Client.md) |
+| Parameter | Type                                                                   |
+| :-------- | :--------------------------------------------------------------------- |
+| `client`  | [`Client`](../namespaces/Model/namespaces/Chat/type-aliases/Client.md) |
 
 #### Returns
 
@@ -297,7 +297,7 @@ Set the client to a new OpenAI API client.
 
 [src/model/model.ts:185](https://github.com/dexaai/llm-tools/blob/5a38bb8/src/model/model.ts#L185)
 
-***
+---
 
 ### setContext()
 
@@ -307,8 +307,8 @@ Set the context to a new context. Removes all existing values.
 
 #### Parameters
 
-| Parameter | Type |
-| :------ | :------ |
+| Parameter | Type                                             |
+| :-------- | :----------------------------------------------- |
 | `context` | [`Ctx`](../namespaces/Model/type-aliases/Ctx.md) |
 
 #### Returns
@@ -323,7 +323,7 @@ Set the context to a new context. Removes all existing values.
 
 [src/model/model.ts:202](https://github.com/dexaai/llm-tools/blob/5a38bb8/src/model/model.ts#L202)
 
-***
+---
 
 ### setEvents()
 
@@ -334,9 +334,9 @@ Set to empty object `{}` to remove all events.
 
 #### Parameters
 
-| Parameter | Type |
-| :------ | :------ |
-| `events` | [`Events`](../namespaces/Model/interfaces/Events.md)\<[`Run`](../namespaces/Model/namespaces/Chat/interfaces/Run.md) & [`Config`](../namespaces/Model/namespaces/Chat/interfaces/Config.md), [`Response`](../namespaces/Model/namespaces/Chat/interfaces/Response.md), `ChatCompletion`\> |
+| Parameter | Type                                                                                                                                                                                                                                                                                      |
+| :-------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `events`  | [`Events`](../namespaces/Model/interfaces/Events.md)\<[`Run`](../namespaces/Model/namespaces/Chat/interfaces/Run.md) & [`Config`](../namespaces/Model/namespaces/Chat/interfaces/Config.md), [`Response`](../namespaces/Model/namespaces/Chat/interfaces/Response.md), `ChatCompletion`\> |
 
 #### Returns
 
@@ -350,7 +350,7 @@ Set to empty object `{}` to remove all events.
 
 [src/model/model.ts:244](https://github.com/dexaai/llm-tools/blob/5a38bb8/src/model/model.ts#L244)
 
-***
+---
 
 ### setParams()
 
@@ -360,9 +360,9 @@ Set the params to a new params. Removes all existing values.
 
 #### Parameters
 
-| Parameter | Type |
-| :------ | :------ |
-| `params` | [`Config`](../namespaces/Model/namespaces/Chat/interfaces/Config.md) & `Partial`\<[`Run`](../namespaces/Model/namespaces/Chat/interfaces/Run.md)\> |
+| Parameter | Type                                                                                                                                               |
+| :-------- | :------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `params`  | [`Config`](../namespaces/Model/namespaces/Chat/interfaces/Config.md) & `Partial`\<[`Run`](../namespaces/Model/namespaces/Chat/interfaces/Run.md)\> |
 
 #### Returns
 
@@ -376,7 +376,7 @@ Set the params to a new params. Removes all existing values.
 
 [src/model/model.ts:223](https://github.com/dexaai/llm-tools/blob/5a38bb8/src/model/model.ts#L223)
 
-***
+---
 
 ### updateContext()
 
@@ -386,8 +386,8 @@ Add the context. Overrides existing keys.
 
 #### Parameters
 
-| Parameter | Type |
-| :------ | :------ |
+| Parameter | Type                                             |
+| :-------- | :----------------------------------------------- |
 | `context` | [`Ctx`](../namespaces/Model/type-aliases/Ctx.md) |
 
 #### Returns

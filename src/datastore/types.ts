@@ -84,7 +84,7 @@ export namespace Datastore {
      *
      * A simple example would be: `(params) => JSON.stringify(params)`
      *
-     * The default `cacheKey` function uses [hash-obj](https://github.com/sindresorhus/hash-obj) to create a stable sha256 hash of the params.
+     * The default `cacheKey` function uses [hash-object](https://github.com/sindresorhus/hash-object) to create a stable sha256 hash of the params.
      */
     cacheKey?: CacheKey<Query<DocMeta, Filter>, string>;
     /**

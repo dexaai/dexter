@@ -8,7 +8,7 @@ By default, caching is not enabled on any of the classes.
 
 The `cache` object is designed to work with `new Map()`, [quick-lru](https://github.com/sindresorhus/quick-lru), [any keyv adaptor](https://github.com/jaredwray/keyv), or any other key-value store.
 
-`cacheKey` is an optional function which takes in a params object and returns the cache key **string** to use for that request. A simple example would be: `(params) => JSON.stringify(params)`. The default `cacheKey` function uses [hash-obj](https://github.com/sindresorhus/hash-obj) to create a stable sha256 hash of the params.
+`cacheKey` is an optional function which takes in a params object and returns the cache key **string** to use for that request. A simple example would be: `(params) => JSON.stringify(params)`. The default `cacheKey` function uses [hash-object](https://github.com/sindresorhus/hash-object) to create a stable sha256 hash of the params.
 
 ## Examples
 
@@ -63,7 +63,7 @@ await cache.disconnect();
 ```ts
 import { ChatModel } from '@dexaai/dexter/model';
 import { pick } from '@dexaai/utils';
-import hashObject from 'hash-obj';
+import hashObject from 'hash-object';
 
 // Create an OpenAI chat completion model w/ an in-memory cache using a
 // custom cache key

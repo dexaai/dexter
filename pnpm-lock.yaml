@@ -14,9 +14,9 @@ importers:
       dedent:
         specifier: ^1.5.1
         version: 1.5.1
-      hash-obj:
-        specifier: ^4.0.0
-        version: 4.0.0
+      hash-object:
+        specifier: ^5.0.0
+        version: 5.0.0
       jsonrepair:
         specifier: ^3.2.0
         version: 3.4.0
@@ -4009,6 +4009,15 @@ packages:
       type-fest: 1.4.0
     dev: false
 
+  /hash-object@5.0.0:
+    resolution: {integrity: sha512-wU0mUPhowb+Rn5GLyqcWkh8FZJB4tD/90YQSkcrOfqfPZdYghHU0yYlaYnEv+Xtpni65dsySU+tf8jdKlQETVw==}
+    engines: {node: '>=18'}
+    dependencies:
+      is-obj: 3.0.0
+      sort-keys: 5.0.0
+      type-fest: 4.6.0
+    dev: false
+
   /hasown@2.0.0:
     resolution: {integrity: sha512-vUptKVTpIJhcczKBbgnS+RtcuYMB8+oNzPK2/Hp3hanz8JmpATdmmgLgSaadVREkDm+e2giHwY3ZRkyjSIDDFA==}
     engines: {node: '>= 0.4'}
@@ -7889,6 +7898,11 @@ packages:
     resolution: {integrity: sha512-pphNW/msgOUSkJbH58x8sqpq8uQj6b0ZKGxEsLKMUnGorRcDjrUaLS+39+/ub41JNTwrrMyJcUB8+YZs3mbwqw==}
     engines: {node: '>=16'}
     dev: true
+
+  /type-fest@4.6.0:
+    resolution: {integrity: sha512-rLjWJzQFOq4xw7MgJrCZ6T1jIOvvYElXT12r+y0CC6u67hegDHaxcPqb2fZHOGlqxugGQPNB1EnTezjBetkwkw==}
+    engines: {node: '>=16'}
+    dev: false
 
   /typed-array-buffer@1.0.0:
     resolution: {integrity: sha512-Y8KTSIglk9OZEr8zywiIHG/kmQ7KWyjseXs1CbSo8vC42w7hg2HgYTxSWwP0+is7bWDc1H+Fo026CpHFwm8tkw==}
