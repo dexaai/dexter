@@ -4,6 +4,18 @@ import { calculateCost } from './calculate-cost.js';
 describe('Calculates cost for', () => {
   test.each([
     { model: 'gpt-4', prompt: 1000, completion: 1000, expected: 9 },
+    {
+      model: 'gpt-4-1106-preview',
+      prompt: 1000,
+      completion: 1000,
+      expected: 4,
+    },
+    {
+      model: 'gpt-4-turbo',
+      prompt: 1000,
+      completion: 1000,
+      expected: 4,
+    },
     { model: 'gpt-4-0613', prompt: 1000, completion: 1000, expected: 9 },
     { model: 'gpt-4-32k', prompt: 1000, completion: 1000, expected: 18 },
     { model: 'gpt-4-32k-0613', prompt: 1000, completion: 1000, expected: 18 },
