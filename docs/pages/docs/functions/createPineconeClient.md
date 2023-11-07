@@ -22,4 +22,4 @@ Create a new Pinecone client instance.
 
 ## Source
 
-[src/datastore/pinecone/client.ts:7](https://github.com/dexaai/llm-tools/blob/98f7fd5/src/datastore/pinecone/client.ts#L7)
+[src/datastore/pinecone/client.ts:7](https://github.com/dexaai/llm-tools/blob/5a38bb8/src/datastore/pinecone/client.ts#L7)

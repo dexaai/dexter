@@ -42,14 +42,14 @@
 
 #### Source
 
-[src/datastore/pinecone/hybrid-datastore.ts:15](https://github.com/dexaai/llm-tools/blob/98f7fd5/src/datastore/pinecone/hybrid-datastore.ts#L15)
+[src/datastore/pinecone/hybrid-datastore.ts:15](https://github.com/dexaai/llm-tools/blob/5a38bb8/src/datastore/pinecone/hybrid-datastore.ts#L15)
 
 ## Properties
 
 | Property | Type | Description | Inheritance | Source |
 | :------ | :------ | :------ | :------ | :------ |
-| `datastoreProvider` | `"pinecone"` | - | [`AbstractHybridDatastore`](AbstractHybridDatastore.md).`datastoreProvider` | [src/datastore/pinecone/hybrid-datastore.ts:12](https://github.com/dexaai/llm-tools/blob/98f7fd5/src/datastore/pinecone/hybrid-datastore.ts#L12) |
-| `datastoreType` | `"hybrid"` | - | [`AbstractHybridDatastore`](AbstractHybridDatastore.md).`datastoreType` | [src/datastore/pinecone/hybrid-datastore.ts:11](https://github.com/dexaai/llm-tools/blob/98f7fd5/src/datastore/pinecone/hybrid-datastore.ts#L11) |
+| `datastoreProvider` | `"pinecone"` | - | [`AbstractHybridDatastore`](AbstractHybridDatastore.md).`datastoreProvider` | [src/datastore/pinecone/hybrid-datastore.ts:12](https://github.com/dexaai/llm-tools/blob/5a38bb8/src/datastore/pinecone/hybrid-datastore.ts#L12) |
+| `datastoreType` | `"hybrid"` | - | [`AbstractHybridDatastore`](AbstractHybridDatastore.md).`datastoreType` | [src/datastore/pinecone/hybrid-datastore.ts:11](https://github.com/dexaai/llm-tools/blob/5a38bb8/src/datastore/pinecone/hybrid-datastore.ts#L11) |
 
 ## Methods
 
@@ -73,7 +73,7 @@
 
 #### Source
 
-[src/datastore/pinecone/hybrid-datastore.ts:176](https://github.com/dexaai/llm-tools/blob/98f7fd5/src/datastore/pinecone/hybrid-datastore.ts#L176)
+[src/datastore/pinecone/hybrid-datastore.ts:176](https://github.com/dexaai/llm-tools/blob/5a38bb8/src/datastore/pinecone/hybrid-datastore.ts#L176)
 
 ***
 
@@ -91,7 +91,7 @@
 
 #### Source
 
-[src/datastore/pinecone/hybrid-datastore.ts:180](https://github.com/dexaai/llm-tools/blob/98f7fd5/src/datastore/pinecone/hybrid-datastore.ts#L180)
+[src/datastore/pinecone/hybrid-datastore.ts:180](https://github.com/dexaai/llm-tools/blob/5a38bb8/src/datastore/pinecone/hybrid-datastore.ts#L180)
 
 ***
 
@@ -116,7 +116,7 @@
 
 #### Source
 
-[src/datastore/datastore.ts:53](https://github.com/dexaai/llm-tools/blob/98f7fd5/src/datastore/datastore.ts#L53)
+[src/datastore/datastore.ts:53](https://github.com/dexaai/llm-tools/blob/5a38bb8/src/datastore/datastore.ts#L53)
 
 ***
 
@@ -141,7 +141,7 @@ AbstractHybridDatastore.runQuery
 
 #### Source
 
-[src/datastore/pinecone/hybrid-datastore.ts:31](https://github.com/dexaai/llm-tools/blob/98f7fd5/src/datastore/pinecone/hybrid-datastore.ts#L31)
+[src/datastore/pinecone/hybrid-datastore.ts:31](https://github.com/dexaai/llm-tools/blob/5a38bb8/src/datastore/pinecone/hybrid-datastore.ts#L31)
 
 ***
 
@@ -166,4 +166,4 @@ AbstractHybridDatastore.runQuery
 
 #### Source
 
-[src/datastore/pinecone/hybrid-datastore.ts:89](https://github.com/dexaai/llm-tools/blob/98f7fd5/src/datastore/pinecone/hybrid-datastore.ts#L89)
+[src/datastore/pinecone/hybrid-datastore.ts:89](https://github.com/dexaai/llm-tools/blob/5a38bb8/src/datastore/pinecone/hybrid-datastore.ts#L89)

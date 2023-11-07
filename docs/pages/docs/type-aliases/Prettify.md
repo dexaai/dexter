@@ -14,4 +14,4 @@ Improve preview of union types in autocomplete.
 
 ## Source
 
-[src/utils/helpers.ts:4](https://github.com/dexaai/llm-tools/blob/98f7fd5/src/utils/helpers.ts#L4)
+[src/utils/helpers.ts:4](https://github.com/dexaai/llm-tools/blob/5a38bb8/src/utils/helpers.ts#L4)

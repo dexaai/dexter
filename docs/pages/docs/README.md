@@ -27,12 +27,11 @@ _If you're a TypeScript AI engineer, check it out!_ 😊
 - production-quality RAG
 - extremely fast and minimal
 - handles caching, throttling, and batching for ingesting large datasets
-- optional hybrid search w/ dense + sparse SPLADE embeddings
-- supports arbitrary reranking strategies
+- optional hybrid search w/ SPLADE embeddings
 - minimal TS package w/ full typing
 - uses `fetch` everywhere
 - supports Node.js 18+, Deno, Cloudflare Workers, Vercel edge functions, etc
-- [well-documented](https://dexter.dexa.ai)
+- [full docs](https://dexter.dexa.ai)
 
 ## Install
 

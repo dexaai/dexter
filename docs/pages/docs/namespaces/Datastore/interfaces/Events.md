@@ -13,6 +13,6 @@ Event handlers for logging and debugging
 
 | Property | Type | Description | Source |
 | :------ | :------ | :------ | :------ |
-| `onError`? | (`event`) => `void` \| `Promise`\<`void`\>[] | - | [src/datastore/types.ts:51](https://github.com/dexaai/llm-tools/blob/98f7fd5/src/datastore/types.ts#L51) |
-| `onQueryComplete`? | (`event`) => `void` \| `Promise`\<`void`\>[] | - | [src/datastore/types.ts:41](https://github.com/dexaai/llm-tools/blob/98f7fd5/src/datastore/types.ts#L41) |
-| `onQueryStart`? | (`event`) => `void` \| `Promise`\<`void`\>[] | - | [src/datastore/types.ts:34](https://github.com/dexaai/llm-tools/blob/98f7fd5/src/datastore/types.ts#L34) |
+| `onError`? | (`event`) => `void` \| `Promise`\<`void`\>[] | - | [src/datastore/types.ts:51](https://github.com/dexaai/llm-tools/blob/5a38bb8/src/datastore/types.ts#L51) |
+| `onQueryComplete`? | (`event`) => `void` \| `Promise`\<`void`\>[] | - | [src/datastore/types.ts:41](https://github.com/dexaai/llm-tools/blob/5a38bb8/src/datastore/types.ts#L41) |
+| `onQueryStart`? | (`event`) => `void` \| `Promise`\<`void`\>[] | - | [src/datastore/types.ts:34](https://github.com/dexaai/llm-tools/blob/5a38bb8/src/datastore/types.ts#L34) |

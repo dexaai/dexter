@@ -4,7 +4,7 @@ import React from 'react';
 
 const siteHost = 'dexter.dexa.ai';
 const siteUrl = `https://${siteHost}`;
-const siteSocialUrl = `${siteUrl}/social.png`; // TODO
+// const siteSocialUrl = `${siteUrl}/social.png`; // TODO
 const siteDesc = `LLM tools used in production at Dexa, with a focus on real-world RAG.`;
 const siteTitle = 'Dexter';
 
@@ -24,9 +24,9 @@ const config: DocsThemeConfig = {
     />
   ),
   project: {
-    link: 'https://github.com/dexaai/llm-tools',
+    link: 'https://github.com/dexaai/dexter',
   },
-  docsRepositoryBase: 'https://github.com/dexaai/llm-tools/blob/master/docs',
+  docsRepositoryBase: 'https://github.com/dexaai/dexter/blob/master/docs',
   editLink: {
     text: 'Edit this page on GitHub',
   },
@@ -66,9 +66,9 @@ const config: DocsThemeConfig = {
         <meta property="og:site_name" content={siteTitle} />
         <meta name="apple-mobile-web-app-title" content={siteTitle} />
 
-        <meta name="twitter:card" content="summary_large_image" />
+        {/* <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:image" content={siteSocialUrl} />
-        <meta name="og:image" content={siteSocialUrl} />
+        <meta name="og:image" content={siteSocialUrl} /> */}
 
         <meta property="twitter:domain" content={siteHost} />
         <meta name="twitter:site:domain" content={siteHost} />
