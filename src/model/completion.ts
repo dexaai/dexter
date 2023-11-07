@@ -71,13 +71,16 @@ export class CompletionModel extends AbstractModel<
 
   /** Clone the model and merge/orverride the given properties. */
   clone(args?: CompletionModelArgs): this {
-    const { cache, client, context, debug, params, events } = args ?? {};
+    const { cacheKey, cache, client, context, debug, params, events } =
+      args ?? {};
+
     // @ts-ignore
     return new CompletionModel({
-      cache: cache || this.cache,
-      client: client || this.client,
+      cacheKey: cacheKey ?? this.cacheKey,
+      cache: cache ?? this.cache,
+      client: client ?? this.client,
       context: this.mergeContext(this.context, context),
-      debug: debug || this.debug,
+      debug: debug ?? this.debug,
       params: this.mergeParams(this.params, params ?? {}),
       events: this.mergeEvents(this.events, events || {}),
     });

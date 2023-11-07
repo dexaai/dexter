@@ -1,4 +1,4 @@
-# Contents
+# API Reference
 
 ## Exports
 
@@ -17,6 +17,8 @@
 - [CompletionModel](classes/CompletionModel.md)
 - [EmbeddingModel](classes/EmbeddingModel.md)
 - [Msg](classes/Msg.md)
+- [PineconeDatastore](classes/PineconeDatastore.md)
+- [PineconeHybridDatastore](classes/PineconeHybridDatastore.md)
 - [SparseVectorModel](classes/SparseVectorModel.md)
 - [VectorUtils](classes/VectorUtils.md)
 
@@ -26,9 +28,12 @@
 
 ### Type Aliases
 
+- [CacheKey](type-aliases/CacheKey.md)
+- [CacheStorage](type-aliases/CacheStorage.md)
 - [ChatModelArgs](type-aliases/ChatModelArgs.md)
 - [CompletionModelArgs](type-aliases/CompletionModelArgs.md)
 - [EmbeddingModelArgs](type-aliases/EmbeddingModelArgs.md)
+- [Prettify](type-aliases/Prettify.md)
 - [SparseVectorModelArgs](type-aliases/SparseVectorModelArgs.md)
 
 ### Functions
@@ -36,9 +41,12 @@
 - [calculateCost](functions/calculateCost.md)
 - [createAIFunction](functions/createAIFunction.md)
 - [createOpenAIClient](functions/createOpenAIClient.md)
+- [createPineconeClient](functions/createPineconeClient.md)
 - [createTokenizer](functions/createTokenizer.md)
+- [deepMerge](functions/deepMerge.md)
+- [defaultCacheKey](functions/defaultCacheKey.md)
 - [extractJsonObject](functions/extractJsonObject.md)
 - [extractZodObject](functions/extractZodObject.md)
-- [getDatastoreMemoryCache](functions/getDatastoreMemoryCache.md)
-- [getModelMemoryCache](functions/getModelMemoryCache.md)
+- [omit](functions/omit.md)
+- [pick](functions/pick.md)
 - [zodToJsonSchema](functions/zodToJsonSchema.md)

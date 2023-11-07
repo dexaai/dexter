@@ -1,6 +1,6 @@
 {
   "private": true,
-  "name": "llm-tools-docs",
+  "name": "dexter-docs",
   "scripts": {
     "dev": "next",
     "build": "next build",

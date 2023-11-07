@@ -16,8 +16,8 @@ A Doc is the unit of storage for data in a Datastore
 
 | Property | Type | Description | Source |
 | :------ | :------ | :------ | :------ |
-| `embedding`? | `number`[] | - | [src/datastore/types.ts:35](https://github.com/dexaai/llm-tools/blob/eeaf162/src/datastore/types.ts#L35) |
-| `id` | `string` | - | [src/datastore/types.ts:33](https://github.com/dexaai/llm-tools/blob/eeaf162/src/datastore/types.ts#L33) |
-| `metadata` | `Meta` | - | [src/datastore/types.ts:34](https://github.com/dexaai/llm-tools/blob/eeaf162/src/datastore/types.ts#L34) |
-| `score`? | `number` | - | [src/datastore/types.ts:37](https://github.com/dexaai/llm-tools/blob/eeaf162/src/datastore/types.ts#L37) |
-| `sparseVector`? | [`Vector`](../../Model/namespaces/SparseVector/type-aliases/Vector.md) | - | [src/datastore/types.ts:36](https://github.com/dexaai/llm-tools/blob/eeaf162/src/datastore/types.ts#L36) |
+| `embedding`? | `number`[] | - | [src/datastore/types.ts:22](https://github.com/dexaai/llm-tools/blob/98f7fd5/src/datastore/types.ts#L22) |
+| `id` | `string` | - | [src/datastore/types.ts:20](https://github.com/dexaai/llm-tools/blob/98f7fd5/src/datastore/types.ts#L20) |
+| `metadata` | `Meta` | - | [src/datastore/types.ts:21](https://github.com/dexaai/llm-tools/blob/98f7fd5/src/datastore/types.ts#L21) |
+| `score`? | `number` | - | [src/datastore/types.ts:24](https://github.com/dexaai/llm-tools/blob/98f7fd5/src/datastore/types.ts#L24) |
+| `sparseVector`? | [`Vector`](../../Model/namespaces/SparseVector/type-aliases/Vector.md) | - | [src/datastore/types.ts:23](https://github.com/dexaai/llm-tools/blob/98f7fd5/src/datastore/types.ts#L23) |

@@ -14,7 +14,6 @@ Generic Model extended by provider specific implementations.
 
 ### Interfaces
 
-- [Cache](interfaces/Cache.md)
 - [Events](interfaces/Events.md)
 - [ITokenizer](interfaces/ITokenizer.md)
 

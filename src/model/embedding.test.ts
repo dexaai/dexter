@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest';
 import type { Model } from './types.js';
-import { getModelMemoryCache } from './utils/memory-cache.js';
 import { EmbeddingModel } from './embedding.js';
 
 const FAKE_RESPONSE: Model.Embedding.Response = {
@@ -104,7 +103,7 @@ describe('EmbeddingModel', () => {
     const apiResponseEvent = vi.fn();
     const completeEvent = vi.fn();
     const model = new EmbeddingModel({
-      cache: getModelMemoryCache(),
+      cache: new Map(),
       client: Client,
       params: { model: 'gpt-fake' },
       events: {

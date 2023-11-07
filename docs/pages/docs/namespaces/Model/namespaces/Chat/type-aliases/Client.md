@@ -14,4 +14,4 @@
 
 ## Source
 
-[src/model/types.ts:54](https://github.com/dexaai/llm-tools/blob/eeaf162/src/model/types.ts#L54)
+[src/model/types.ts:46](https://github.com/dexaai/llm-tools/blob/98f7fd5/src/model/types.ts#L46)

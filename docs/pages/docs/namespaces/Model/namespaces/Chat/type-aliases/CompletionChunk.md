@@ -6,4 +6,4 @@ A chunk recieved from a streaming response
 
 ## Source
 
-[src/model/types.ts:81](https://github.com/dexaai/llm-tools/blob/eeaf162/src/model/types.ts#L81)
+[src/model/types.ts:73](https://github.com/dexaai/llm-tools/blob/98f7fd5/src/model/types.ts#L73)

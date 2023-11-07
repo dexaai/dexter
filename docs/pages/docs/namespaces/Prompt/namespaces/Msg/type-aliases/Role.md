@@ -6,4 +6,4 @@ The possible roles for a message.
 
 ## Source
 
-[src/prompt/types.ts:66](https://github.com/dexaai/llm-tools/blob/eeaf162/src/prompt/types.ts#L66)
+[src/prompt/types.ts:66](https://github.com/dexaai/llm-tools/blob/98f7fd5/src/prompt/types.ts#L66)

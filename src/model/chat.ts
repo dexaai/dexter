@@ -4,7 +4,7 @@ import type { Model } from './types.js';
 import { calculateCost } from './utils/calculate-cost.js';
 import { createOpenAIClient } from './clients/openai.js';
 import { AbstractModel } from './model.js';
-import { deepMerge } from './utils/helpers.js';
+import { deepMerge } from '../utils/helpers.js';
 
 export type ChatModelArgs = SetOptional<
   ModelArgs<
@@ -182,13 +182,16 @@ export class ChatModel extends AbstractModel<
 
   /** Clone the model and merge/orverride the given properties. */
   clone(args?: ChatModelArgs): this {
-    const { cache, client, context, debug, params, events } = args ?? {};
+    const { cacheKey, cache, client, context, debug, params, events } =
+      args ?? {};
+
     // @ts-ignore
     return new ChatModel({
-      cache: cache || this.cache,
-      client: client || this.client,
+      cacheKey: cacheKey ?? this.cacheKey,
+      cache: cache ?? this.cache,
+      client: client ?? this.client,
       context: this.mergeContext(this.context, context),
-      debug: debug || this.debug,
+      debug: debug ?? this.debug,
       params: this.mergeParams(this.params, params ?? {}),
       events: this.mergeEvents(this.events, events || {}),
     });
@@ -235,6 +238,7 @@ function logResponse(args: {
   console.debug();
   logMessage(message, args.params.messages.length + 1);
 }
+
 function logMessage(message: Model.Message, index: number) {
   console.debug(
     `[${index}] ${message.role.toUpperCase()}:${

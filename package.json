@@ -1,10 +1,51 @@
 {
-  "name": "@dexaai/ai",
+  "name": "@dexaai/dexter",
   "type": "module",
   "version": "0.0.1",
-  "description": "LLM tools used for production RAG at Dexa.ai",
-  "repository": "dexaai/llm-tools",
+  "description": "LLM tools used in production at Dexa, with a focus on real-world RAG.",
+  "repository": "dexaai/dexter",
   "license": "MIT",
+  "author": "Riley Tomasek <riley@dexa.ai>",
+  "contributors": [
+    "Riley Tomasek <riley@dexa.ai>",
+    "Travis Fischer <travis@transitivebullsh.it>"
+  ],
+  "engines": {
+    "node": ">= 18"
+  },
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./datastore": {
+      "types": "./dist/datastore/index.d.ts",
+      "import": "./dist/datastore/index.js"
+    },
+    "./datastore/pinecone": {
+      "types": "./dist/datastore/pinecone/index.d.ts",
+      "import": "./dist/datastore/pinecone/index.js"
+    },
+    "./prompt": {
+      "types": "./dist/prompt/index.d.ts",
+      "import": "./dist/prompt/index.js"
+    },
+    "./model": {
+      "types": "./dist/model/index.d.ts",
+      "import": "./dist/model/index.js"
+    },
+    "./utils": {
+      "types": "./dist/utils/index.d.ts",
+      "import": "./dist/utils/index.js"
+    }
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "sideEffects": false,
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsc --project tsconfig.dist.json",
     "prebuild": "rimraf dist",
@@ -22,34 +63,10 @@
     "test:unit": "dotenv -e .env.example -- vitest",
     "test:typecheck": "tsc --noEmit"
   },
-  "sideEffects": false,
-  "files": [
-    "dist"
-  ],
-  "exports": {
-    "./package.json": "./package.json",
-    "./datastore": {
-      "types": "./dist/datastore/index.d.ts",
-      "import": "./dist/datastore/index.js"
-    },
-    "./datastore/pinecone": {
-      "types": "./dist/datastore/pinecone/index.d.ts",
-      "import": "./dist/datastore/pinecone/index.js"
-    },
-    "./prompt": {
-      "types": "./dist/prompt/index.d.ts",
-      "import": "./dist/prompt/index.js"
-    },
-    "./model": {
-      "types": "./dist/model/index.d.ts",
-      "import": "./dist/model/index.js"
-    }
-  },
-  "types": "./dist/index.d.ts",
-  "main": "./dist/index.js",
   "dependencies": {
     "@fastify/deepmerge": "^1.3.0",
     "dedent": "^1.5.1",
+    "hash-obj": "^4.0.0",
     "jsonrepair": "^3.2.0",
     "ky": "^1.1.0",
     "openai-fetch": "^2.0.0-beta.7",
@@ -79,11 +96,5 @@
     "typescript": "^5.2.2",
     "vite": "^4.3.9",
     "vitest": "^0.34.3"
-  },
-  "publishConfig": {
-    "access": "restricted"
-  },
-  "engines": {
-    "node": ">= 18"
   }
 }

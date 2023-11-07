@@ -1,6 +1,11 @@
 import type { Model } from '../model/index.js';
 import type { Datastore } from './types.js';
-import { deepMerge } from './utils/helpers.js';
+import { deepMerge } from '../utils/helpers.js';
+import {
+  type CacheKey,
+  type CacheStorage,
+  defaultCacheKey,
+} from '../utils/cache.js';
 
 export abstract class AbstractDatastore<
   DocMeta extends Datastore.BaseMeta,
@@ -20,10 +25,11 @@ export abstract class AbstractDatastore<
   abstract datastoreType: Datastore.Type;
   abstract datastoreProvider: Datastore.Provider;
 
-  protected namespace: string;
   protected contentKey: keyof DocMeta;
   protected embeddingModel: Model.Embedding.Model;
-  protected cache?: Datastore.Cache<DocMeta, Filter>;
+  protected namespace?: string;
+  protected cacheKey: CacheKey<Datastore.Query<DocMeta, Filter>, string>;
+  protected cache?: CacheStorage<string, Datastore.QueryResult<DocMeta>>;
   protected events: Datastore.Events<DocMeta, Filter>;
   protected context: Datastore.Ctx;
 
@@ -31,6 +37,7 @@ export abstract class AbstractDatastore<
     this.namespace = args.namespace;
     this.contentKey = args.contentKey;
     this.embeddingModel = args.embeddingModel;
+    this.cacheKey = args.cacheKey ?? defaultCacheKey;
     this.cache = args.cache;
     this.context = args.context ?? {};
     this.events = args.events ?? {};
@@ -64,8 +71,10 @@ export abstract class AbstractDatastore<
       ) ?? []
     );
 
+    const cacheKey = this.cacheKey(query);
+
     // Return cached response if available
-    const cached = await this?.cache?.get(query);
+    const cached = await Promise.resolve(this.cache?.get(cacheKey));
     if (cached) {
       await Promise.allSettled(
         this.events?.onQueryComplete?.map((event) =>
@@ -83,7 +92,10 @@ export abstract class AbstractDatastore<
           )
         ) ?? []
       );
-      return cached;
+      return {
+        ...cached,
+        cached: true,
+      };
     }
 
     try {
@@ -99,7 +111,7 @@ export abstract class AbstractDatastore<
               datastoreProvider: this.datastoreProvider,
               query,
               response,
-              cached: true,
+              cached: false,
               context: mergedContext,
               latency: Date.now() - start,
             })
@@ -108,9 +120,12 @@ export abstract class AbstractDatastore<
       );
 
       // Update the cache
-      await this?.cache?.set(query, response);
+      await Promise.resolve(this.cache?.set(cacheKey, response));
 
-      return response;
+      return {
+        ...response,
+        cached: false,
+      };
     } catch (error) {
       await Promise.allSettled(
         this.events?.onError?.map((event) =>

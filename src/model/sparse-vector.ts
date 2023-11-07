@@ -4,7 +4,7 @@ import type { ModelArgs } from './model.js';
 import { AbstractModel } from './model.js';
 import type { Model } from './types.js';
 import { createSpladeClient } from './clients/splade.js';
-import type { Prettify } from './utils/helpers.js';
+import type { Prettify } from '../utils/helpers.js';
 
 export type SparseVectorModelArgs = Prettify<
   Omit<
@@ -103,9 +103,10 @@ export class SparseVectorModel extends AbstractModel<
 
   /** Clone the model and merge/orverride the given properties. */
   clone(args?: SparseVectorModelArgs): this {
-    const { cache, context, debug, params, events } = args ?? {};
+    const { cacheKey, cache, context, debug, params, events } = args ?? {};
     // @ts-ignore
     return new SparseVectorModel({
+      cacheKey: cacheKey || this.cacheKey,
       cache: cache || this.cache,
       context: this.mergeContext(this.context, context),
       debug: debug || this.debug,
