@@ -1,0 +1,32 @@
+{
+  "include": ["src", "examples"],
+  "exclude": ["**/node_modules", "**/.*/"],
+  "compilerOptions": {
+    "types": ["vitest/globals", "node"],
+    "moduleResolution": "node16",
+    "module": "node16",
+    "lib": ["ESNext", "DOM"],
+    "jsx": "preserve",
+    "outDir": "dist",
+    "allowJs": true,
+    "importHelpers": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "preserveWatchOutput": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "declaration": true,
+    "sourceMap": true,
+    "checkJs": true,
+    "noEmit": false,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
+    "incremental": false,
+    "skipDefaultLibCheck": true
+  }
+}

@@ -1,4 +1,3 @@
 packages:
-  - 'config/*'
-  - 'examples/**'
-  - 'packages/*'
+  - 'docs'
+  - 'examples'

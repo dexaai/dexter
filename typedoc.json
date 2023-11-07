@@ -1,0 +1,20 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "entryPoints": ["./src/index.ts"],
+  "exclude": ["**/*.test.ts"],
+  "plugin": ["typedoc-plugin-markdown"],
+  "out": "./docs/pages/docs",
+  "hidePageHeader": true,
+  "hideBreadcrumbs": true,
+  "hideInPageTOC": true,
+  "hideGenerator": true,
+  "excludePrivate": true,
+  "excludeProtected": true,
+  "excludeExternals": true,
+  "excludeInternal": true,
+  "preserveAnchorCasing": true,
+  "excludeGroups": false,
+  "parametersFormat": "table",
+  "propertiesFormat": "table",
+  "indexPageTitle": "API Reference"
+}

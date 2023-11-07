@@ -1,6 +1,0 @@
-{
-  "extends": ["@dexaai/eslint-config", "@dexaai/eslint-config/node"],
-  "rules": {
-    "no-console": "off"
-  }
-}
