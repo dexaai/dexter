@@ -60,8 +60,12 @@ export namespace Model {
       max_tokens?: ChatParams['max_tokens'];
       model: ChatParams['model'];
       presence_penalty?: ChatParams['presence_penalty'];
+      response_format?: ChatParams['response_format'];
+      seed?: ChatParams['seed'];
       stop?: ChatParams['stop'];
       temperature?: ChatParams['temperature'];
+      tools?: ChatParams['tools'];
+      tool_choice?: ChatParams['tool_choice'];
       top_p?: ChatParams['top_p'];
     }
     export interface Response extends Base.Response, ChatResponse {

@@ -12,7 +12,7 @@ const FAKE_RESPONSE: Model.Chat.Response = {
   created: 0,
   id: 'fake-id',
   model: 'gpt-fake',
-  object: 'fake-chat',
+  object: 'chat.completion',
   usage: {
     completion_tokens: 1,
     prompt_tokens: 1,
