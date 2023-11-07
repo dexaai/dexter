@@ -79,7 +79,7 @@ export class PineconeDatastore<
     try {
       // Get the text from the docs that are missing an embedding
       const textsToEmbed = docs
-        .filter((doc) => !doc.embedding)
+        .filter((doc) => !doc.embedding?.length)
         .map((doc) => {
           const content = doc.metadata[this.contentKey];
           if (typeof content !== 'string') {
