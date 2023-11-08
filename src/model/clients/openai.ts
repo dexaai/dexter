@@ -1,4 +1,3 @@
-import type { ChatMessage } from 'openai-fetch';
 import { OpenAIClient } from 'openai-fetch';
 
 /** Cached OpenAI clients. */
@@ -23,11 +22,8 @@ export function createOpenAIClient(
 }
 
 /** Reformat name to adhere to OpenAI's naming restrictions: /^[a-zA-Z0-9_-]{1,64}$/ */
-export function formatName<Msg extends ChatMessage>(message: Msg): Msg {
-  const { name, role, content } = message;
-
-  // Remove the name key if it's empty.
-  if (!name) return { role, content } as Msg;
+export function formatName(name?: string | null): string | null {
+  if (!name) return null;
 
   // Reformat to meet OpenAI's naming restrictions.
   const formattedName = name
@@ -35,5 +31,5 @@ export function formatName<Msg extends ChatMessage>(message: Msg): Msg {
     .replace(/[^a-zA-Z0-9_]/g, '')
     .toLowerCase();
 
-  return { role, name: formattedName, content } as Msg;
+  return formattedName;
 }

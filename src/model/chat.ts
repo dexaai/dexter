@@ -131,12 +131,13 @@ export class ChatModel extends AbstractModel<
       const choice = chunk.choices[0];
       const response: Model.Chat.ApiResponse = {
         ...chunk,
+        object: 'chat.completion',
         choices: [
           {
             finish_reason:
               choice.finish_reason as Model.Chat.Response['choices'][0]['finish_reason'],
             index: choice.index,
-            message: choice.delta as Model.Message,
+            message: choice.delta as Model.Message & { role: 'assistant' },
           },
         ],
       };
@@ -240,11 +241,7 @@ function logResponse(args: {
 }
 
 function logMessage(message: Model.Message, index: number) {
-  console.debug(
-    `[${index}] ${message.role.toUpperCase()}:${
-      message.name ? ` (${message.name}) ` : ''
-    }`
-  );
+  console.debug(`[${index}] ${message.role.toUpperCase()}`);
   if (message.content) {
     console.debug(message.content);
   }
@@ -260,6 +257,28 @@ function logMessage(message: Model.Message, index: number) {
         console.debug(formatted);
       } catch (err) {
         console.debug(message.function_call.arguments);
+      }
+    }
+  } else if (message.tool_calls) {
+    for (const toolCall of message.tool_calls) {
+      const toolCallFunction = toolCall.function;
+      console.debug(
+        `tool call: ${toolCall.type}${
+          toolCallFunction ? `:${toolCallFunction.name}` : ''
+        } (id ${toolCall.id})`
+      );
+      if (toolCall.type !== 'function' || !toolCallFunction) continue;
+      if (toolCallFunction.arguments) {
+        try {
+          const formatted = JSON.stringify(
+            JSON.parse(toolCallFunction.arguments),
+            null,
+            2
+          );
+          console.debug(formatted);
+        } catch (err) {
+          console.debug(toolCallFunction.arguments);
+        }
       }
     }
   }

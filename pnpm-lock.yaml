@@ -24,8 +24,8 @@ importers:
         specifier: ^1.1.0
         version: 1.1.3
       openai-fetch:
-        specifier: 2.0.0-beta.9
-        version: 2.0.0-beta.9
+        specifier: 2.0.1-beta.0
+        version: 2.0.1-beta.0
       p-map:
         specifier: ^6.0.0
         version: 6.0.0
@@ -6368,8 +6368,8 @@ packages:
       is-wsl: 2.2.0
     dev: true
 
-  /openai-fetch@2.0.0-beta.9:
-    resolution: {integrity: sha512-u1NxvxCd6zoKnBU7IfcyRIl04WHw7xn3dGFOZD/hQW27G9PiMxud72VgmuDaJJuGV0zAcbY2iCFbqOmmvpk6AQ==}
+  /openai-fetch@2.0.1-beta.0:
+    resolution: {integrity: sha512-fFO/Oz95r1eKypOU/FTwdt1fWdqiBivWWfhoaNm3QIVtSOjnWmBKWEWkAk44jJ+mp6POG9p940KmaQp6OLsR9A==}
     engines: {node: '>=18'}
     dependencies:
       ky: 1.1.3
