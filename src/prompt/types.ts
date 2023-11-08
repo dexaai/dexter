@@ -41,11 +41,6 @@ export namespace Prompt {
     parseArgs(input: string | Msg): z.infer<Schema>;
     /** The function spec for the OpenAI API `functions` property. */
     spec: AIFunctionSpec;
-    /** The tool spec for the OpenAI API `tools` property. */
-    tool: {
-      type: string;
-      function: AIFunctionSpec;
-    };
   }
 
   /**

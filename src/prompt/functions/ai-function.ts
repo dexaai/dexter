@@ -57,10 +57,6 @@ export function createAIFunction<
     description: cleanString(spec.description ?? ''),
     parameters: zodToJsonSchema(spec.argsSchema),
   };
-  aiFunction.tool = {
-    type: 'function',
-    function: aiFunction.spec,
-  };
 
   return aiFunction;
 }
