@@ -81,9 +81,13 @@ class Tokenizer implements Model.ITokenizer {
           // For 4, the name and role are included
           // Details here: https://github.com/openai/openai-python/blob/main/chatml.md
           numTokens += 1; // role
+          if (message.name) {
+            // No idea why this, but tested with many examples and it works...
+            numTokens += this.countTokens(`${message.name}`) + 1;
+          }
         } else {
           // For 3.5, the name replaces the role if it's present
-          numTokens += this.countTokens(message.role);
+          numTokens += this.countTokens(message.name || message.role);
         }
       }
 

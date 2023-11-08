@@ -16,14 +16,17 @@ export class Msg {
   static system(
     content: string,
     opts?: {
+      /** Custom name for the message. */
+      name?: string;
       /** Whether to clean extra newlines and indentation. Defaults to true. */
       cleanContent?: boolean;
     }
   ): Prompt.Msg.System {
-    const { cleanContent = true } = opts ?? {};
+    const { name, cleanContent = true } = opts ?? {};
     return {
       role: 'system',
       content: cleanContent ? cleanString(content) : content,
+      ...(name ? { name } : {}),
     };
   }
 
@@ -31,14 +34,17 @@ export class Msg {
   static user(
     content: string,
     opts?: {
+      /** Custom name for the message. */
+      name?: string;
       /** Whether to clean extra newlines and indentation. Defaults to true. */
       cleanContent?: boolean;
     }
   ): Prompt.Msg.User {
-    const { cleanContent = true } = opts ?? {};
+    const { name, cleanContent = true } = opts ?? {};
     return {
       role: 'user',
       content: cleanContent ? cleanString(content) : content,
+      ...(name ? { name } : {}),
     };
   }
 
@@ -46,28 +52,39 @@ export class Msg {
   static assistant(
     content: string,
     opts?: {
+      /** Custom name for the message. */
+      name?: string;
       /** Whether to clean extra newlines and indentation. Defaults to true. */
       cleanContent?: boolean;
     }
   ): Prompt.Msg.Assistant {
-    const { cleanContent = true } = opts ?? {};
+    const { name, cleanContent = true } = opts ?? {};
     return {
       role: 'assistant',
       content: cleanContent ? cleanString(content) : content,
+      ...(name ? { name } : {}),
     };
   }
 
   /** Create a function call message with argumets. */
-  static assistantFunctionCall(function_call: {
-    /** Name of the function to call. */
-    name: string;
-    /** Arguments to pass to the function. */
-    arguments: string;
-  }): Prompt.Msg.AssistantFunctionCall {
+  static assistantFunctionCall(
+    function_call: {
+      /** Name of the function to call. */
+      name: string;
+      /** Arguments to pass to the function. */
+      arguments: string;
+    },
+    opts?: {
+      /** The name descriptor for the message.(message.name) */
+      name?: string;
+    }
+  ): Prompt.Msg.AssistantFunctionCall {
+    const { name: msgName } = opts ?? {};
     return {
       role: 'assistant',
       content: null,
       function_call,
+      ...(msgName ? { name: msgName } : {}),
     };
   }
 
@@ -83,12 +100,18 @@ export class Msg {
 
   /** Create a function call message with argumets. */
   static assistantToolCalls(
-    tool_calls: Prompt.Msg.ToolCall[]
+    tool_calls: Prompt.Msg.ToolCall[],
+    opts?: {
+      /** The name descriptor for the message.(message.name) */
+      name?: string;
+    }
   ): Prompt.Msg.AssistantToolCalls {
+    const { name: msgName } = opts ?? {};
     return {
       role: 'assistant',
       content: null,
       tool_calls,
+      ...(msgName ? { name: msgName } : {}),
     };
   }
 

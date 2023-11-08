@@ -12,9 +12,6 @@ import { cleanString } from '../utils/message.js';
  *
  * The `spec` property of the returned function is the spec for adding the
  * function to the OpenAI API `functions` property.
- *
- * The `tool` property of the returned function is the spec for adding the
- * function to the OpenAI API `tools` array.
  */
 export function createAIFunction<
   Schema extends z.ZodObject<any>,
