@@ -115,21 +115,21 @@ export namespace Prompt {
     };
 
     /** Message with arguments to call a function. */
-    export type FuncCall = {
+    export type AssistantFunctionCall = {
       role: 'assistant';
       content: null;
       function_call: FunctionCall;
     };
 
     /** Message with the result of a function call. */
-    export type FuncResult = {
+    export type FunctionResult = {
       role: 'function';
       name: string;
       content: string;
     };
 
     /** Message with arguments to call one or more tools. */
-    export type ToolCalls = {
+    export type AssistantToolCalls = {
       role: 'assistant';
       content: null;
       tool_calls: ToolCall[];

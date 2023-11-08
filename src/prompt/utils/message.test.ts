@@ -22,7 +22,7 @@ describe('Msg', () => {
   });
 
   it('handles tool calls request', () => {
-    const msg = Msg.toolCalls([
+    const msg = Msg.assistantToolCalls([
       {
         id: 'fake-tool-call-id',
         type: 'function',
@@ -32,8 +32,8 @@ describe('Msg', () => {
         },
       },
     ]);
-    expectTypeOf(msg).toMatchTypeOf<Prompt.Msg.ToolCalls>();
-    expect(Msg.isToolCallsRequest(msg)).toBe(true);
+    expectTypeOf(msg).toMatchTypeOf<Prompt.Msg.AssistantToolCalls>();
+    expect(Msg.isAssistantToolCalls(msg)).toBe(true);
   });
 
   it('handles tool call response', () => {
@@ -50,9 +50,11 @@ describe('Msg', () => {
     expectTypeOf(
       {} as Prompt.Msg.Assistant
     ).toMatchTypeOf<OpenAI.ChatMessage>();
-    expectTypeOf({} as Prompt.Msg.FuncCall).toMatchTypeOf<OpenAI.ChatMessage>();
     expectTypeOf(
-      {} as Prompt.Msg.FuncResult
+      {} as Prompt.Msg.AssistantFunctionCall
+    ).toMatchTypeOf<OpenAI.ChatMessage>();
+    expectTypeOf(
+      {} as Prompt.Msg.FunctionResult
     ).toMatchTypeOf<OpenAI.ChatMessage>();
   });
 });
