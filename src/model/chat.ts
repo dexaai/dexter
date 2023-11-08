@@ -241,7 +241,11 @@ function logResponse(args: {
 }
 
 function logMessage(message: Model.Message, index: number) {
-  console.debug(`[${index}] ${message.role.toUpperCase()}`);
+  console.debug(
+    `[${index}] ${message.role.toUpperCase()}:${
+      message.name ? ` (${message.name}) ` : ''
+    }`
+  );
   if (message.content) {
     console.debug(message.content);
   }
