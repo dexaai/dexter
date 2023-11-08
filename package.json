@@ -73,7 +73,7 @@
     "p-map": "^6.0.0",
     "p-throttle": "^5.1.0",
     "parse-json": "^7.0.0",
-    "pinecone-client": "^1.1.0",
+    "pinecone-client": "^2.0.0",
     "tiktoken": "^1.0.10",
     "zod": "^3.21.4",
     "zod-to-json-schema": "^3.21.4",
