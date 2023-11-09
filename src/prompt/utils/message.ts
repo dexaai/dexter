@@ -78,7 +78,7 @@ export class Msg {
       /** The name descriptor for the message.(message.name) */
       name?: string;
     }
-  ): Prompt.Msg.AssistantFunctionCall {
+  ): Prompt.Msg.FuncCall {
     const { name: msgName } = opts ?? {};
     return {
       role: 'assistant',
@@ -89,10 +89,10 @@ export class Msg {
   }
 
   /** Create a function result message. */
-  static functionResult(
+  static funcResult(
     content: string | object | unknown[],
     name: string
-  ): Prompt.Msg.FunctionResult {
+  ): Prompt.Msg.FuncResult {
     const contentString =
       typeof content === 'string' ? content : JSON.stringify(content);
     return { role: 'function', content: contentString, name };
@@ -105,7 +105,7 @@ export class Msg {
       /** The name descriptor for the message.(message.name) */
       name?: string;
     }
-  ): Prompt.Msg.AssistantToolCalls {
+  ): Prompt.Msg.ToolCalls {
     const { name: msgName } = opts ?? {};
     return {
       role: 'assistant',
@@ -130,10 +130,7 @@ export class Msg {
     // @TODO
     response: any
     // response: ChatModel.EnrichedResponse
-  ):
-    | Prompt.Msg.Assistant
-    | Prompt.Msg.AssistantFunctionCall
-    | Prompt.Msg.AssistantToolCalls {
+  ): Prompt.Msg.Assistant | Prompt.Msg.FuncCall | Prompt.Msg.ToolCalls {
     const msg = response.choices[0].message as Prompt.Msg;
     return this.narrowResponseMessage(msg);
   }
@@ -141,10 +138,7 @@ export class Msg {
   /** Narrow a message received from the API. It only responds with role=assistant */
   static narrowResponseMessage(
     msg: Prompt.Msg
-  ):
-    | Prompt.Msg.Assistant
-    | Prompt.Msg.AssistantFunctionCall
-    | Prompt.Msg.AssistantToolCalls {
+  ): Prompt.Msg.Assistant | Prompt.Msg.FuncCall | Prompt.Msg.ToolCalls {
     if (msg.content === null && msg.tool_calls != null) {
       return Msg.assistantToolCalls(msg.tool_calls);
     } else if (msg.content === null && msg.function_call != null) {
@@ -171,21 +165,15 @@ export class Msg {
     return message.role === 'assistant' && message.content !== null;
   }
   /** Check if a message is a function call message with arguments. */
-  static isAssistantFunctionCall(
-    message: Prompt.Msg
-  ): message is Prompt.Msg.AssistantFunctionCall {
+  static isFuncCall(message: Prompt.Msg): message is Prompt.Msg.FuncCall {
     return message.role === 'assistant' && message.function_call != null;
   }
   /** Check if a message is a function result message. */
-  static isFunctionResult(
-    message: Prompt.Msg
-  ): message is Prompt.Msg.FunctionResult {
+  static isFuncResult(message: Prompt.Msg): message is Prompt.Msg.FuncResult {
     return message.role === 'function' && message.name != null;
   }
   /** Check if a message is a tool calls message. */
-  static isAssistantToolCalls(
-    message: Prompt.Msg
-  ): message is Prompt.Msg.AssistantToolCalls {
+  static isToolCalls(message: Prompt.Msg): message is Prompt.Msg.ToolCalls {
     return message.role === 'assistant' && message.tool_calls != null;
   }
   /** Check if a message is a tool call result message. */
@@ -199,13 +187,9 @@ export class Msg {
   static narrow(message: Prompt.Msg.System): Prompt.Msg.System;
   static narrow(message: Prompt.Msg.User): Prompt.Msg.User;
   static narrow(message: Prompt.Msg.Assistant): Prompt.Msg.Assistant;
-  static narrow(
-    message: Prompt.Msg.AssistantFunctionCall
-  ): Prompt.Msg.AssistantFunctionCall;
-  static narrow(message: Prompt.Msg.FunctionResult): Prompt.Msg.FunctionResult;
-  static narrow(
-    message: Prompt.Msg.AssistantToolCalls
-  ): Prompt.Msg.AssistantToolCalls;
+  static narrow(message: Prompt.Msg.FuncCall): Prompt.Msg.FuncCall;
+  static narrow(message: Prompt.Msg.FuncResult): Prompt.Msg.FuncResult;
+  static narrow(message: Prompt.Msg.ToolCalls): Prompt.Msg.ToolCalls;
   static narrow(message: Prompt.Msg.ToolCallResult): Prompt.Msg.ToolCallResult;
   static narrow(
     message: Prompt.Msg
@@ -213,9 +197,9 @@ export class Msg {
     | Prompt.Msg.System
     | Prompt.Msg.User
     | Prompt.Msg.Assistant
-    | Prompt.Msg.AssistantFunctionCall
-    | Prompt.Msg.FunctionResult
-    | Prompt.Msg.AssistantToolCalls
+    | Prompt.Msg.FuncCall
+    | Prompt.Msg.FuncResult
+    | Prompt.Msg.ToolCalls
     | Prompt.Msg.ToolCallResult {
     if (this.isSystem(message)) {
       return message;
@@ -226,13 +210,13 @@ export class Msg {
     if (this.isAssistant(message)) {
       return message;
     }
-    if (this.isAssistantFunctionCall(message)) {
+    if (this.isFuncCall(message)) {
       return message;
     }
-    if (this.isFunctionResult(message)) {
+    if (this.isFuncResult(message)) {
       return message;
     }
-    if (this.isAssistantToolCalls(message)) {
+    if (this.isToolCalls(message)) {
       return message;
     }
     if (this.isToolCallResult(message)) {

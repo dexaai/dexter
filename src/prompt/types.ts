@@ -95,37 +95,42 @@ export namespace Prompt {
     export type System = {
       role: 'system';
       content: string;
+      name?: string;
     };
 
     /** Message with text content from the user. */
     export type User = {
       role: 'user';
+      name?: string;
       content: string;
     };
 
     /** Message with text content from the assistant. */
     export type Assistant = {
       role: 'assistant';
+      name?: string;
       content: string;
     };
 
     /** Message with arguments to call a function. */
-    export type AssistantFunctionCall = {
+    export type FuncCall = {
       role: 'assistant';
+      name?: string;
       content: null;
       function_call: FunctionCall;
     };
 
     /** Message with the result of a function call. */
-    export type FunctionResult = {
+    export type FuncResult = {
       role: 'function';
       name: string;
       content: string;
     };
 
     /** Message with arguments to call one or more tools. */
-    export type AssistantToolCalls = {
+    export type ToolCalls = {
       role: 'assistant';
+      name?: string;
       content: null;
       tool_calls: ToolCall[];
     };

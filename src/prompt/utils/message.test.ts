@@ -32,8 +32,8 @@ describe('Msg', () => {
         },
       },
     ]);
-    expectTypeOf(msg).toMatchTypeOf<Prompt.Msg.AssistantToolCalls>();
-    expect(Msg.isAssistantToolCalls(msg)).toBe(true);
+    expectTypeOf(msg).toMatchTypeOf<Prompt.Msg.ToolCalls>();
+    expect(Msg.isToolCalls(msg)).toBe(true);
   });
 
   it('handles tool call response', () => {
@@ -50,11 +50,9 @@ describe('Msg', () => {
     expectTypeOf(
       {} as Prompt.Msg.Assistant
     ).toMatchTypeOf<OpenAI.ChatMessage>();
+    expectTypeOf({} as Prompt.Msg.FuncCall).toMatchTypeOf<OpenAI.ChatMessage>();
     expectTypeOf(
-      {} as Prompt.Msg.AssistantFunctionCall
-    ).toMatchTypeOf<OpenAI.ChatMessage>();
-    expectTypeOf(
-      {} as Prompt.Msg.FunctionResult
+      {} as Prompt.Msg.FuncResult
     ).toMatchTypeOf<OpenAI.ChatMessage>();
   });
 });
