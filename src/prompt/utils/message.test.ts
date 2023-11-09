@@ -22,7 +22,7 @@ describe('Msg', () => {
   });
 
   it('handles tool calls request', () => {
-    const msg = Msg.toolCalls([
+    const msg = Msg.toolCall([
       {
         id: 'fake-tool-call-id',
         type: 'function',
@@ -32,14 +32,14 @@ describe('Msg', () => {
         },
       },
     ]);
-    expectTypeOf(msg).toMatchTypeOf<Prompt.Msg.ToolCalls>();
-    expect(Msg.isToolCalls(msg)).toBe(true);
+    expectTypeOf(msg).toMatchTypeOf<Prompt.Msg.ToolCall>();
+    expect(Msg.isToolCall(msg)).toBe(true);
   });
 
   it('handles tool call response', () => {
-    const msg = Msg.toolCallResult('Hello, World!', 'fake-tool-call-id');
-    expectTypeOf(msg).toMatchTypeOf<Prompt.Msg.ToolCallResult>();
-    expect(Msg.isToolCallResult(msg)).toBe(true);
+    const msg = Msg.toolResult('Hello, World!', 'fake-tool-call-id');
+    expectTypeOf(msg).toMatchTypeOf<Prompt.Msg.ToolResult>();
+    expect(Msg.isToolResult(msg)).toBe(true);
   });
 
   it('prompt message types should interop with openai-fetch message types', () => {
