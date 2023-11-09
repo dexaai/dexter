@@ -22,7 +22,7 @@ describe('Msg', () => {
   });
 
   it('handles tool calls request', () => {
-    const msg = Msg.assistantToolCalls([
+    const msg = Msg.toolCalls([
       {
         id: 'fake-tool-call-id',
         type: 'function',
