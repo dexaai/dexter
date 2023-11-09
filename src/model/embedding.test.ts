@@ -6,12 +6,12 @@ const FAKE_RESPONSE: Model.Embedding.Response = {
   data: [
     {
       index: 0,
-      object: 'asdf',
+      object: 'embedding',
       embedding: [1, 2, 3],
     },
   ],
   model: 'fake-model',
-  object: 'asdf',
+  object: 'embedding',
   usage: {
     prompt_tokens: 1,
     total_tokens: 1,

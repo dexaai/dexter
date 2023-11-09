@@ -69,11 +69,11 @@
     "hash-object": "^5.0.0",
     "jsonrepair": "^3.2.0",
     "ky": "^1.1.0",
-    "openai-fetch": "^2.0.0-beta.7",
+    "openai-fetch": "2.0.1",
     "p-map": "^6.0.0",
     "p-throttle": "^5.1.0",
     "parse-json": "^7.0.0",
-    "pinecone-client": "^1.1.0",
+    "pinecone-client": "^2.0.0",
     "tiktoken": "^1.0.10",
     "zod": "^3.21.4",
     "zod-to-json-schema": "^3.21.4",
@@ -96,5 +96,23 @@
     "typescript": "^5.2.2",
     "vite": "^4.3.9",
     "vitest": "^0.34.3"
+  },
+  "prettier": {
+    "singleQuote": true
+  },
+  "eslintConfig": {
+    "root": true,
+    "extends": [
+      "@dexaai/eslint-config",
+      "@dexaai/eslint-config/node"
+    ],
+    "ignorePatterns": [
+      "node_modules",
+      "dist",
+      ".next"
+    ],
+    "rules": {
+      "no-console": "off"
+    }
   }
 }

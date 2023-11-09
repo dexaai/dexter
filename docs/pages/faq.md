@@ -3,8 +3,7 @@
 ### Why should I consider using Dexter?
 
 - **Dozens of the world's top podcasters trust Dexa's RAG to represent them**
-- Optimized for real production-quality RAG
-- We've spent thousands of hours testing this package in production
+- Optimized for production-quality RAG
 - We only use best-in-class third-parties like [OpenAI](https://openai.com) and [Pinecone](https://www.pinecone.io)
 - Simple and extremely minimal TS package (no complicated abstractions)
 - Supports all envs with native fetch: Node.js 18+, Deno, Cloudflare Workers, etc

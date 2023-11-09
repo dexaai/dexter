@@ -6,6 +6,10 @@ const COSTS: Record<string, Cost> = {
     input: 0.003,
     output: 0.006,
   },
+  'gpt-4-turbo': {
+    input: 0.001,
+    output: 0.003,
+  },
   'gpt-4-32k': {
     input: 0.006,
     output: 0.012,
@@ -17,6 +21,10 @@ const COSTS: Record<string, Cost> = {
   'gpt-3.5-turbo-16k': {
     input: 0.0003,
     output: 0.0004,
+  },
+  'gpt-3.5-turbo-1106': {
+    input: 0.0001,
+    output: 0.0002,
   },
   'gpt-3.5-turbo-instruct': {
     input: 0.00015,
@@ -81,7 +89,11 @@ function getCost(model: string): Cost | null {
   // Eg: gpt-3.5-turbo-0613
 
   if (model.startsWith('gpt-4')) {
-    return COSTS[model.includes('32k') ? 'gpt-4-32k' : 'gpt-4'];
+    if (model.startsWith('gpt-4-1106') || model.includes('turbo')) {
+      return COSTS['gpt-4-turbo'];
+    } else {
+      return COSTS[model.includes('32k') ? 'gpt-4-32k' : 'gpt-4'];
+    }
   }
 
   if (model.startsWith('gpt-3.5-turbo')) {
