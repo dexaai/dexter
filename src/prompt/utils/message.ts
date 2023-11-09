@@ -67,7 +67,7 @@ export class Msg {
   }
 
   /** Create a function call message with argumets. */
-  static assistantFunctionCall(
+  static funcCall(
     function_call: {
       /** Name of the function to call. */
       name: string;
@@ -99,7 +99,7 @@ export class Msg {
   }
 
   /** Create a function call message with argumets. */
-  static assistantToolCalls(
+  static toolCalls(
     tool_calls: Prompt.Msg.ToolCall[],
     opts?: {
       /** The name descriptor for the message.(message.name) */
@@ -140,9 +140,9 @@ export class Msg {
     msg: Prompt.Msg
   ): Prompt.Msg.Assistant | Prompt.Msg.FuncCall | Prompt.Msg.ToolCalls {
     if (msg.content === null && msg.tool_calls != null) {
-      return Msg.assistantToolCalls(msg.tool_calls);
+      return Msg.toolCalls(msg.tool_calls);
     } else if (msg.content === null && msg.function_call != null) {
-      return Msg.assistantFunctionCall(msg.function_call);
+      return Msg.funcCall(msg.function_call);
     } else if (msg.content !== null) {
       return Msg.assistant(msg.content);
     } else {
