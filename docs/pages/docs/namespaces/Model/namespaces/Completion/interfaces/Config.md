@@ -8,4 +8,4 @@
 
 | Property | Type | Description | Inheritance | Source |
 | :------ | :------ | :------ | :------ | :------ |
-| `model` | `"gpt-3.5-turbo-instruct"` \| `"babbage-002"` \| `"davinci-002"` \| `string` & `object` \| `"text-davinci-003"` \| `"text-davinci-002"` \| `"text-davinci-001"` \| `"code-davinci-002"` \| `"text-curie-001"` \| `"text-babbage-001"` \| `"text-ada-001"` | - | [`Config`](../../Base/interfaces/Config.md).`model` | [src/model/types.ts:96](https://github.com/dexaai/llm-tools/blob/5a38bb8/src/model/types.ts#L96) |
+| `model` | `"gpt-3.5-turbo-instruct"` \| `"babbage-002"` \| `"davinci-002"` \| `string` & `object` \| `"text-davinci-003"` \| `"text-davinci-002"` \| `"text-davinci-001"` \| `"code-davinci-002"` \| `"text-curie-001"` \| `"text-babbage-001"` \| `"text-ada-001"` | - | [`Config`](../../Base/interfaces/Config.md).`model` | [src/model/types.ts:100](https://github.com/dexaai/llm-tools/blob/3551610/src/model/types.ts#L100) |

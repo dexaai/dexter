@@ -6,4 +6,4 @@ The type of embedding model.
 
 ## Source
 
-[src/datastore/types.ts:155](https://github.com/dexaai/llm-tools/blob/5a38bb8/src/datastore/types.ts#L155)
+[src/datastore/types.ts:155](https://github.com/dexaai/llm-tools/blob/3551610/src/datastore/types.ts#L155)

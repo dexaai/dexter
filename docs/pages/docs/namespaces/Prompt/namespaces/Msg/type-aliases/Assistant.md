@@ -20,4 +20,4 @@ Message with text content from the assistant.
 
 ## Source
 
-[src/prompt/types.ts:91](https://github.com/dexaai/llm-tools/blob/5a38bb8/src/prompt/types.ts#L91)
+[src/prompt/types.ts:111](https://github.com/dexaai/llm-tools/blob/3551610/src/prompt/types.ts#L111)

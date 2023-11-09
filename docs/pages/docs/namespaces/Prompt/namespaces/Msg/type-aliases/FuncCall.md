@@ -12,7 +12,7 @@ Message with arguments to call a function.
 
 ### function\_call
 
-> **function\_call**: [`FunctionCall`](FunctionCall.md)
+> **function\_call**: [`Function`](../namespaces/Call/type-aliases/Function.md)
 
 ### name
 
@@ -24,4 +24,4 @@ Message with arguments to call a function.
 
 ## Source
 
-[src/prompt/types.ts:98](https://github.com/dexaai/llm-tools/blob/5a38bb8/src/prompt/types.ts#L98)
+[src/prompt/types.ts:118](https://github.com/dexaai/llm-tools/blob/3551610/src/prompt/types.ts#L118)

@@ -9,6 +9,7 @@
 ### Interfaces
 
 - [AIFunction](interfaces/AIFunction.md)
+- [AIFunctionSpec](interfaces/AIFunctionSpec.md)
 - [Msg](interfaces/Msg.md)
 
 ### Type Aliases

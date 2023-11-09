@@ -16,4 +16,4 @@ Extract a JSON object from a string.
 
 ## Source
 
-[src/prompt/functions/extract-json.ts:6](https://github.com/dexaai/llm-tools/blob/5a38bb8/src/prompt/functions/extract-json.ts#L6)
+[src/prompt/functions/extract-json.ts:6](https://github.com/dexaai/llm-tools/blob/3551610/src/prompt/functions/extract-json.ts#L6)

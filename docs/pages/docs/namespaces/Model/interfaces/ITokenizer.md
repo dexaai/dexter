@@ -16,7 +16,7 @@ Strings are counted as is.
 
 | Parameter | Type |
 | :------ | :------ |
-| `input`? | `string` \| `ChatCompletionMessageParam` \| `ChatCompletionMessageParam`[] |
+| `input`? | `string` \| `ChatMessage` \| `ChatMessage`[] |
 
 #### Returns
 
@@ -24,7 +24,7 @@ Strings are counted as is.
 
 #### Source
 
-[src/model/types.ts:198](https://github.com/dexaai/llm-tools/blob/5a38bb8/src/model/types.ts#L198)
+[src/model/types.ts:202](https://github.com/dexaai/llm-tools/blob/3551610/src/model/types.ts#L202)
 
 ***
 
@@ -46,7 +46,7 @@ Decode an array of integer tokens into a string
 
 #### Source
 
-[src/model/types.ts:192](https://github.com/dexaai/llm-tools/blob/5a38bb8/src/model/types.ts#L192)
+[src/model/types.ts:196](https://github.com/dexaai/llm-tools/blob/3551610/src/model/types.ts#L196)
 
 ***
 
@@ -68,7 +68,7 @@ Tokenize a string into an array of integer tokens
 
 #### Source
 
-[src/model/types.ts:190](https://github.com/dexaai/llm-tools/blob/5a38bb8/src/model/types.ts#L190)
+[src/model/types.ts:194](https://github.com/dexaai/llm-tools/blob/3551610/src/model/types.ts#L194)
 
 ***
 
@@ -93,4 +93,4 @@ Truncate a string to a maximum number of tokens
 
 #### Source
 
-[src/model/types.ts:200](https://github.com/dexaai/llm-tools/blob/5a38bb8/src/model/types.ts#L200)
+[src/model/types.ts:204](https://github.com/dexaai/llm-tools/blob/3551610/src/model/types.ts#L204)

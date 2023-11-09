@@ -12,16 +12,16 @@
 
 #### Parameters
 
-| Parameter          | Type                                                                                                                                                                                                                                                                                                   | Description                                                                                                                                                                                                                                                                                         |
-| :----------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `args`             | `object`                                                                                                                                                                                                                                                                                               | -                                                                                                                                                                                                                                                                                                   |
-| `args.cache`?      | [`CacheStorage`](../type-aliases/CacheStorage.md)\<`string`, [`Response`](../namespaces/Model/namespaces/SparseVector/interfaces/Response.md)\>                                                                                                                                                        | Enables caching for model responses. Must implement `.get(key)` and `.set(key, value)`, both of which can be either sync or async.<br /><br />Some examples include: `new Map()`, [quick-lru](https://github.com/sindresorhus/quick-lru), or any [keyv adaptor](https://github.com/jaredwray/keyv). |
-| `args.cacheKey`?   | [`CacheKey`](../type-aliases/CacheKey.md)\<[`Run`](../namespaces/Model/namespaces/SparseVector/interfaces/Run.md) & [`Config`](../namespaces/Model/namespaces/SparseVector/interfaces/Config.md), `string`\>                                                                                           | A function that returns a cache key for the given params.<br /><br />A simple example would be: `(params) => JSON.stringify(params)`<br /><br />The default `cacheKey` function uses [hash-object](https://github.com/sindresorhus/hash-object) to create a stable sha256 hash of the params.       |
-| `args.context`?    | [`Ctx`](../namespaces/Model/type-aliases/Ctx.md)                                                                                                                                                                                                                                                       | -                                                                                                                                                                                                                                                                                                   |
-| `args.debug`?      | `boolean`                                                                                                                                                                                                                                                                                              | Whether or not to add default `console.log` event handlers                                                                                                                                                                                                                                          |
-| `args.events`?     | [`Events`](../namespaces/Model/interfaces/Events.md)\<[`Run`](../namespaces/Model/namespaces/SparseVector/interfaces/Run.md) & [`Config`](../namespaces/Model/namespaces/SparseVector/interfaces/Config.md), [`Response`](../namespaces/Model/namespaces/SparseVector/interfaces/Response.md), `any`\> | -                                                                                                                                                                                                                                                                                                   |
-| `args.params`      | [`Config`](../namespaces/Model/namespaces/SparseVector/interfaces/Config.md) & `Partial`\<[`Run`](../namespaces/Model/namespaces/SparseVector/interfaces/Run.md)\>                                                                                                                                     | -                                                                                                                                                                                                                                                                                                   |
-| `args.serviceUrl`? | `string`                                                                                                                                                                                                                                                                                               | -                                                                                                                                                                                                                                                                                                   |
+| Parameter | Type | Description |
+| :------ | :------ | :------ |
+| `args` | `object` | - |
+| `args.cache`? | [`CacheStorage`](../type-aliases/CacheStorage.md)\<`string`, [`Response`](../namespaces/Model/namespaces/SparseVector/interfaces/Response.md)\> | Enables caching for model responses. Must implement `.get(key)` and `.set(key, value)`, both of which can be either sync or async.<br /><br />Some examples include: `new Map()`, [quick-lru](https://github.com/sindresorhus/quick-lru), or any [keyv adaptor](https://github.com/jaredwray/keyv). |
+| `args.cacheKey`? | [`CacheKey`](../type-aliases/CacheKey.md)\<[`Run`](../namespaces/Model/namespaces/SparseVector/interfaces/Run.md) & [`Config`](../namespaces/Model/namespaces/SparseVector/interfaces/Config.md), `string`\> | A function that returns a cache key for the given params.<br /><br />A simple example would be: `(params) => JSON.stringify(params)`<br /><br />The default `cacheKey` function uses [hash-object](https://github.com/sindresorhus/hash-object) to create a stable sha256 hash of the params. |
+| `args.context`? | [`Ctx`](../namespaces/Model/type-aliases/Ctx.md) | - |
+| `args.debug`? | `boolean` | Whether or not to add default `console.log` event handlers |
+| `args.events`? | [`Events`](../namespaces/Model/interfaces/Events.md)\<[`Run`](../namespaces/Model/namespaces/SparseVector/interfaces/Run.md) & [`Config`](../namespaces/Model/namespaces/SparseVector/interfaces/Config.md), [`Response`](../namespaces/Model/namespaces/SparseVector/interfaces/Response.md), `any`\> | - |
+| `args.params` | [`Config`](../namespaces/Model/namespaces/SparseVector/interfaces/Config.md) & `Partial`\<[`Run`](../namespaces/Model/namespaces/SparseVector/interfaces/Run.md)\> | - |
+| `args.serviceUrl`? | `string` | - |
 
 #### Returns
 
@@ -33,16 +33,16 @@
 
 #### Source
 
-[src/model/sparse-vector.ts:33](https://github.com/dexaai/llm-tools/blob/5a38bb8/src/model/sparse-vector.ts#L33)
+[src/model/sparse-vector.ts:33](https://github.com/dexaai/llm-tools/blob/3551610/src/model/sparse-vector.ts#L33)
 
 ## Properties
 
-| Property        | Type                                                         | Description | Inheritance                                         | Source                                                                                                           |
-| :-------------- | :----------------------------------------------------------- | :---------- | :-------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------- |
-| `modelProvider` | `"custom"`                                                   | -           | [`AbstractModel`](AbstractModel.md).`modelProvider` | [src/model/sparse-vector.ts:30](https://github.com/dexaai/llm-tools/blob/5a38bb8/src/model/sparse-vector.ts#L30) |
-| `modelType`     | `"sparse-vector"`                                            | -           | [`AbstractModel`](AbstractModel.md).`modelType`     | [src/model/sparse-vector.ts:29](https://github.com/dexaai/llm-tools/blob/5a38bb8/src/model/sparse-vector.ts#L29) |
-| `serviceUrl`    | `string`                                                     | -           | -                                                   | [src/model/sparse-vector.ts:31](https://github.com/dexaai/llm-tools/blob/5a38bb8/src/model/sparse-vector.ts#L31) |
-| `tokenizer`     | [`ITokenizer`](../namespaces/Model/interfaces/ITokenizer.md) | -           | [`AbstractModel`](AbstractModel.md).`tokenizer`     | [src/model/model.ts:65](https://github.com/dexaai/llm-tools/blob/5a38bb8/src/model/model.ts#L65)                 |
+| Property | Type | Description | Inheritance | Source |
+| :------ | :------ | :------ | :------ | :------ |
+| `modelProvider` | `"custom"` | - | [`AbstractModel`](AbstractModel.md).`modelProvider` | [src/model/sparse-vector.ts:30](https://github.com/dexaai/llm-tools/blob/3551610/src/model/sparse-vector.ts#L30) |
+| `modelType` | `"sparse-vector"` | - | [`AbstractModel`](AbstractModel.md).`modelType` | [src/model/sparse-vector.ts:29](https://github.com/dexaai/llm-tools/blob/3551610/src/model/sparse-vector.ts#L29) |
+| `serviceUrl` | `string` | - | - | [src/model/sparse-vector.ts:31](https://github.com/dexaai/llm-tools/blob/3551610/src/model/sparse-vector.ts#L31) |
+| `tokenizer` | [`ITokenizer`](../namespaces/Model/interfaces/ITokenizer.md) | - | [`AbstractModel`](AbstractModel.md).`tokenizer` | [src/model/model.ts:65](https://github.com/dexaai/llm-tools/blob/3551610/src/model/model.ts#L65) |
 
 ## Methods
 
@@ -54,9 +54,9 @@ Add event handlers to the model.
 
 #### Parameters
 
-| Parameter | Type                                                                                                                                                                                                                                                                                                   |
-| :-------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `events`  | [`Events`](../namespaces/Model/interfaces/Events.md)\<[`Run`](../namespaces/Model/namespaces/SparseVector/interfaces/Run.md) & [`Config`](../namespaces/Model/namespaces/SparseVector/interfaces/Config.md), [`Response`](../namespaces/Model/namespaces/SparseVector/interfaces/Response.md), `any`\> |
+| Parameter | Type |
+| :------ | :------ |
+| `events` | [`Events`](../namespaces/Model/interfaces/Events.md)\<[`Run`](../namespaces/Model/namespaces/SparseVector/interfaces/Run.md) & [`Config`](../namespaces/Model/namespaces/SparseVector/interfaces/Config.md), [`Response`](../namespaces/Model/namespaces/SparseVector/interfaces/Response.md), `any`\> |
 
 #### Returns
 
@@ -68,9 +68,9 @@ Add event handlers to the model.
 
 #### Source
 
-[src/model/model.ts:235](https://github.com/dexaai/llm-tools/blob/5a38bb8/src/model/model.ts#L235)
+[src/model/model.ts:235](https://github.com/dexaai/llm-tools/blob/3551610/src/model/model.ts#L235)
 
----
+***
 
 ### addParams()
 
@@ -80,9 +80,9 @@ Add the params. Overrides existing keys.
 
 #### Parameters
 
-| Parameter | Type                                                                                                                                                                            |
-| :-------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `params`  | `Partial`\<[`Config`](../namespaces/Model/namespaces/SparseVector/interfaces/Config.md) & `Partial`\<[`Run`](../namespaces/Model/namespaces/SparseVector/interfaces/Run.md)\>\> |
+| Parameter | Type |
+| :------ | :------ |
+| `params` | `Partial`\<[`Config`](../namespaces/Model/namespaces/SparseVector/interfaces/Config.md) & `Partial`\<[`Run`](../namespaces/Model/namespaces/SparseVector/interfaces/Run.md)\>\> |
 
 #### Returns
 
@@ -94,9 +94,9 @@ Add the params. Overrides existing keys.
 
 #### Source
 
-[src/model/model.ts:213](https://github.com/dexaai/llm-tools/blob/5a38bb8/src/model/model.ts#L213)
+[src/model/model.ts:213](https://github.com/dexaai/llm-tools/blob/3551610/src/model/model.ts#L213)
 
----
+***
 
 ### clone()
 
@@ -106,16 +106,16 @@ Clone the model and merge/orverride the given properties.
 
 #### Parameters
 
-| Parameter          | Type                                                                                                                                                                                                                                                                                                   | Description                                                                                                                                                                                                                                                                                         |
-| :----------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `args`?            | `object`                                                                                                                                                                                                                                                                                               | -                                                                                                                                                                                                                                                                                                   |
-| `args.cache`?      | [`CacheStorage`](../type-aliases/CacheStorage.md)\<`string`, [`Response`](../namespaces/Model/namespaces/SparseVector/interfaces/Response.md)\>                                                                                                                                                        | Enables caching for model responses. Must implement `.get(key)` and `.set(key, value)`, both of which can be either sync or async.<br /><br />Some examples include: `new Map()`, [quick-lru](https://github.com/sindresorhus/quick-lru), or any [keyv adaptor](https://github.com/jaredwray/keyv). |
-| `args.cacheKey`?   | [`CacheKey`](../type-aliases/CacheKey.md)\<[`Run`](../namespaces/Model/namespaces/SparseVector/interfaces/Run.md) & [`Config`](../namespaces/Model/namespaces/SparseVector/interfaces/Config.md), `string`\>                                                                                           | A function that returns a cache key for the given params.<br /><br />A simple example would be: `(params) => JSON.stringify(params)`<br /><br />The default `cacheKey` function uses [hash-object](https://github.com/sindresorhus/hash-object) to create a stable sha256 hash of the params.       |
-| `args.context`?    | [`Ctx`](../namespaces/Model/type-aliases/Ctx.md)                                                                                                                                                                                                                                                       | -                                                                                                                                                                                                                                                                                                   |
-| `args.debug`?      | `boolean`                                                                                                                                                                                                                                                                                              | Whether or not to add default `console.log` event handlers                                                                                                                                                                                                                                          |
-| `args.events`?     | [`Events`](../namespaces/Model/interfaces/Events.md)\<[`Run`](../namespaces/Model/namespaces/SparseVector/interfaces/Run.md) & [`Config`](../namespaces/Model/namespaces/SparseVector/interfaces/Config.md), [`Response`](../namespaces/Model/namespaces/SparseVector/interfaces/Response.md), `any`\> | -                                                                                                                                                                                                                                                                                                   |
-| `args.params`?     | [`Config`](../namespaces/Model/namespaces/SparseVector/interfaces/Config.md) & `Partial`\<[`Run`](../namespaces/Model/namespaces/SparseVector/interfaces/Run.md)\>                                                                                                                                     | -                                                                                                                                                                                                                                                                                                   |
-| `args.serviceUrl`? | `string`                                                                                                                                                                                                                                                                                               | -                                                                                                                                                                                                                                                                                                   |
+| Parameter | Type | Description |
+| :------ | :------ | :------ |
+| `args`? | `object` | - |
+| `args.cache`? | [`CacheStorage`](../type-aliases/CacheStorage.md)\<`string`, [`Response`](../namespaces/Model/namespaces/SparseVector/interfaces/Response.md)\> | Enables caching for model responses. Must implement `.get(key)` and `.set(key, value)`, both of which can be either sync or async.<br /><br />Some examples include: `new Map()`, [quick-lru](https://github.com/sindresorhus/quick-lru), or any [keyv adaptor](https://github.com/jaredwray/keyv). |
+| `args.cacheKey`? | [`CacheKey`](../type-aliases/CacheKey.md)\<[`Run`](../namespaces/Model/namespaces/SparseVector/interfaces/Run.md) & [`Config`](../namespaces/Model/namespaces/SparseVector/interfaces/Config.md), `string`\> | A function that returns a cache key for the given params.<br /><br />A simple example would be: `(params) => JSON.stringify(params)`<br /><br />The default `cacheKey` function uses [hash-object](https://github.com/sindresorhus/hash-object) to create a stable sha256 hash of the params. |
+| `args.context`? | [`Ctx`](../namespaces/Model/type-aliases/Ctx.md) | - |
+| `args.debug`? | `boolean` | Whether or not to add default `console.log` event handlers |
+| `args.events`? | [`Events`](../namespaces/Model/interfaces/Events.md)\<[`Run`](../namespaces/Model/namespaces/SparseVector/interfaces/Run.md) & [`Config`](../namespaces/Model/namespaces/SparseVector/interfaces/Config.md), [`Response`](../namespaces/Model/namespaces/SparseVector/interfaces/Response.md), `any`\> | - |
+| `args.params`? | [`Config`](../namespaces/Model/namespaces/SparseVector/interfaces/Config.md) & `Partial`\<[`Run`](../namespaces/Model/namespaces/SparseVector/interfaces/Run.md)\> | - |
+| `args.serviceUrl`? | `string` | - |
 
 #### Returns
 
@@ -127,9 +127,9 @@ Clone the model and merge/orverride the given properties.
 
 #### Source
 
-[src/model/sparse-vector.ts:105](https://github.com/dexaai/llm-tools/blob/5a38bb8/src/model/sparse-vector.ts#L105)
+[src/model/sparse-vector.ts:105](https://github.com/dexaai/llm-tools/blob/3551610/src/model/sparse-vector.ts#L105)
 
----
+***
 
 ### getClient()
 
@@ -147,9 +147,9 @@ Get the current client
 
 #### Source
 
-[src/model/model.ts:180](https://github.com/dexaai/llm-tools/blob/5a38bb8/src/model/model.ts#L180)
+[src/model/model.ts:180](https://github.com/dexaai/llm-tools/blob/3551610/src/model/model.ts#L180)
 
----
+***
 
 ### getContext()
 
@@ -167,9 +167,9 @@ Get the current context
 
 #### Source
 
-[src/model/model.ts:191](https://github.com/dexaai/llm-tools/blob/5a38bb8/src/model/model.ts#L191)
+[src/model/model.ts:191](https://github.com/dexaai/llm-tools/blob/3551610/src/model/model.ts#L191)
 
----
+***
 
 ### getEvents()
 
@@ -187,9 +187,9 @@ Get the current event handlers
 
 #### Source
 
-[src/model/model.ts:230](https://github.com/dexaai/llm-tools/blob/5a38bb8/src/model/model.ts#L230)
+[src/model/model.ts:230](https://github.com/dexaai/llm-tools/blob/3551610/src/model/model.ts#L230)
 
----
+***
 
 ### getParams()
 
@@ -207,9 +207,9 @@ Get the current params
 
 #### Source
 
-[src/model/model.ts:208](https://github.com/dexaai/llm-tools/blob/5a38bb8/src/model/model.ts#L208)
+[src/model/model.ts:208](https://github.com/dexaai/llm-tools/blob/3551610/src/model/model.ts#L208)
 
----
+***
 
 ### run()
 
@@ -217,15 +217,15 @@ Get the current params
 
 #### Parameters
 
-| Parameter                  | Type                                             |
-| :------------------------- | :----------------------------------------------- |
-| `params`                   | `object`                                         |
-| `params.concurrency`?      | `number`                                         |
-| `params.input`?            | `string`[]                                       |
-| `params.model`?            | `string`                                         |
-| `params.throttleInterval`? | `number`                                         |
-| `params.throttleLimit`?    | `number`                                         |
-| `context`?                 | [`Ctx`](../namespaces/Model/type-aliases/Ctx.md) |
+| Parameter | Type |
+| :------ | :------ |
+| `params` | `object` |
+| `params.concurrency`? | `number` |
+| `params.input`? | `string`[] |
+| `params.model`? | `string` |
+| `params.throttleInterval`? | `number` |
+| `params.throttleLimit`? | `number` |
+| `context`? | [`Ctx`](../namespaces/Model/type-aliases/Ctx.md) |
 
 #### Returns
 
@@ -237,9 +237,9 @@ Get the current params
 
 #### Source
 
-[src/model/model.ts:78](https://github.com/dexaai/llm-tools/blob/5a38bb8/src/model/model.ts#L78)
+[src/model/model.ts:78](https://github.com/dexaai/llm-tools/blob/3551610/src/model/model.ts#L78)
 
----
+***
 
 ### setCache()
 
@@ -249,9 +249,9 @@ Set the cache to a new cache. Set to undefined to remove existing.
 
 #### Parameters
 
-| Parameter | Type                                                                                                                                                           |
-| :-------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `cache`   | `undefined` \| [`CacheStorage`](../type-aliases/CacheStorage.md)\<`string`, [`Response`](../namespaces/Model/namespaces/SparseVector/interfaces/Response.md)\> |
+| Parameter | Type |
+| :------ | :------ |
+| `cache` | `undefined` \| [`CacheStorage`](../type-aliases/CacheStorage.md)\<`string`, [`Response`](../namespaces/Model/namespaces/SparseVector/interfaces/Response.md)\> |
 
 #### Returns
 
@@ -263,9 +263,9 @@ Set the cache to a new cache. Set to undefined to remove existing.
 
 #### Source
 
-[src/model/model.ts:174](https://github.com/dexaai/llm-tools/blob/5a38bb8/src/model/model.ts#L174)
+[src/model/model.ts:174](https://github.com/dexaai/llm-tools/blob/3551610/src/model/model.ts#L174)
 
----
+***
 
 ### setClient()
 
@@ -275,9 +275,9 @@ Set the client to a new OpenAI API client.
 
 #### Parameters
 
-| Parameter | Type                                                                           |
-| :-------- | :----------------------------------------------------------------------------- |
-| `client`  | [`Client`](../namespaces/Model/namespaces/SparseVector/type-aliases/Client.md) |
+| Parameter | Type |
+| :------ | :------ |
+| `client` | [`Client`](../namespaces/Model/namespaces/SparseVector/type-aliases/Client.md) |
 
 #### Returns
 
@@ -289,9 +289,9 @@ Set the client to a new OpenAI API client.
 
 #### Source
 
-[src/model/model.ts:185](https://github.com/dexaai/llm-tools/blob/5a38bb8/src/model/model.ts#L185)
+[src/model/model.ts:185](https://github.com/dexaai/llm-tools/blob/3551610/src/model/model.ts#L185)
 
----
+***
 
 ### setContext()
 
@@ -301,8 +301,8 @@ Set the context to a new context. Removes all existing values.
 
 #### Parameters
 
-| Parameter | Type                                             |
-| :-------- | :----------------------------------------------- |
+| Parameter | Type |
+| :------ | :------ |
 | `context` | [`Ctx`](../namespaces/Model/type-aliases/Ctx.md) |
 
 #### Returns
@@ -315,9 +315,9 @@ Set the context to a new context. Removes all existing values.
 
 #### Source
 
-[src/model/model.ts:202](https://github.com/dexaai/llm-tools/blob/5a38bb8/src/model/model.ts#L202)
+[src/model/model.ts:202](https://github.com/dexaai/llm-tools/blob/3551610/src/model/model.ts#L202)
 
----
+***
 
 ### setEvents()
 
@@ -328,9 +328,9 @@ Set to empty object `{}` to remove all events.
 
 #### Parameters
 
-| Parameter | Type                                                                                                                                                                                                                                                                                                   |
-| :-------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `events`  | [`Events`](../namespaces/Model/interfaces/Events.md)\<[`Run`](../namespaces/Model/namespaces/SparseVector/interfaces/Run.md) & [`Config`](../namespaces/Model/namespaces/SparseVector/interfaces/Config.md), [`Response`](../namespaces/Model/namespaces/SparseVector/interfaces/Response.md), `any`\> |
+| Parameter | Type |
+| :------ | :------ |
+| `events` | [`Events`](../namespaces/Model/interfaces/Events.md)\<[`Run`](../namespaces/Model/namespaces/SparseVector/interfaces/Run.md) & [`Config`](../namespaces/Model/namespaces/SparseVector/interfaces/Config.md), [`Response`](../namespaces/Model/namespaces/SparseVector/interfaces/Response.md), `any`\> |
 
 #### Returns
 
@@ -342,9 +342,9 @@ Set to empty object `{}` to remove all events.
 
 #### Source
 
-[src/model/model.ts:244](https://github.com/dexaai/llm-tools/blob/5a38bb8/src/model/model.ts#L244)
+[src/model/model.ts:244](https://github.com/dexaai/llm-tools/blob/3551610/src/model/model.ts#L244)
 
----
+***
 
 ### setParams()
 
@@ -354,9 +354,9 @@ Set the params to a new params. Removes all existing values.
 
 #### Parameters
 
-| Parameter | Type                                                                                                                                                               |
-| :-------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `params`  | [`Config`](../namespaces/Model/namespaces/SparseVector/interfaces/Config.md) & `Partial`\<[`Run`](../namespaces/Model/namespaces/SparseVector/interfaces/Run.md)\> |
+| Parameter | Type |
+| :------ | :------ |
+| `params` | [`Config`](../namespaces/Model/namespaces/SparseVector/interfaces/Config.md) & `Partial`\<[`Run`](../namespaces/Model/namespaces/SparseVector/interfaces/Run.md)\> |
 
 #### Returns
 
@@ -368,9 +368,9 @@ Set the params to a new params. Removes all existing values.
 
 #### Source
 
-[src/model/model.ts:223](https://github.com/dexaai/llm-tools/blob/5a38bb8/src/model/model.ts#L223)
+[src/model/model.ts:223](https://github.com/dexaai/llm-tools/blob/3551610/src/model/model.ts#L223)
 
----
+***
 
 ### updateContext()
 
@@ -380,8 +380,8 @@ Add the context. Overrides existing keys.
 
 #### Parameters
 
-| Parameter | Type                                             |
-| :-------- | :----------------------------------------------- |
+| Parameter | Type |
+| :------ | :------ |
 | `context` | [`Ctx`](../namespaces/Model/type-aliases/Ctx.md) |
 
 #### Returns
@@ -394,4 +394,4 @@ Add the context. Overrides existing keys.
 
 #### Source
 
-[src/model/model.ts:196](https://github.com/dexaai/llm-tools/blob/5a38bb8/src/model/model.ts#L196)
+[src/model/model.ts:196](https://github.com/dexaai/llm-tools/blob/3551610/src/model/model.ts#L196)

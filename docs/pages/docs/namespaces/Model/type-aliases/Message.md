@@ -6,4 +6,4 @@ Primary message type for chat models
 
 ## Source
 
-[src/model/types.ts:211](https://github.com/dexaai/llm-tools/blob/5a38bb8/src/model/types.ts#L211)
+[src/model/types.ts:215](https://github.com/dexaai/llm-tools/blob/3551610/src/model/types.ts#L215)

@@ -6,8 +6,8 @@
 
 ## Type parameters
 
-| Parameter                                                                        |
-| :------------------------------------------------------------------------------- |
+| Parameter |
+| :------ |
 | `DocMeta` extends [`BaseMeta`](../namespaces/Datastore/type-aliases/BaseMeta.md) |
 
 ## Constructors
@@ -18,18 +18,18 @@
 
 #### Parameters
 
-| Parameter             | Type                                                                                                                                                   | Description                                                                                                                                                                                                                                                                                   |
-| :-------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `args`                | `object`                                                                                                                                               | -                                                                                                                                                                                                                                                                                             |
-| `args.cache`?         | [`CacheStorage`](../type-aliases/CacheStorage.md)\<`string`, [`QueryResult`](../namespaces/Datastore/interfaces/QueryResult.md)\<`DocMeta`\>\>         | Enables caching for queries. Must implement `.get(key)` and `.set(key, value)`, both of which can be either sync or async.<br /><br />Some examples include: `new Map()`, [quick-lru](https://github.com/sindresorhus/quick-lru), or any [keyv adaptor](https://github.com/jaredwray/keyv).   |
-| `args.cacheKey`?      | [`CacheKey`](../type-aliases/CacheKey.md)\<[`Query`](../namespaces/Datastore/interfaces/Query.md)\<`DocMeta`, `QueryFilter`\<`DocMeta`\>\>, `string`\> | A function that returns a cache key for the given params.<br /><br />A simple example would be: `(params) => JSON.stringify(params)`<br /><br />The default `cacheKey` function uses [hash-object](https://github.com/sindresorhus/hash-object) to create a stable sha256 hash of the params. |
-| `args.contentKey`     | keyof `DocMeta`                                                                                                                                        | The metadata key of the content that is embedded.<br />The value associated with the key must be a string.                                                                                                                                                                                    |
-| `args.context`?       | [`Ctx`](../namespaces/Datastore/type-aliases/Ctx.md)                                                                                                   | -                                                                                                                                                                                                                                                                                             |
-| `args.debug`?         | `boolean`                                                                                                                                              | Whether or not to add default `console.log` event handlers                                                                                                                                                                                                                                    |
-| `args.embeddingModel` | [`EmbeddingModel`](EmbeddingModel.md)                                                                                                                  | -                                                                                                                                                                                                                                                                                             |
-| `args.events`?        | [`Events`](../namespaces/Datastore/interfaces/Events.md)\<`DocMeta`, `QueryFilter`\<`DocMeta`\>\>                                                      | -                                                                                                                                                                                                                                                                                             |
-| `args.namespace`?     | `string`                                                                                                                                               | -                                                                                                                                                                                                                                                                                             |
-| `args.pinecone`?      | `PineconeClient`\<`DocMeta`\>                                                                                                                          | -                                                                                                                                                                                                                                                                                             |
+| Parameter | Type | Description |
+| :------ | :------ | :------ |
+| `args` | `object` | - |
+| `args.cache`? | [`CacheStorage`](../type-aliases/CacheStorage.md)\<`string`, [`QueryResult`](../namespaces/Datastore/interfaces/QueryResult.md)\<`DocMeta`\>\> | Enables caching for queries. Must implement `.get(key)` and `.set(key, value)`, both of which can be either sync or async.<br /><br />Some examples include: `new Map()`, [quick-lru](https://github.com/sindresorhus/quick-lru), or any [keyv adaptor](https://github.com/jaredwray/keyv). |
+| `args.cacheKey`? | [`CacheKey`](../type-aliases/CacheKey.md)\<[`Query`](../namespaces/Datastore/interfaces/Query.md)\<`DocMeta`, `QueryFilter`\<`DocMeta`\>\>, `string`\> | A function that returns a cache key for the given params.<br /><br />A simple example would be: `(params) => JSON.stringify(params)`<br /><br />The default `cacheKey` function uses [hash-object](https://github.com/sindresorhus/hash-object) to create a stable sha256 hash of the params. |
+| `args.contentKey` | keyof `DocMeta` | The metadata key of the content that is embedded.<br />The value associated with the key must be a string. |
+| `args.context`? | [`Ctx`](../namespaces/Datastore/type-aliases/Ctx.md) | - |
+| `args.debug`? | `boolean` | Whether or not to add default `console.log` event handlers |
+| `args.embeddingModel` | [`EmbeddingModel`](EmbeddingModel.md) | - |
+| `args.events`? | [`Events`](../namespaces/Datastore/interfaces/Events.md)\<`DocMeta`, `QueryFilter`\<`DocMeta`\>\> | - |
+| `args.namespace`? | `string` | - |
+| `args.pinecone`? | `PineconeClient`\<`DocMeta`\> | - |
 
 #### Returns
 
@@ -41,14 +41,14 @@
 
 #### Source
 
-[src/datastore/pinecone/datastore.ts:14](https://github.com/dexaai/llm-tools/blob/5a38bb8/src/datastore/pinecone/datastore.ts#L14)
+[src/datastore/pinecone/datastore.ts:14](https://github.com/dexaai/llm-tools/blob/3551610/src/datastore/pinecone/datastore.ts#L14)
 
 ## Properties
 
-| Property            | Type          | Description | Inheritance                                                     | Source                                                                                                                             |
-| :------------------ | :------------ | :---------- | :-------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------- |
-| `datastoreProvider` | `"pinecone"`  | -           | [`AbstractDatastore`](AbstractDatastore.md).`datastoreProvider` | [src/datastore/pinecone/datastore.ts:11](https://github.com/dexaai/llm-tools/blob/5a38bb8/src/datastore/pinecone/datastore.ts#L11) |
-| `datastoreType`     | `"embedding"` | -           | [`AbstractDatastore`](AbstractDatastore.md).`datastoreType`     | [src/datastore/pinecone/datastore.ts:10](https://github.com/dexaai/llm-tools/blob/5a38bb8/src/datastore/pinecone/datastore.ts#L10) |
+| Property | Type | Description | Inheritance | Source |
+| :------ | :------ | :------ | :------ | :------ |
+| `datastoreProvider` | `"pinecone"` | - | [`AbstractDatastore`](AbstractDatastore.md).`datastoreProvider` | [src/datastore/pinecone/datastore.ts:11](https://github.com/dexaai/llm-tools/blob/3551610/src/datastore/pinecone/datastore.ts#L11) |
+| `datastoreType` | `"embedding"` | - | [`AbstractDatastore`](AbstractDatastore.md).`datastoreType` | [src/datastore/pinecone/datastore.ts:10](https://github.com/dexaai/llm-tools/blob/3551610/src/datastore/pinecone/datastore.ts#L10) |
 
 ## Methods
 
@@ -58,9 +58,9 @@
 
 #### Parameters
 
-| Parameter | Type       |
-| :-------- | :--------- |
-| `docIds`  | `string`[] |
+| Parameter | Type |
+| :------ | :------ |
+| `docIds` | `string`[] |
 
 #### Returns
 
@@ -72,9 +72,9 @@
 
 #### Source
 
-[src/datastore/pinecone/datastore.ts:153](https://github.com/dexaai/llm-tools/blob/5a38bb8/src/datastore/pinecone/datastore.ts#L153)
+[src/datastore/pinecone/datastore.ts:153](https://github.com/dexaai/llm-tools/blob/3551610/src/datastore/pinecone/datastore.ts#L153)
 
----
+***
 
 ### deleteAll()
 
@@ -90,9 +90,9 @@
 
 #### Source
 
-[src/datastore/pinecone/datastore.ts:157](https://github.com/dexaai/llm-tools/blob/5a38bb8/src/datastore/pinecone/datastore.ts#L157)
+[src/datastore/pinecone/datastore.ts:157](https://github.com/dexaai/llm-tools/blob/3551610/src/datastore/pinecone/datastore.ts#L157)
 
----
+***
 
 ### query()
 
@@ -100,10 +100,10 @@
 
 #### Parameters
 
-| Parameter  | Type                                                                                            |
-| :--------- | :---------------------------------------------------------------------------------------------- |
-| `query`    | [`Query`](../namespaces/Datastore/interfaces/Query.md)\<`DocMeta`, `QueryFilter`\<`DocMeta`\>\> |
-| `context`? | [`Ctx`](../namespaces/Datastore/type-aliases/Ctx.md)                                            |
+| Parameter | Type |
+| :------ | :------ |
+| `query` | [`Query`](../namespaces/Datastore/interfaces/Query.md)\<`DocMeta`, `QueryFilter`\<`DocMeta`\>\> |
+| `context`? | [`Ctx`](../namespaces/Datastore/type-aliases/Ctx.md) |
 
 #### Returns
 
@@ -115,9 +115,9 @@
 
 #### Source
 
-[src/datastore/datastore.ts:53](https://github.com/dexaai/llm-tools/blob/5a38bb8/src/datastore/datastore.ts#L53)
+[src/datastore/datastore.ts:53](https://github.com/dexaai/llm-tools/blob/3551610/src/datastore/datastore.ts#L53)
 
----
+***
 
 ### runQuery()
 
@@ -125,10 +125,10 @@
 
 #### Parameters
 
-| Parameter  | Type                                                                                            |
-| :--------- | :---------------------------------------------------------------------------------------------- |
-| `query`    | [`Query`](../namespaces/Datastore/interfaces/Query.md)\<`DocMeta`, `QueryFilter`\<`DocMeta`\>\> |
-| `context`? | [`Ctx`](../namespaces/Datastore/type-aliases/Ctx.md)                                            |
+| Parameter | Type |
+| :------ | :------ |
+| `query` | [`Query`](../namespaces/Datastore/interfaces/Query.md)\<`DocMeta`, `QueryFilter`\<`DocMeta`\>\> |
+| `context`? | [`Ctx`](../namespaces/Datastore/type-aliases/Ctx.md) |
 
 #### Returns
 
@@ -140,9 +140,9 @@ AbstractDatastore.runQuery
 
 #### Source
 
-[src/datastore/pinecone/datastore.ts:30](https://github.com/dexaai/llm-tools/blob/5a38bb8/src/datastore/pinecone/datastore.ts#L30)
+[src/datastore/pinecone/datastore.ts:30](https://github.com/dexaai/llm-tools/blob/3551610/src/datastore/pinecone/datastore.ts#L30)
 
----
+***
 
 ### upsert()
 
@@ -150,10 +150,10 @@ AbstractDatastore.runQuery
 
 #### Parameters
 
-| Parameter  | Type                                                              |
-| :--------- | :---------------------------------------------------------------- |
-| `docs`     | [`Doc`](../namespaces/Datastore/interfaces/Doc.md)\<`DocMeta`\>[] |
-| `context`? | [`Ctx`](../namespaces/Datastore/type-aliases/Ctx.md)              |
+| Parameter | Type |
+| :------ | :------ |
+| `docs` | [`Doc`](../namespaces/Datastore/interfaces/Doc.md)\<`DocMeta`\>[] |
+| `context`? | [`Ctx`](../namespaces/Datastore/type-aliases/Ctx.md) |
 
 #### Returns
 
@@ -165,4 +165,4 @@ AbstractDatastore.runQuery
 
 #### Source
 
-[src/datastore/pinecone/datastore.ts:74](https://github.com/dexaai/llm-tools/blob/5a38bb8/src/datastore/pinecone/datastore.ts#L74)
+[src/datastore/pinecone/datastore.ts:74](https://github.com/dexaai/llm-tools/blob/3551610/src/datastore/pinecone/datastore.ts#L74)

@@ -17,4 +17,4 @@ Create a new openai-fetch OpenAIClient.
 
 ## Source
 
-[src/model/clients/openai.ts:8](https://github.com/dexaai/llm-tools/blob/5a38bb8/src/model/clients/openai.ts#L8)
+[src/model/clients/openai.ts:8](https://github.com/dexaai/llm-tools/blob/3551610/src/model/clients/openai.ts#L8)

@@ -20,4 +20,4 @@ Message with text content for the system.
 
 ## Source
 
-[src/prompt/types.ts:77](https://github.com/dexaai/llm-tools/blob/5a38bb8/src/prompt/types.ts#L77)
+[src/prompt/types.ts:97](https://github.com/dexaai/llm-tools/blob/3551610/src/prompt/types.ts#L97)

@@ -33,7 +33,7 @@ Calculate the cosine similarity between two vectors.
 
 #### Source
 
-[src/datastore/utils/vectors.ts:4](https://github.com/dexaai/llm-tools/blob/5a38bb8/src/datastore/utils/vectors.ts#L4)
+[src/datastore/utils/vectors.ts:4](https://github.com/dexaai/llm-tools/blob/3551610/src/datastore/utils/vectors.ts#L4)
 
 ***
 
@@ -56,7 +56,7 @@ Calculate the dot product of two vectors
 
 #### Source
 
-[src/datastore/utils/vectors.ts:34](https://github.com/dexaai/llm-tools/blob/5a38bb8/src/datastore/utils/vectors.ts#L34)
+[src/datastore/utils/vectors.ts:34](https://github.com/dexaai/llm-tools/blob/3551610/src/datastore/utils/vectors.ts#L34)
 
 ***
 
@@ -90,4 +90,4 @@ The k nearest neighbors of the vector with the similarity score added (sorted by
 
 #### Source
 
-[src/datastore/utils/vectors.ts:59](https://github.com/dexaai/llm-tools/blob/5a38bb8/src/datastore/utils/vectors.ts#L59)
+[src/datastore/utils/vectors.ts:59](https://github.com/dexaai/llm-tools/blob/3551610/src/datastore/utils/vectors.ts#L59)

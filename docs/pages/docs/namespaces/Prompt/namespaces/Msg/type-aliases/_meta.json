@@ -2,8 +2,9 @@
   "Assistant": "Assistant",
   "FuncCall": "FuncCall",
   "FuncResult": "FuncResult",
-  "FunctionCall": "FunctionCall",
   "Role": "Role",
   "System": "System",
+  "ToolCall": "ToolCall",
+  "ToolResult": "ToolResult",
   "User": "User"
 }

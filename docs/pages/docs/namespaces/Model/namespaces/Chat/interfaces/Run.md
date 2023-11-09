@@ -8,4 +8,4 @@
 
 | Property | Type | Description | Source |
 | :------ | :------ | :------ | :------ |
-| `messages` | `ChatCompletionMessageParam`[] | - | [src/model/types.ts:51](https://github.com/dexaai/llm-tools/blob/5a38bb8/src/model/types.ts#L51) |
+| `messages` | `ChatMessage`[] | - | [src/model/types.ts:51](https://github.com/dexaai/llm-tools/blob/3551610/src/model/types.ts#L51) |
