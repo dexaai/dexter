@@ -1,4 +1,4 @@
-import { type z } from 'zod';
+import type { z } from 'zod';
 import type { SetOptional } from 'type-fest';
 import type { ModelArgs } from './model.js';
 import type { Model } from './types.js';
