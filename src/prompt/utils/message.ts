@@ -6,6 +6,8 @@ import type { Prompt } from '../types.js';
  * @see: https://github.com/dmnd/dedent
  */
 export function cleanString(text: string): string {
+  // TODO: Should this trim the output as well? could be useful for multiline
+  // templated strings which begin or end with unnecessary newlines.
   const dedenter = dedent.withOptions({ escapeSpecialCharacters: true });
   return dedenter(text);
 }

@@ -1,10 +1,12 @@
+import { type z } from 'zod';
 import type { SetOptional } from 'type-fest';
 import type { ModelArgs } from './model.js';
 import type { Model } from './types.js';
 import { calculateCost } from './utils/calculate-cost.js';
 import { createOpenAIClient } from './clients/openai.js';
 import { AbstractModel } from './model.js';
-import { deepMerge } from '../utils/helpers.js';
+import { type Prettify, deepMerge } from '../utils/helpers.js';
+import { extractZodObject, getErrorMsg } from '../prompt/index.js';
 
 export type ChatModelArgs = SetOptional<
   ModelArgs<
@@ -178,6 +180,59 @@ export class ChatModel extends AbstractModel<
       };
 
       return modelResponse;
+    }
+  }
+
+  /**
+   * Run the model and validate the response against a Zod schema.
+   * Retries the request by passing the error message back into the model.
+   *
+   * TODO: handle multiple retries
+   * TODO: handle JSON arrays in addition to objects
+   * TODO: add an onRetry event handler
+   */
+  async runWithValidation<Schema extends z.ZodObject<any>>(
+    schema: Schema,
+    params: Prettify<Model.Chat.Run & Model.Chat.Config>,
+    context?: Model.Ctx
+  ): Promise<z.infer<Schema>> {
+    const { message } = await this.run(params, context);
+    if (!message.content) {
+      throw new Error(`OpenAI returned a message with no content`);
+    }
+
+    try {
+      return extractZodObject({ json: message.content, schema });
+    } catch (error) {
+      // Get the error message from the failed validation
+      const errorMessage = getErrorMsg(error);
+
+      // Add a message to the conversation with the error message and instruct
+      // the model to try again.
+      const appendedMessages: Model.Message[] = [
+        ...params.messages,
+        message,
+        {
+          role: 'user',
+          content: `There was an error parsing your response. Please read the error message and try again.\n\nError message: ${errorMessage}`,
+        },
+      ];
+
+      const { message: message2 } = await this.run(
+        {
+          ...params,
+          messages: appendedMessages,
+        },
+        {
+          ...context,
+          validationRetry: true,
+        }
+      );
+      if (!message2.content) {
+        throw new Error(`OpenAI returned a message with no content`);
+      }
+
+      return extractZodObject({ json: message2.content, schema });
     }
   }
 

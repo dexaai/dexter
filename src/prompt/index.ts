@@ -5,3 +5,4 @@ export { createAIFunction } from './functions/ai-function.js';
 export { extractJsonObject } from './functions/extract-json.js';
 export { extractZodObject } from './functions/extract-zod-object.js';
 export { zodToJsonSchema } from './functions/zod-to-json.js';
+export { getErrorMsg } from './utils/get-error-message.js';
