@@ -42,7 +42,7 @@ export abstract class AbstractDatastore<
     this.context = args.context ?? {};
     this.events = args.events ?? {};
     if (args.debug) {
-      this.mergeEvents(args.events ?? {}, {
+      this.addEvents({
         onQueryStart: [console.debug],
         onQueryComplete: [console.debug],
         onError: [console.error],
@@ -142,6 +142,26 @@ export abstract class AbstractDatastore<
       );
       throw error;
     }
+  }
+
+  /** Get the current event handlers */
+  getEvents() {
+    return this.events;
+  }
+
+  /** Add event handlers to the datastore. */
+  addEvents(events: typeof this.events): this {
+    this.events = this.mergeEvents(this.events, events);
+    return this;
+  }
+
+  /**
+   * Set the event handlers to a new set of events. Removes all existing event handlers.
+   * Set to empty object `{}` to remove all events.
+   */
+  setEvents(events: typeof this.events): this {
+    this.events = events;
+    return this;
   }
 
   protected mergeEvents(

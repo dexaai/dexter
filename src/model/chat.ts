@@ -36,7 +36,7 @@ export class ChatModel extends AbstractModel<
     params = params ?? { model: 'gpt-3.5-turbo' };
     super({ client, params, ...rest });
     if (args?.debug) {
-      this.mergeEvents(args.events || {}, {
+      this.addEvents({
         onStart: [logInput],
         onComplete: [logResponse],
       });
