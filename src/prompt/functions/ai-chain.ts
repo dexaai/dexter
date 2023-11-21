@@ -10,6 +10,24 @@ import {
 } from '../index.js';
 import { type Prettify } from '../../utils/helpers.js';
 
+/**
+ * Creates a chain of chat completion calls that can be invoked as a single
+ * function. It is meant to simplify the process of resolving tool calls
+ * and optionally adding validation to the final result.
+ *
+ * The returned function will invoke the `chatModel` up to `maxCalls` times,
+ * resolving any tool calls to the included `functions` and retrying if
+ * necessary up to `maxRetries`.
+ *
+ * You must pass either `params.messages` or `prompt` to provide the initial
+ * messages to the chat completion model (passing both will throw an error).
+ *
+ * The chain ends when a non-tool call is returned, and the final result can
+ * optionally be validated against a Zod schema, which defaults to a `string`.
+ *
+ * To prevent possible infinite loops, the chain will throw an error after
+ * `maxCalls`, so `maxCalls` is expected to be >= `maxRetries`.
+ */
 export function createAIChain<
   Params extends Prompt.ChainParams = void,
   Result extends Prompt.ChainResult = string
@@ -19,7 +37,7 @@ export function createAIChain<
   params,
   prompt,
   functions,
-  maxCalls = 3,
+  maxCalls = 5,
   maxRetries = 3,
   toolCallConcurrency = 8,
 }: {
@@ -54,7 +72,7 @@ export function createAIChain<
     let numCalls = 0;
     let numErrors = 0;
 
-    do {
+    while (numCalls < maxCalls) {
       ++numCalls;
       const response = await chatModel.run({
         ...params,
@@ -103,6 +121,8 @@ export function createAIChain<
           );
         } else if (Msg.isAssistant(message)) {
           if (schema) {
+            // TODO: we're passing a schema, but we're not actually telling the
+            // chat model anything about it
             if (schema instanceof z.ZodObject) {
               return extractZodObject({ json: message.content, schema });
             } else {
@@ -135,7 +155,7 @@ export function createAIChain<
           );
         }
       }
-    } while (numCalls < maxCalls);
+    }
 
     throw new Error(`Chain stopped after reaching max ${maxCalls} calls`);
   };

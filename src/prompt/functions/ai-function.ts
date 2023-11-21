@@ -5,7 +5,7 @@ import type { Prompt } from '../types.js';
 import { cleanString } from '../utils/message.js';
 
 /**
- * Create a function meant to be used with OpenAI function calling.
+ * Create a function meant to be used with OpenAI tool or function calling.
  *
  * The returned function will parse the arguments string and call the
  * implementation function with the parsed arguments.
