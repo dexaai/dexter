@@ -39,7 +39,7 @@ npx tsx examples/caching-redis.ts
 
 ### AI Function
 
-This example shows how to use the `createAIFunction` utility function to handle `function` and `tool_calls` with the OpenAI chat completions API and Zod.
+This example shows how to use `createAIFunction` to handle `function` and `tool_calls` with the OpenAI chat completions API and Zod.
 
 ```bash
 npx tsx examples/ai-function.ts
@@ -49,7 +49,9 @@ npx tsx examples/ai-function.ts
 
 ### AI Chain
 
-This example shows how to use the `createAIChain` utility function to easily invoke a chain of OpenAI chat completion calls, resolving tool / function calls, retrying when necessary, and optionally validating the resulting output via Zod.
+This example shows how to use `createAIChain` to easily invoke a chain of OpenAI chat completion calls, resolving tool / function calls, retrying when necessary, and optionally validating the resulting output via Zod.
+
+Note that `createAIChain` takes in a `functions` array of `AIFunction` objects created by `createAIFunction`, as the two utility functions are meant to used together.
 
 ```bash
 npx tsx examples/ai-chain.ts
