@@ -1,13 +1,15 @@
 import type { z } from 'zod';
-import type { Jsonifiable } from 'type-fest';
 
 export namespace Prompt {
+  export type ChainParams = Record<string, any> | void;
+  export type ChainResult = string | Record<string, any>;
+
   /**
    * A prompt chain that coordinates the template, functions, and validator.
    */
   export type Chain<
-    Params extends Record<string, any> | void = void,
-    Result extends Jsonifiable = string
+    Params extends ChainParams = void,
+    Result extends ChainResult = string
   > = (params: Params) => Promise<Result>;
 
   /**

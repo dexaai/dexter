@@ -1,13 +1,18 @@
 import pMap from 'p-map';
-import { type ZodType } from 'zod';
-import type { Jsonifiable } from 'type-fest';
+import { z, type ZodType } from 'zod';
 import type { Model } from '../../model/types.js';
-import { Msg, getErrorMsg, type Prompt } from '../index.js';
+import {
+  Msg,
+  getErrorMsg,
+  type Prompt,
+  extractZodObject,
+  AbortError,
+} from '../index.js';
 import { type Prettify } from '../../utils/helpers.js';
 
 export function createAIChain<
-  Params extends Record<string, any> | void,
-  Result extends Jsonifiable = string
+  Params extends Prompt.ChainParams = void,
+  Result extends Prompt.ChainResult = string
 >({
   chatModel,
   schema,
@@ -92,9 +97,19 @@ export function createAIChain<
               concurrency: toolCallConcurrency,
             }
           );
-        } else {
+        } else if (Msg.isFuncCall(message)) {
+          throw new AbortError(
+            'Function calls are not supported; expected tool call'
+          );
+        } else if (Msg.isAssistant(message)) {
           if (schema) {
-            return schema.parse(message.content);
+            if (schema instanceof z.ZodObject) {
+              return extractZodObject({ json: message.content, schema });
+            } else {
+              // TODO: support arrays, boolean, number, etc.
+              // validate string output
+              return schema.parse(message.content);
+            }
           } else {
             return message.content as Result;
           }
@@ -124,24 +139,4 @@ export function createAIChain<
 
     throw new Error(`Chain stopped after reaching max ${maxCalls} calls`);
   };
-}
-
-export class AbortError extends Error {
-  readonly name: 'AbortError';
-  readonly originalError: Error;
-
-  constructor(message: string | Error) {
-    super();
-
-    if (message instanceof Error) {
-      this.originalError = message;
-      ({ message } = message);
-    } else {
-      this.originalError = new Error(message);
-      this.originalError.stack = this.stack;
-    }
-
-    this.name = 'AbortError';
-    this.message = message;
-  }
 }
