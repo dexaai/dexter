@@ -35,28 +35,31 @@ import { type Prettify } from '../../utils/helpers.js';
 export function createAIChain<
   Params extends Prompt.ChainParams = void,
   Result extends Prompt.ChainResult = string
->({
-  chatModel,
-  schema,
-  params,
-  prompt,
-  functions,
-  maxCalls = 5,
-  maxRetries = 3,
-  toolCallConcurrency = 8,
-}: {
-  chatModel: Model.Chat.Model;
-  schema?: ZodType<Result>;
-  params?: Omit<
-    Prettify<Model.Chat.Run & Model.Chat.Config>,
-    'functions' | 'tools' | 'function_call' | 'tool_choice'
-  >;
-  prompt?: Prompt.Template<Params>;
-  functions?: Prompt.AIFunction[];
-  maxCalls?: number;
-  maxRetries?: number;
-  toolCallConcurrency?: number;
-}): Prompt.Chain<Params, Result> {
+>(
+  {
+    chatModel,
+    schema,
+    params,
+    prompt,
+    functions,
+    maxCalls = 5,
+    maxRetries = 3,
+    toolCallConcurrency = 8,
+  }: {
+    chatModel: Model.Chat.Model;
+    schema?: ZodType<Result>;
+    params?: Omit<
+      Prettify<Model.Chat.Run & Model.Chat.Config>,
+      'functions' | 'tools' | 'function_call' | 'tool_choice'
+    >;
+    prompt?: Prompt.Template<Params>;
+    functions?: Prompt.AIFunction[];
+    maxCalls?: number;
+    maxRetries?: number;
+    toolCallConcurrency?: number;
+  },
+  context?: Model.Ctx
+): Prompt.Chain<Params, Result> {
   return async (promptArgs: Params): Promise<Result> => {
     if (!params?.messages && !prompt) {
       throw new Error('Either params.messages or prompt must be provided');
@@ -78,11 +81,14 @@ export function createAIChain<
 
     while (numCalls < maxCalls) {
       ++numCalls;
-      const response = await chatModel.run({
-        ...params,
-        messages,
-        tools,
-      });
+      const response = await chatModel.run(
+        {
+          ...params,
+          messages,
+          tools,
+        },
+        context
+      );
 
       const { message } = response;
       try {
