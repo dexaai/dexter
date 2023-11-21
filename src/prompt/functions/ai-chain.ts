@@ -112,6 +112,8 @@ export function createAIChain<
                 );
               }
 
+              // TODO: ideally we'd differentiate between tool argument validation
+              // errors versus errors in the function implementation
               const result = await func(toolCall.function.arguments);
 
               const toolResult = Msg.toolResult(
@@ -132,7 +134,7 @@ export function createAIChain<
         } else if (Msg.isAssistant(message)) {
           if (schema) {
             // TODO: we're passing a schema, but we're not actually telling the
-            // chat model anything about it
+            // chat model anything about the expected output format
             if (schema instanceof z.ZodObject) {
               return extractZodObject({ json: message.content, schema });
             } else {
