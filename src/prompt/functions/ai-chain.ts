@@ -75,6 +75,15 @@ export function createAIChain<
       type: 'function' as const,
       function: func.spec,
     }));
+    const functionMapByName = functions?.reduce<
+      Record<string, Prompt.AIFunction>
+    >(
+      (map, func) => ({
+        ...map,
+        [func.name]: func,
+      }),
+      {}
+    );
 
     let numCalls = 0;
     let numErrors = 0;
@@ -102,9 +111,7 @@ export function createAIChain<
           await pMap(
             message.tool_calls,
             async (toolCall) => {
-              const func = functions?.find(
-                (func) => func.spec.name === toolCall.function.name
-              );
+              const func = functionMapByName![toolCall.function.name];
 
               if (!func) {
                 throw new Error(
