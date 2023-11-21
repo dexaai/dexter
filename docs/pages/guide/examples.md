@@ -37,6 +37,26 @@ npx tsx examples/caching-redis.ts
 
 [source](https://github.com/dexaai/dexter/tree/master/examples/caching-redis.ts)
 
+### AI Function
+
+This example shows how to use the `createAIFunction` utility function to handle `function` and `tool_calls` with the OpenAI chat completions API and Zod.
+
+```bash
+npx tsx examples/ai-function.ts
+```
+
+[source](https://github.com/dexaai/dexter/tree/master/examples/ai-function.ts)
+
+### AI Chain
+
+This example shows how to use the `createAIChain` utility function to easily invoke a chain of OpenAI chat completion calls, resolving tool / function calls, retrying when necessary, and optionally validating the resulting output via Zod.
+
+```bash
+npx tsx examples/ai-chain.ts
+```
+
+[source](https://github.com/dexaai/dexter/tree/master/examples/ai-chain.ts)
+
 ### Chatbot
 
 This is a more involved example of a chatbot using RAG. It indexes 100 transcript chunks from the [Huberman Lab Podcast](https://hubermanlab.com) into a [hybrid Pinecone datastore](https://docs.pinecone.io/docs/hybrid-search) using [OpenAI ada-002 embeddings](https://platform.openai.com/docs/guides/embeddings) for the dense vectors and a [HuggingFace SPLADE model](https://huggingface.co/naver/splade-cocondenser-ensembledistil) for the sparse embeddings.

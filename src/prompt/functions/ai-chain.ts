@@ -27,6 +27,10 @@ import { type Prettify } from '../../utils/helpers.js';
  *
  * To prevent possible infinite loops, the chain will throw an error after
  * `maxCalls`, so `maxCalls` is expected to be >= `maxRetries`.
+ *
+ * Note that `createAIChain` takes in a `functions` array of `AIFunction`
+ * objects created by `createAIFunction`, as the two utility functions are
+ * meant to be used together.
  */
 export function createAIChain<
   Params extends Prompt.ChainParams = void,
