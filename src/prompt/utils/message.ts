@@ -1,5 +1,7 @@
 import dedent from 'dedent';
+import type { Jsonifiable } from 'type-fest';
 import type { Prompt } from '../types.js';
+import { stringifyForModel } from '../functions/stringify-for-model.js';
 
 /**
  * Clean a string by removing extra newlines and indentation.
@@ -91,12 +93,8 @@ export class Msg {
   }
 
   /** Create a function result message. */
-  static funcResult(
-    content: string | object | unknown[],
-    name: string
-  ): Prompt.Msg.FuncResult {
-    const contentString =
-      typeof content === 'string' ? content : JSON.stringify(content);
+  static funcResult(content: Jsonifiable, name: string): Prompt.Msg.FuncResult {
+    const contentString = stringifyForModel(content);
     return { role: 'function', content: contentString, name };
   }
 
@@ -119,11 +117,10 @@ export class Msg {
 
   /** Create a tool call result message. */
   static toolResult(
-    content: string | object | unknown[],
+    content: Jsonifiable,
     tool_call_id: string
   ): Prompt.Msg.ToolResult {
-    const contentString =
-      typeof content === 'string' ? content : JSON.stringify(content);
+    const contentString = stringifyForModel(content);
     return { role: 'tool', tool_call_id, content: contentString };
   }
 

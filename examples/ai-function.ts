@@ -76,10 +76,7 @@ async function main() {
       }
 
       const result = await getWeather(toolCall.function.arguments);
-      const toolResult = Msg.toolResult(
-        JSON.stringify(result, null, 2),
-        toolCall.id
-      );
+      const toolResult = Msg.toolResult(result, toolCall.id);
       messages.push(toolResult);
     }
   }

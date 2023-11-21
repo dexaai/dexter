@@ -91,10 +91,10 @@ export function createAIChain<
       );
 
       const { message } = response;
+      messages.push(message);
+
       try {
         if (Msg.isToolCall(message)) {
-          messages.push(message);
-
           if (!functions) {
             throw new AbortError('No functions provided to handle tool call');
           }
@@ -113,14 +113,12 @@ export function createAIChain<
               }
 
               // TODO: ideally we'd differentiate between tool argument validation
-              // errors versus errors in the function implementation
+              // errors versus errors thrown from the tool implementation. Errors
+              // from the underlying tool could be things like network errors, which
+              // should be retried locally without re-calling the LLM.
               const result = await func(toolCall.function.arguments);
 
-              const toolResult = Msg.toolResult(
-                JSON.stringify(result, null, 2),
-                toolCall.id
-              );
-
+              const toolResult = Msg.toolResult(result, toolCall.id);
               messages.push(toolResult);
             },
             {
@@ -154,7 +152,6 @@ export function createAIChain<
         }
 
         const errMessage = getErrorMsg(error);
-        messages.push(message);
         messages.push(
           Msg.user(
             `There was an error validating the response. Please check the error message and try again.\nError:\n${errMessage}`
