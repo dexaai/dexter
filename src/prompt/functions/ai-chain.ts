@@ -25,8 +25,8 @@ import { type Prettify } from '../../utils/helpers.js';
  * The chain ends when a non-tool call is returned, and the final result can
  * optionally be validated against a Zod schema, which defaults to a `string`.
  *
- * To prevent possible infinite loops, the chain will throw an error after
- * `maxCalls`, so `maxCalls` is expected to be >= `maxRetries`.
+ * To prevent possible infinite loops, the chain will throw an error if it
+ * exceeds `maxCalls` (`maxCalls` is expected to be >= `maxRetries`).
  *
  * Note that `createAIChain` takes in a `functions` array of `AIFunction`
  * objects created by `createAIFunction`, as the two utility functions are
