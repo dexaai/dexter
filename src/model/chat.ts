@@ -1,12 +1,10 @@
-import type { z } from 'zod';
 import type { SetOptional } from 'type-fest';
 import type { ModelArgs } from './model.js';
 import type { Model } from './types.js';
 import { calculateCost } from './utils/calculate-cost.js';
 import { createOpenAIClient } from './clients/openai.js';
 import { AbstractModel } from './model.js';
-import { type Prettify, deepMerge } from '../utils/helpers.js';
-import { extractZodObject, getErrorMsg } from '../prompt/index.js';
+import { deepMerge } from '../utils/helpers.js';
 
 export type ChatModelArgs = SetOptional<
   ModelArgs<
