@@ -1,8 +1,49 @@
 import type { z } from 'zod';
+import type { SetOptional } from 'type-fest';
+import type { Model } from '../index.js';
 
 export namespace Prompt {
   export type ChainParams = Record<string, any> | void;
   export type ChainResult = string | Record<string, any>;
+
+  /**
+   * A runner that iteratively calls the model and handles function calls.
+   */
+  export type Runner<Content extends any = string> = (
+    params: string | Runner.Params,
+    context?: Model.Ctx
+  ) => Promise<Runner.Response<Content>>;
+  export namespace Runner {
+    /** Parameters to execute a runner */
+    export type Params = SetOptional<
+      Model.Chat.Run & Model.Chat.Config,
+      'model'
+    >;
+
+    /** Response from executing a runner */
+    export type Response<Content extends any = string> =
+      | {
+          status: 'success';
+          messages: Prompt.Msg[];
+          content: Content;
+        }
+      | {
+          status: 'error';
+          messages: Prompt.Msg[];
+          error: Error;
+        };
+
+    /** Controls use of functions or tool_calls from OpenAI API */
+    export type Mode = 'tools' | 'functions';
+  }
+
+  /**
+   * A function used to extract data using OpenAI function calling.
+   */
+  export type ExtractFunction<Schema extends z.ZodObject<any>> = (
+    params: string | Runner.Params,
+    context?: Model.Ctx
+  ) => Promise<z.infer<Schema>>;
 
   /**
    * A prompt chain that coordinates the template, functions, and validator.
@@ -39,6 +80,26 @@ export namespace Prompt {
   > {
     /** The implementation of the function, with arg parsing and validation. */
     (input: string | Msg): Promise<Return>;
+    /** The Zod schema for the arguments string. */
+    argsSchema: Schema;
+    /** Parse the function arguments from a message. */
+    parseArgs(input: string | Msg): z.infer<Schema>;
+    /** The function spec for the OpenAI API `functions` property. */
+    spec: AIFunctionSpec;
+  }
+
+  export interface AIFunction2<
+    Schema extends z.ZodObject<any> = z.ZodObject<any>,
+    Return extends any = any
+  > {
+    /** Call the function and return the result. */
+    call: (input: string | Msg) => Promise<Return>;
+    /** Run the model with the function call. */
+    run: (args: {
+      chatModel: Model.Chat.Model;
+      messages: Prompt.Msg[];
+      maxRetries?: number;
+    }) => Promise<Return>;
     /** The Zod schema for the arguments string. */
     argsSchema: Schema;
     /** Parse the function arguments from a message. */
