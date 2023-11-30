@@ -1,4 +1,4 @@
-import type { z } from 'zod';
+import { z, type ZodType } from 'zod';
 import { zodToJsonSchema } from './zod-to-json.js';
 import { extractZodObject } from './extract-zod-object.js';
 import type { Prompt } from '../types.js';
@@ -14,30 +14,34 @@ import { cleanString } from '../utils/message.js';
  * function to the OpenAI API `functions` property.
  */
 export function createAIFunction<
-  Schema extends z.ZodObject<any>,
-  Return extends any
+  Params extends Prompt.AIFunctionParams = any,
+  Result extends Prompt.AIFunctionResult = string
 >(
-  spec: {
+  {
+    name,
+    description = '',
+    paramsSchema,
+  }: {
     /** Name of the function. */
     name: string;
     /** Description of the function. */
     description?: string;
     /** Zod schema for the arguments string. */
-    argsSchema: Schema;
+    paramsSchema: ZodType<Params>;
   },
   /** Implementation of the function to call with the parsed arguments. */
-  implementation: (params: z.infer<Schema>) => Promise<Return>
-): Prompt.AIFunction<Schema, Return> {
+  implementation: (params: Params) => Promise<Result>
+): Prompt.AIFunction<Params, Result> {
   /** Parse the arguments string, optionally reading from a message. */
-  const parseArgs = (input: string | Prompt.Msg) => {
+  const parseArgs = (input: string | Prompt.Msg): Params => {
     if (typeof input === 'string') {
-      return extractZodObject({ schema: spec.argsSchema, json: input });
+      return extractZodObject({ schema: paramsSchema, json: input });
     } else {
       const args = input.function_call?.arguments;
       if (!args) {
         throw new Error(`Missing required function_call.arguments property`);
       }
-      return extractZodObject({ schema: spec.argsSchema, json: args });
+      return extractZodObject({ schema: paramsSchema, json: args });
     }
   };
 
@@ -48,11 +52,11 @@ export function createAIFunction<
   };
 
   aiFunction.parseArgs = parseArgs;
-  aiFunction.argsSchema = spec.argsSchema;
+  aiFunction.paramsSchema = paramsSchema;
   aiFunction.spec = {
-    name: spec.name,
-    description: cleanString(spec.description ?? ''),
-    parameters: zodToJsonSchema(spec.argsSchema),
+    name,
+    description: cleanString(description),
+    parameters: zodToJsonSchema(paramsSchema),
   };
 
   return aiFunction;

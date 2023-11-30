@@ -1,21 +1,28 @@
-import type { z } from 'zod';
+import type { ZodType } from 'zod';
 
 export namespace Prompt {
-  export type ChainParams = Record<string, any> | void;
-  export type ChainResult = string | Record<string, any>;
+  // TODO: Convert this to use type-fest/Jsonifiable which is stricter
+  export type SoftJsonifiableObject = Record<string, unknown>;
+  export type SoftJsonifiableArray = any[];
+  export type SoftJsonifiablePrimitive = string | number | boolean | null;
+  export type SoftJsonifiable =
+    | SoftJsonifiableObject
+    | SoftJsonifiableArray
+    | SoftJsonifiablePrimitive;
+
+  export type TaskParams = SoftJsonifiableObject | void;
+  export type TaskResult = SoftJsonifiable;
+
+  export type AIFunctionParams = Exclude<TaskParams, void>;
+  export type AIFunctionResult = TaskResult;
+
+  export type AIChainParams = TaskParams;
+  export type AIChainResult = TaskResult;
 
   /**
-   * A prompt chain that coordinates the template, functions, and validator.
+   * Turn structured data into an array of messages.
    */
-  export type Chain<
-    Params extends ChainParams = void,
-    Result extends ChainResult = string
-  > = (params: Params) => Promise<Result>;
-
-  /**
-   * Turn structured data into a message.
-   */
-  export type Template<T extends Record<string, any> | void = void> = (
+  export type MessagesTemplate<T extends AIChainParams = void> = (
     params: T
   ) => Promise<Msg[]> | Msg[];
 
@@ -27,25 +34,52 @@ export namespace Prompt {
   export interface AIFunctionSpec {
     name: string;
     description?: string;
-    parameters: Record<string, unknown>;
+    parameters: SoftJsonifiableObject;
+  }
+
+  export interface Task<
+    Params extends TaskParams = void,
+    Result extends TaskResult = any
+  > {
+    /** The implementation of the function, with arg parsing and validation. */
+    (input: string | Msg): Promise<Result>;
+    /** The Zod schema for the input. */
+    paramsSchema: ZodType<Params>;
+    /** Parse the function arguments from a message. */
+    parseArgs(input: string | Msg): Params;
+    /** The function spec for the OpenAI API `functions` property. */
+    spec: AIFunctionSpec;
   }
 
   /**
    * A function meant to be used with OpenAI function calling.
    */
   export interface AIFunction<
-    Schema extends z.ZodObject<any> = z.ZodObject<any>,
-    Return extends any = any
-  > {
-    /** The implementation of the function, with arg parsing and validation. */
-    (input: string | Msg): Promise<Return>;
-    /** The Zod schema for the arguments string. */
-    argsSchema: Schema;
-    /** Parse the function arguments from a message. */
-    parseArgs(input: string | Msg): z.infer<Schema>;
-    /** The function spec for the OpenAI API `functions` property. */
-    spec: AIFunctionSpec;
+    Params extends Prompt.AIFunctionParams = any,
+    Result extends Prompt.AIFunctionResult = any
+  > extends Task<Params, Result> {}
+
+  /**
+   * A prompt chain that coordinates a template, functions, and validator.
+   */
+  export interface AIChain<
+    Params extends AIChainParams = void,
+    Result extends AIChainResult = string
+  > extends Task<Params, Result> {
+    resultSchema?: ZodType<Result>;
   }
+
+  /**
+   * A prompt chain that coordinates the template, functions, and validator.
+   */
+  export interface AIExtractFunction<
+    Params extends AIFunctionParams = any,
+    Result extends AIFunctionResult = string
+  > extends AIFunction<Params, Result> {
+    resultSchema: ZodType<Result>;
+  }
+
+  export type AITools = Task[];
 
   /**
    * Generic/default OpenAI message without any narrowing applied

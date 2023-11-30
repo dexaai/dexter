@@ -6,7 +6,7 @@ const fullName = createAIFunction(
   {
     name: 'fullName',
     description: 'Returns the full name of a person.',
-    argsSchema: z.object({
+    paramsSchema: z.object({
       first: z.string(),
       last: z.string(),
     }),
