@@ -1,4 +1,4 @@
-import defaultKy from 'ky';
+import defaultKy, { type KyInstance } from 'ky';
 import { z } from 'zod';
 import { getEnv } from '../../utils/helpers.js';
 import { AIToolsProvider, aiFunction } from '../fns.js';
@@ -7,12 +7,12 @@ export namespace serper {
   export const BASE_URL = 'https://google.serper.dev';
 
   export const SearchParamsSchema = z.object({
-    q: z.string(),
+    q: z.string().describe('search query'),
     autocorrect: z.boolean().default(true).optional(),
     gl: z.string().default('us').optional(),
     hl: z.string().default('en').optional(),
-    page: z.number().int().default(1).optional(),
-    num: z.number().int().default(10).optional(),
+    page: z.number().int().positive().default(1).optional(),
+    num: z.number().int().positive().default(10).optional(),
   });
   export type SearchParams = z.infer<typeof SearchParamsSchema>;
 
@@ -188,7 +188,7 @@ export namespace serper {
   export interface ClientOptions extends Omit<Partial<SearchParams>, 'q'> {
     apiKey?: string;
     apiBaseUrl?: string;
-    ky?: typeof defaultKy;
+    ky?: KyInstance;
   }
 }
 
@@ -198,7 +198,7 @@ export namespace serper {
  * @see https://serper.dev
  */
 export class SerperClient extends AIToolsProvider {
-  protected api: typeof defaultKy;
+  protected api: KyInstance;
   protected apiKey: string;
   protected apiBaseUrl: string;
   protected params: Omit<Partial<serper.SearchParams>, 'q'>;
