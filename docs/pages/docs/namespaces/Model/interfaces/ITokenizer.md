@@ -24,7 +24,7 @@ Strings are counted as is.
 
 #### Source
 
-[src/model/types.ts:202](https://github.com/dexaai/llm-tools/blob/3551610/src/model/types.ts#L202)
+[src/model/types.ts:203](https://github.com/dexaai/llm-tools/blob/f300435/src/model/types.ts#L203)
 
 ***
 
@@ -46,7 +46,7 @@ Decode an array of integer tokens into a string
 
 #### Source
 
-[src/model/types.ts:196](https://github.com/dexaai/llm-tools/blob/3551610/src/model/types.ts#L196)
+[src/model/types.ts:197](https://github.com/dexaai/llm-tools/blob/f300435/src/model/types.ts#L197)
 
 ***
 
@@ -68,7 +68,7 @@ Tokenize a string into an array of integer tokens
 
 #### Source
 
-[src/model/types.ts:194](https://github.com/dexaai/llm-tools/blob/3551610/src/model/types.ts#L194)
+[src/model/types.ts:195](https://github.com/dexaai/llm-tools/blob/f300435/src/model/types.ts#L195)
 
 ***
 
@@ -93,4 +93,4 @@ Truncate a string to a maximum number of tokens
 
 #### Source
 
-[src/model/types.ts:204](https://github.com/dexaai/llm-tools/blob/3551610/src/model/types.ts#L204)
+[src/model/types.ts:205](https://github.com/dexaai/llm-tools/blob/f300435/src/model/types.ts#L205)

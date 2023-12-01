@@ -10,6 +10,7 @@
 
 ### Classes
 
+- [AbortError](classes/AbortError.md)
 - [AbstractDatastore](classes/AbstractDatastore.md)
 - [AbstractHybridDatastore](classes/AbstractHybridDatastore.md)
 - [AbstractModel](classes/AbstractModel.md)
@@ -39,7 +40,9 @@
 ### Functions
 
 - [calculateCost](functions/calculateCost.md)
+- [createAIExtractFunction](functions/createAIExtractFunction.md)
 - [createAIFunction](functions/createAIFunction.md)
+- [createAIRunner](functions/createAIRunner.md)
 - [createOpenAIClient](functions/createOpenAIClient.md)
 - [createPineconeClient](functions/createPineconeClient.md)
 - [createTokenizer](functions/createTokenizer.md)
@@ -47,6 +50,9 @@
 - [defaultCacheKey](functions/defaultCacheKey.md)
 - [extractJsonObject](functions/extractJsonObject.md)
 - [extractZodObject](functions/extractZodObject.md)
+- [getErrorMsg](functions/getErrorMsg.md)
+- [handleFunctionCallMessage](functions/handleFunctionCallMessage.md)
 - [omit](functions/omit.md)
 - [pick](functions/pick.md)
+- [stringifyForModel](functions/stringifyForModel.md)
 - [zodToJsonSchema](functions/zodToJsonSchema.md)

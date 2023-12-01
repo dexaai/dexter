@@ -5,6 +5,7 @@
 ### Namespaces
 
 - [Msg](namespaces/Msg/README.md)
+- [Runner](namespaces/Runner/README.md)
 
 ### Interfaces
 
@@ -14,6 +15,5 @@
 
 ### Type Aliases
 
-- [Chain](type-aliases/Chain.md)
-- [Template](type-aliases/Template.md)
-- [Validator](type-aliases/Validator.md)
+- [ExtractFunction](type-aliases/ExtractFunction.md)
+- [Runner](type-aliases/Runner.md)

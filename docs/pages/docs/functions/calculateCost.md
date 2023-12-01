@@ -20,4 +20,4 @@ Calculate the cost (in cents) for the given model and tokens.
 
 ## Source
 
-[src/model/utils/calculate-cost.ts:68](https://github.com/dexaai/llm-tools/blob/3551610/src/model/utils/calculate-cost.ts#L68)
+[src/model/utils/calculate-cost.ts:68](https://github.com/dexaai/llm-tools/blob/f300435/src/model/utils/calculate-cost.ts#L68)

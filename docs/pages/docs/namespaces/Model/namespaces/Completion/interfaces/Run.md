@@ -8,4 +8,4 @@
 
 | Property | Type | Description | Source |
 | :------ | :------ | :------ | :------ |
-| `prompt` | `null` \| `string` \| `string`[] \| `number`[] \| `number`[][] | - | [src/model/types.ts:90](https://github.com/dexaai/llm-tools/blob/3551610/src/model/types.ts#L90) |
+| `prompt` | `null` \| `string` \| `string`[] \| `number`[] \| `number`[][] | - | [src/model/types.ts:91](https://github.com/dexaai/llm-tools/blob/f300435/src/model/types.ts#L91) |

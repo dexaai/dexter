@@ -41,16 +41,42 @@
 
 #### Source
 
-[src/datastore/pinecone/datastore.ts:14](https://github.com/dexaai/llm-tools/blob/3551610/src/datastore/pinecone/datastore.ts#L14)
+[src/datastore/pinecone/datastore.ts:14](https://github.com/dexaai/llm-tools/blob/f300435/src/datastore/pinecone/datastore.ts#L14)
 
 ## Properties
 
 | Property | Type | Description | Inheritance | Source |
 | :------ | :------ | :------ | :------ | :------ |
-| `datastoreProvider` | `"pinecone"` | - | [`AbstractDatastore`](AbstractDatastore.md).`datastoreProvider` | [src/datastore/pinecone/datastore.ts:11](https://github.com/dexaai/llm-tools/blob/3551610/src/datastore/pinecone/datastore.ts#L11) |
-| `datastoreType` | `"embedding"` | - | [`AbstractDatastore`](AbstractDatastore.md).`datastoreType` | [src/datastore/pinecone/datastore.ts:10](https://github.com/dexaai/llm-tools/blob/3551610/src/datastore/pinecone/datastore.ts#L10) |
+| `datastoreProvider` | `"pinecone"` | - | [`AbstractDatastore`](AbstractDatastore.md).`datastoreProvider` | [src/datastore/pinecone/datastore.ts:11](https://github.com/dexaai/llm-tools/blob/f300435/src/datastore/pinecone/datastore.ts#L11) |
+| `datastoreType` | `"embedding"` | - | [`AbstractDatastore`](AbstractDatastore.md).`datastoreType` | [src/datastore/pinecone/datastore.ts:10](https://github.com/dexaai/llm-tools/blob/f300435/src/datastore/pinecone/datastore.ts#L10) |
 
 ## Methods
+
+### addEvents()
+
+> **addEvents**(`events`): [`PineconeDatastore`](PineconeDatastore.md)\<`DocMeta`\>
+
+Add event handlers to the datastore.
+
+#### Parameters
+
+| Parameter | Type |
+| :------ | :------ |
+| `events` | [`Events`](../namespaces/Datastore/interfaces/Events.md)\<`DocMeta`, `QueryFilter`\<`DocMeta`\>\> |
+
+#### Returns
+
+[`PineconeDatastore`](PineconeDatastore.md)\<`DocMeta`\>
+
+#### Inherited from
+
+[`AbstractDatastore`](AbstractDatastore.md).[`addEvents`](AbstractDatastore.md#addEvents)
+
+#### Source
+
+[src/datastore/datastore.ts:153](https://github.com/dexaai/llm-tools/blob/f300435/src/datastore/datastore.ts#L153)
+
+***
 
 ### delete()
 
@@ -72,7 +98,7 @@
 
 #### Source
 
-[src/datastore/pinecone/datastore.ts:153](https://github.com/dexaai/llm-tools/blob/3551610/src/datastore/pinecone/datastore.ts#L153)
+[src/datastore/pinecone/datastore.ts:153](https://github.com/dexaai/llm-tools/blob/f300435/src/datastore/pinecone/datastore.ts#L153)
 
 ***
 
@@ -90,7 +116,27 @@
 
 #### Source
 
-[src/datastore/pinecone/datastore.ts:157](https://github.com/dexaai/llm-tools/blob/3551610/src/datastore/pinecone/datastore.ts#L157)
+[src/datastore/pinecone/datastore.ts:157](https://github.com/dexaai/llm-tools/blob/f300435/src/datastore/pinecone/datastore.ts#L157)
+
+***
+
+### getEvents()
+
+> **getEvents**(): [`Events`](../namespaces/Datastore/interfaces/Events.md)\<`DocMeta`, `QueryFilter`\<`DocMeta`\>\>
+
+Get the current event handlers
+
+#### Returns
+
+[`Events`](../namespaces/Datastore/interfaces/Events.md)\<`DocMeta`, `QueryFilter`\<`DocMeta`\>\>
+
+#### Inherited from
+
+[`AbstractDatastore`](AbstractDatastore.md).[`getEvents`](AbstractDatastore.md#getEvents)
+
+#### Source
+
+[src/datastore/datastore.ts:148](https://github.com/dexaai/llm-tools/blob/f300435/src/datastore/datastore.ts#L148)
 
 ***
 
@@ -115,7 +161,7 @@
 
 #### Source
 
-[src/datastore/datastore.ts:53](https://github.com/dexaai/llm-tools/blob/3551610/src/datastore/datastore.ts#L53)
+[src/datastore/datastore.ts:53](https://github.com/dexaai/llm-tools/blob/f300435/src/datastore/datastore.ts#L53)
 
 ***
 
@@ -140,7 +186,34 @@ AbstractDatastore.runQuery
 
 #### Source
 
-[src/datastore/pinecone/datastore.ts:30](https://github.com/dexaai/llm-tools/blob/3551610/src/datastore/pinecone/datastore.ts#L30)
+[src/datastore/pinecone/datastore.ts:30](https://github.com/dexaai/llm-tools/blob/f300435/src/datastore/pinecone/datastore.ts#L30)
+
+***
+
+### setEvents()
+
+> **setEvents**(`events`): [`PineconeDatastore`](PineconeDatastore.md)\<`DocMeta`\>
+
+Set the event handlers to a new set of events. Removes all existing event handlers.
+Set to empty object `{}` to remove all events.
+
+#### Parameters
+
+| Parameter | Type |
+| :------ | :------ |
+| `events` | [`Events`](../namespaces/Datastore/interfaces/Events.md)\<`DocMeta`, `QueryFilter`\<`DocMeta`\>\> |
+
+#### Returns
+
+[`PineconeDatastore`](PineconeDatastore.md)\<`DocMeta`\>
+
+#### Inherited from
+
+[`AbstractDatastore`](AbstractDatastore.md).[`setEvents`](AbstractDatastore.md#setEvents)
+
+#### Source
+
+[src/datastore/datastore.ts:162](https://github.com/dexaai/llm-tools/blob/f300435/src/datastore/datastore.ts#L162)
 
 ***
 
@@ -165,4 +238,4 @@ AbstractDatastore.runQuery
 
 #### Source
 
-[src/datastore/pinecone/datastore.ts:74](https://github.com/dexaai/llm-tools/blob/3551610/src/datastore/pinecone/datastore.ts#L74)
+[src/datastore/pinecone/datastore.ts:74](https://github.com/dexaai/llm-tools/blob/f300435/src/datastore/pinecone/datastore.ts#L74)

@@ -4,4 +4,4 @@
 
 ## Source
 
-[src/model/chat.ts:9](https://github.com/dexaai/llm-tools/blob/3551610/src/model/chat.ts#L9)
+[src/model/chat.ts:9](https://github.com/dexaai/llm-tools/blob/f300435/src/model/chat.ts#L9)

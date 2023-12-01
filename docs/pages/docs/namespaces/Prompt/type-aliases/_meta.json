@@ -1,5 +1,4 @@
 {
-  "Chain": "Chain",
-  "Template": "Template",
-  "Validator": "Validator"
+  "ExtractFunction": "ExtractFunction",
+  "Runner": "Runner"
 }

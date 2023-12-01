@@ -2,7 +2,7 @@
 
 > **createAIFunction**\<`Schema`, `Return`\>(`spec`, `implementation`): [`AIFunction`](../namespaces/Prompt/interfaces/AIFunction.md)\<`Schema`, `Return`\>
 
-Create a function meant to be used with OpenAI function calling.
+Create a function meant to be used with OpenAI tool or function calling.
 
 The returned function will parse the arguments string and call the
 implementation function with the parsed arguments.
@@ -33,4 +33,4 @@ function to the OpenAI API `functions` property.
 
 ## Source
 
-[src/prompt/functions/ai-function.ts:16](https://github.com/dexaai/llm-tools/blob/3551610/src/prompt/functions/ai-function.ts#L16)
+[src/prompt/functions/ai-function.ts:16](https://github.com/dexaai/llm-tools/blob/f300435/src/prompt/functions/ai-function.ts#L16)

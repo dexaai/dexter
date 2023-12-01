@@ -16,4 +16,4 @@ Create a tokenizer for a specific model
 
 ## Source
 
-[src/model/utils/tokenizer.ts:10](https://github.com/dexaai/llm-tools/blob/3551610/src/model/utils/tokenizer.ts#L10)
+[src/model/utils/tokenizer.ts:10](https://github.com/dexaai/llm-tools/blob/f300435/src/model/utils/tokenizer.ts#L10)

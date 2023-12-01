@@ -10,4 +10,4 @@ Generic metadata object.
 
 ## Source
 
-[src/model/types.ts:110](https://github.com/dexaai/llm-tools/blob/3551610/src/model/types.ts#L110)
+[src/model/types.ts:111](https://github.com/dexaai/llm-tools/blob/f300435/src/model/types.ts#L111)

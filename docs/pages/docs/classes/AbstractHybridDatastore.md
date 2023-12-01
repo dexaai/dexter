@@ -33,16 +33,42 @@
 
 #### Source
 
-[src/datastore/hybrid-datastore.ts:11](https://github.com/dexaai/llm-tools/blob/3551610/src/datastore/hybrid-datastore.ts#L11)
+[src/datastore/hybrid-datastore.ts:11](https://github.com/dexaai/llm-tools/blob/f300435/src/datastore/hybrid-datastore.ts#L11)
 
 ## Properties
 
 | Modifier | Property | Type | Description | Inheritance | Source |
 | :------ | :------ | :------ | :------ | :------ | :------ |
-| `abstract` | `datastoreProvider` | [`Provider`](../namespaces/Datastore/type-aliases/Provider.md) | - | [`AbstractDatastore`](AbstractDatastore.md).`datastoreProvider` | [src/datastore/datastore.ts:26](https://github.com/dexaai/llm-tools/blob/3551610/src/datastore/datastore.ts#L26) |
-| `abstract` | `datastoreType` | [`Type`](../namespaces/Datastore/type-aliases/Type.md) | - | [`AbstractDatastore`](AbstractDatastore.md).`datastoreType` | [src/datastore/datastore.ts:25](https://github.com/dexaai/llm-tools/blob/3551610/src/datastore/datastore.ts#L25) |
+| `abstract` | `datastoreProvider` | [`Provider`](../namespaces/Datastore/type-aliases/Provider.md) | - | [`AbstractDatastore`](AbstractDatastore.md).`datastoreProvider` | [src/datastore/datastore.ts:26](https://github.com/dexaai/llm-tools/blob/f300435/src/datastore/datastore.ts#L26) |
+| `abstract` | `datastoreType` | [`Type`](../namespaces/Datastore/type-aliases/Type.md) | - | [`AbstractDatastore`](AbstractDatastore.md).`datastoreType` | [src/datastore/datastore.ts:25](https://github.com/dexaai/llm-tools/blob/f300435/src/datastore/datastore.ts#L25) |
 
 ## Methods
+
+### addEvents()
+
+> **addEvents**(`events`): [`AbstractHybridDatastore`](AbstractHybridDatastore.md)\<`DocMeta`, `Filter`\>
+
+Add event handlers to the datastore.
+
+#### Parameters
+
+| Parameter | Type |
+| :------ | :------ |
+| `events` | [`Events`](../namespaces/Datastore/interfaces/Events.md)\<`DocMeta`, `Filter`\> |
+
+#### Returns
+
+[`AbstractHybridDatastore`](AbstractHybridDatastore.md)\<`DocMeta`, `Filter`\>
+
+#### Inherited from
+
+[`AbstractDatastore`](AbstractDatastore.md).[`addEvents`](AbstractDatastore.md#addEvents)
+
+#### Source
+
+[src/datastore/datastore.ts:153](https://github.com/dexaai/llm-tools/blob/f300435/src/datastore/datastore.ts#L153)
+
+***
 
 ### `abstract` delete()
 
@@ -64,7 +90,7 @@
 
 #### Source
 
-[src/datastore/datastore.ts:22](https://github.com/dexaai/llm-tools/blob/3551610/src/datastore/datastore.ts#L22)
+[src/datastore/datastore.ts:22](https://github.com/dexaai/llm-tools/blob/f300435/src/datastore/datastore.ts#L22)
 
 ***
 
@@ -82,7 +108,27 @@
 
 #### Source
 
-[src/datastore/datastore.ts:23](https://github.com/dexaai/llm-tools/blob/3551610/src/datastore/datastore.ts#L23)
+[src/datastore/datastore.ts:23](https://github.com/dexaai/llm-tools/blob/f300435/src/datastore/datastore.ts#L23)
+
+***
+
+### getEvents()
+
+> **getEvents**(): [`Events`](../namespaces/Datastore/interfaces/Events.md)\<`DocMeta`, `Filter`\>
+
+Get the current event handlers
+
+#### Returns
+
+[`Events`](../namespaces/Datastore/interfaces/Events.md)\<`DocMeta`, `Filter`\>
+
+#### Inherited from
+
+[`AbstractDatastore`](AbstractDatastore.md).[`getEvents`](AbstractDatastore.md#getEvents)
+
+#### Source
+
+[src/datastore/datastore.ts:148](https://github.com/dexaai/llm-tools/blob/f300435/src/datastore/datastore.ts#L148)
 
 ***
 
@@ -107,7 +153,34 @@
 
 #### Source
 
-[src/datastore/datastore.ts:53](https://github.com/dexaai/llm-tools/blob/3551610/src/datastore/datastore.ts#L53)
+[src/datastore/datastore.ts:53](https://github.com/dexaai/llm-tools/blob/f300435/src/datastore/datastore.ts#L53)
+
+***
+
+### setEvents()
+
+> **setEvents**(`events`): [`AbstractHybridDatastore`](AbstractHybridDatastore.md)\<`DocMeta`, `Filter`\>
+
+Set the event handlers to a new set of events. Removes all existing event handlers.
+Set to empty object `{}` to remove all events.
+
+#### Parameters
+
+| Parameter | Type |
+| :------ | :------ |
+| `events` | [`Events`](../namespaces/Datastore/interfaces/Events.md)\<`DocMeta`, `Filter`\> |
+
+#### Returns
+
+[`AbstractHybridDatastore`](AbstractHybridDatastore.md)\<`DocMeta`, `Filter`\>
+
+#### Inherited from
+
+[`AbstractDatastore`](AbstractDatastore.md).[`setEvents`](AbstractDatastore.md#setEvents)
+
+#### Source
+
+[src/datastore/datastore.ts:162](https://github.com/dexaai/llm-tools/blob/f300435/src/datastore/datastore.ts#L162)
 
 ***
 
@@ -132,4 +205,4 @@
 
 #### Source
 
-[src/datastore/datastore.ts:18](https://github.com/dexaai/llm-tools/blob/3551610/src/datastore/datastore.ts#L18)
+[src/datastore/datastore.ts:18](https://github.com/dexaai/llm-tools/blob/f300435/src/datastore/datastore.ts#L18)

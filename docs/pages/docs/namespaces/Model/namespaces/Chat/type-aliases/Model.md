@@ -4,4 +4,4 @@
 
 ## Source
 
-[src/model/types.ts:79](https://github.com/dexaai/llm-tools/blob/3551610/src/model/types.ts#L79)
+[src/model/types.ts:80](https://github.com/dexaai/llm-tools/blob/f300435/src/model/types.ts#L80)

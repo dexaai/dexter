@@ -20,4 +20,4 @@ The name of the function to call.
 
 ## Source
 
-[src/prompt/types.ts:78](https://github.com/dexaai/llm-tools/blob/3551610/src/prompt/types.ts#L78)
+[src/prompt/types.ts:108](https://github.com/dexaai/llm-tools/blob/f300435/src/prompt/types.ts#L108)

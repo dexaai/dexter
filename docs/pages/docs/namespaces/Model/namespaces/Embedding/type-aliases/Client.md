@@ -10,4 +10,4 @@
 
 ## Source
 
-[src/model/types.ts:116](https://github.com/dexaai/llm-tools/blob/3551610/src/model/types.ts#L116)
+[src/model/types.ts:117](https://github.com/dexaai/llm-tools/blob/f300435/src/model/types.ts#L117)

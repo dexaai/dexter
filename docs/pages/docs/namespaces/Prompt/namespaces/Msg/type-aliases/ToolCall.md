@@ -24,4 +24,4 @@ Message with arguments to call one or more tools.
 
 ## Source
 
-[src/prompt/types.ts:133](https://github.com/dexaai/llm-tools/blob/3551610/src/prompt/types.ts#L133)
+[src/prompt/types.ts:163](https://github.com/dexaai/llm-tools/blob/f300435/src/prompt/types.ts#L163)

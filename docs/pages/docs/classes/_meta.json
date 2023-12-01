@@ -1,4 +1,5 @@
 {
+  "AbortError": "AbortError",
   "AbstractDatastore": "AbstractDatastore",
   "AbstractHybridDatastore": "AbstractHybridDatastore",
   "AbstractModel": "AbstractModel",

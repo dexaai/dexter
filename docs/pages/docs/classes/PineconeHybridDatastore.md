@@ -42,16 +42,42 @@
 
 #### Source
 
-[src/datastore/pinecone/hybrid-datastore.ts:15](https://github.com/dexaai/llm-tools/blob/3551610/src/datastore/pinecone/hybrid-datastore.ts#L15)
+[src/datastore/pinecone/hybrid-datastore.ts:15](https://github.com/dexaai/llm-tools/blob/f300435/src/datastore/pinecone/hybrid-datastore.ts#L15)
 
 ## Properties
 
 | Property | Type | Description | Inheritance | Source |
 | :------ | :------ | :------ | :------ | :------ |
-| `datastoreProvider` | `"pinecone"` | - | [`AbstractHybridDatastore`](AbstractHybridDatastore.md).`datastoreProvider` | [src/datastore/pinecone/hybrid-datastore.ts:12](https://github.com/dexaai/llm-tools/blob/3551610/src/datastore/pinecone/hybrid-datastore.ts#L12) |
-| `datastoreType` | `"hybrid"` | - | [`AbstractHybridDatastore`](AbstractHybridDatastore.md).`datastoreType` | [src/datastore/pinecone/hybrid-datastore.ts:11](https://github.com/dexaai/llm-tools/blob/3551610/src/datastore/pinecone/hybrid-datastore.ts#L11) |
+| `datastoreProvider` | `"pinecone"` | - | [`AbstractHybridDatastore`](AbstractHybridDatastore.md).`datastoreProvider` | [src/datastore/pinecone/hybrid-datastore.ts:12](https://github.com/dexaai/llm-tools/blob/f300435/src/datastore/pinecone/hybrid-datastore.ts#L12) |
+| `datastoreType` | `"hybrid"` | - | [`AbstractHybridDatastore`](AbstractHybridDatastore.md).`datastoreType` | [src/datastore/pinecone/hybrid-datastore.ts:11](https://github.com/dexaai/llm-tools/blob/f300435/src/datastore/pinecone/hybrid-datastore.ts#L11) |
 
 ## Methods
+
+### addEvents()
+
+> **addEvents**(`events`): [`PineconeHybridDatastore`](PineconeHybridDatastore.md)\<`DocMeta`\>
+
+Add event handlers to the datastore.
+
+#### Parameters
+
+| Parameter | Type |
+| :------ | :------ |
+| `events` | [`Events`](../namespaces/Datastore/interfaces/Events.md)\<`DocMeta`, `QueryFilter`\<`DocMeta`\>\> |
+
+#### Returns
+
+[`PineconeHybridDatastore`](PineconeHybridDatastore.md)\<`DocMeta`\>
+
+#### Inherited from
+
+[`AbstractHybridDatastore`](AbstractHybridDatastore.md).[`addEvents`](AbstractHybridDatastore.md#addEvents)
+
+#### Source
+
+[src/datastore/datastore.ts:153](https://github.com/dexaai/llm-tools/blob/f300435/src/datastore/datastore.ts#L153)
+
+***
 
 ### delete()
 
@@ -73,7 +99,7 @@
 
 #### Source
 
-[src/datastore/pinecone/hybrid-datastore.ts:176](https://github.com/dexaai/llm-tools/blob/3551610/src/datastore/pinecone/hybrid-datastore.ts#L176)
+[src/datastore/pinecone/hybrid-datastore.ts:176](https://github.com/dexaai/llm-tools/blob/f300435/src/datastore/pinecone/hybrid-datastore.ts#L176)
 
 ***
 
@@ -91,7 +117,27 @@
 
 #### Source
 
-[src/datastore/pinecone/hybrid-datastore.ts:180](https://github.com/dexaai/llm-tools/blob/3551610/src/datastore/pinecone/hybrid-datastore.ts#L180)
+[src/datastore/pinecone/hybrid-datastore.ts:180](https://github.com/dexaai/llm-tools/blob/f300435/src/datastore/pinecone/hybrid-datastore.ts#L180)
+
+***
+
+### getEvents()
+
+> **getEvents**(): [`Events`](../namespaces/Datastore/interfaces/Events.md)\<`DocMeta`, `QueryFilter`\<`DocMeta`\>\>
+
+Get the current event handlers
+
+#### Returns
+
+[`Events`](../namespaces/Datastore/interfaces/Events.md)\<`DocMeta`, `QueryFilter`\<`DocMeta`\>\>
+
+#### Inherited from
+
+[`AbstractHybridDatastore`](AbstractHybridDatastore.md).[`getEvents`](AbstractHybridDatastore.md#getEvents)
+
+#### Source
+
+[src/datastore/datastore.ts:148](https://github.com/dexaai/llm-tools/blob/f300435/src/datastore/datastore.ts#L148)
 
 ***
 
@@ -116,7 +162,7 @@
 
 #### Source
 
-[src/datastore/datastore.ts:53](https://github.com/dexaai/llm-tools/blob/3551610/src/datastore/datastore.ts#L53)
+[src/datastore/datastore.ts:53](https://github.com/dexaai/llm-tools/blob/f300435/src/datastore/datastore.ts#L53)
 
 ***
 
@@ -141,7 +187,34 @@ AbstractHybridDatastore.runQuery
 
 #### Source
 
-[src/datastore/pinecone/hybrid-datastore.ts:31](https://github.com/dexaai/llm-tools/blob/3551610/src/datastore/pinecone/hybrid-datastore.ts#L31)
+[src/datastore/pinecone/hybrid-datastore.ts:31](https://github.com/dexaai/llm-tools/blob/f300435/src/datastore/pinecone/hybrid-datastore.ts#L31)
+
+***
+
+### setEvents()
+
+> **setEvents**(`events`): [`PineconeHybridDatastore`](PineconeHybridDatastore.md)\<`DocMeta`\>
+
+Set the event handlers to a new set of events. Removes all existing event handlers.
+Set to empty object `{}` to remove all events.
+
+#### Parameters
+
+| Parameter | Type |
+| :------ | :------ |
+| `events` | [`Events`](../namespaces/Datastore/interfaces/Events.md)\<`DocMeta`, `QueryFilter`\<`DocMeta`\>\> |
+
+#### Returns
+
+[`PineconeHybridDatastore`](PineconeHybridDatastore.md)\<`DocMeta`\>
+
+#### Inherited from
+
+[`AbstractHybridDatastore`](AbstractHybridDatastore.md).[`setEvents`](AbstractHybridDatastore.md#setEvents)
+
+#### Source
+
+[src/datastore/datastore.ts:162](https://github.com/dexaai/llm-tools/blob/f300435/src/datastore/datastore.ts#L162)
 
 ***
 
@@ -166,4 +239,4 @@ AbstractHybridDatastore.runQuery
 
 #### Source
 
-[src/datastore/pinecone/hybrid-datastore.ts:89](https://github.com/dexaai/llm-tools/blob/3551610/src/datastore/pinecone/hybrid-datastore.ts#L89)
+[src/datastore/pinecone/hybrid-datastore.ts:89](https://github.com/dexaai/llm-tools/blob/f300435/src/datastore/pinecone/hybrid-datastore.ts#L89)

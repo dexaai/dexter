@@ -24,4 +24,4 @@ Message with arguments to call a function.
 
 ## Source
 
-[src/prompt/types.ts:118](https://github.com/dexaai/llm-tools/blob/3551610/src/prompt/types.ts#L118)
+[src/prompt/types.ts:148](https://github.com/dexaai/llm-tools/blob/f300435/src/prompt/types.ts#L148)

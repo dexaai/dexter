@@ -20,4 +20,4 @@ Message with the result of a function call.
 
 ## Source
 
-[src/prompt/types.ts:126](https://github.com/dexaai/llm-tools/blob/3551610/src/prompt/types.ts#L126)
+[src/prompt/types.ts:156](https://github.com/dexaai/llm-tools/blob/f300435/src/prompt/types.ts#L156)
