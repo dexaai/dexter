@@ -38,6 +38,9 @@ importers:
       pinecone-client:
         specifier: ^2.0.0
         version: 2.0.0
+      reflect-metadata:
+        specifier: ^0.1.13
+        version: 0.1.13
       tiktoken:
         specifier: ^1.0.11
         version: 1.0.11
@@ -7318,6 +7321,10 @@ packages:
     engines: {node: '>=4'}
     dependencies:
       redis-errors: 1.2.0
+    dev: false
+
+  /reflect-metadata@0.1.13:
+    resolution: {integrity: sha512-Ts1Y/anZELhSsjMcU605fU9RE4Oi3p5ORujwbIKXfWa+0Zxs510Qrmrce5/Jowq3cHSZSJqBjypxmHarc+vEWg==}
     dev: false
 
   /reflect.getprototypeof@1.0.4:

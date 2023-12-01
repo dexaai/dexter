@@ -75,6 +75,7 @@
     "parse-json": "^8.0.1",
     "pinecone-client": "^2.0.0",
     "tiktoken": "^1.0.11",
+    "reflect-metadata": "^0.1.13",
     "zod": "^3.21.4",
     "zod-to-json-schema": "^3.22.0",
     "zod-validation-error": "^2.1.0"

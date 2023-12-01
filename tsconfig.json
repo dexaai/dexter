@@ -9,7 +9,6 @@
     "jsx": "preserve",
     "outDir": "dist",
     "allowJs": true,
-    "importHelpers": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "strict": true,
@@ -27,6 +26,9 @@
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
     "incremental": false,
-    "skipDefaultLibCheck": true
+    "skipDefaultLibCheck": true,
+    "importHelpers": false,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
   }
 }

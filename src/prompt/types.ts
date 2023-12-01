@@ -56,6 +56,11 @@ export namespace Prompt {
     parameters: Record<string, unknown>;
   }
 
+  export interface AIToolSpec {
+    type: 'function';
+    function: AIFunctionSpec;
+  }
+
   /**
    * A function meant to be used with OpenAI function calling.
    */
