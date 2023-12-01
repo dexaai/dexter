@@ -1,8 +1,12 @@
 import 'dotenv/config';
 import { z } from 'zod';
-import { ChatModel, Msg, createAIFunction } from '../../index.js';
-import { createExtractFunction } from './extract-function.js';
-import { createRunner } from './runner.js';
+import {
+  ChatModel,
+  Msg,
+  createAIFunction,
+  createAIExtractFunction,
+  createAIRunner,
+} from '@dexaai/dexter';
 
 /** Get the weather for a given location. */
 const getWeather = createAIFunction(
@@ -59,14 +63,14 @@ const getCapitalCity = createAIFunction(
 );
 
 /** A runner that uses the weather and capital city functions. */
-const weatherofCapitalRunner = createRunner({
+const weatherCapitalRunner = createAIRunner({
   chatModel: new ChatModel({ params: { model: 'gpt-4-1106-preview' } }),
   functions: [getWeather, getCapitalCity],
   systemMessage: `You use functions to answer questions about the weather and capital cities.`,
 });
 
 /** A function to extract people names from a message. */
-const extractPeopleNamesRunner = createExtractFunction({
+const extractPeopleNamesRunner = createAIExtractFunction({
   chatModel: new ChatModel({ params: { model: 'gpt-4-1106-preview' } }),
   systemMessage: `You use functions to extract people names from a message.`,
   name: 'log_people_names',
@@ -90,13 +94,13 @@ async function main() {
   console.log('peopleNames', peopleNames);
 
   // Run with a string input
-  const rString = await weatherofCapitalRunner(
+  const rString = await weatherCapitalRunner(
     `Whats the capital of California and NY and the weather for both`
   );
   console.log('rString', rString);
 
   // Run with a message input
-  const rMessage = await weatherofCapitalRunner({
+  const rMessage = await weatherCapitalRunner({
     messages: [
       Msg.user(
         `Whats the capital of California and NY and the weather for both`

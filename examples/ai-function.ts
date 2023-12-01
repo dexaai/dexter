@@ -58,9 +58,9 @@ async function main() {
     const { message } = await chatModel.run({
       messages,
       tool_choice: {
-        type: 'function' as const,
+        type: 'function',
         function: {
-          name: 'get_weather' as const,
+          name: 'get_weather',
         },
       },
     });

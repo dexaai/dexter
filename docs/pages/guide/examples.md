@@ -49,15 +49,15 @@ npx tsx examples/ai-function.ts
 
 ### AI Chain
 
-This example shows how to use `createAIChain` to easily invoke a chain of OpenAI chat completion calls, resolving tool / function calls, retrying when necessary, and optionally validating the resulting output via Zod.
+This example shows how to use `createAIRunner` to easily invoke a chain of OpenAI chat completion calls, resolving tool / function calls, retrying when necessary, and optionally validating the resulting output via Zod.
 
-Note that `createAIChain` takes in a `functions` array of `AIFunction` objects created by `createAIFunction`, as the two utility functions are meant to used together.
+Note that `createAIRunner` takes in a `functions` array of `AIFunction` objects created by `createAIFunction`, as the two utility functions are meant to used together.
 
 ```bash
-npx tsx examples/ai-chain.ts
+npx tsx examples/ai-runner.ts
 ```
 
-[source](https://github.com/dexaai/dexter/tree/master/examples/ai-chain.ts)
+[source](https://github.com/dexaai/dexter/tree/master/examples/ai-runner.ts)
 
 ### Chatbot
 

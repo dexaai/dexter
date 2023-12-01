@@ -1,15 +1,19 @@
 import pMap from 'p-map';
-import { AbortError, Msg, getErrorMsg } from '../index.js';
+import { Msg, getErrorMsg } from '../index.js';
 import type { Prompt } from '../types.js';
 import type { Model } from '../../index.js';
 
+type RunnerModelParams = Partial<
+  Omit<Model.Chat.Run & Model.Chat.Config, 'messages' | 'functions' | 'tools'>
+>;
+
 /**
  * Creates a function to run a chat model in a loop
- * - Handles parsing, running, and inserting responses for function & toll call messages
+ * - Handles parsing, running, and inserting responses for function & tool call messages
  * - Handles errors by adding a message with the error and rerunning the model
  * - Optionally validates the content of the last message
  */
-export function createRunner<Content extends any = string>(args: {
+export function createAIRunner<Content extends any = string>(args: {
   /** The ChatModel used to make API calls. */
   chatModel: Model.Chat.Model;
   /** The functions the model can call. */
@@ -21,11 +25,13 @@ export function createRunner<Content extends any = string>(args: {
   /** The number of function calls to make concurrently. */
   functionCallConcurrency?: number;
   /** Parse and validate the content of the last message. */
-  validateContent?: (content: string | null) => Content;
+  validateContent?: (content: string | null) => Content | Promise<Content>;
   /** Controls whether functions or tool_calls are used. */
   mode?: Prompt.Runner.Mode;
   /** Add a system message to the beginning of the messages array. */
   systemMessage?: string;
+  /** Model params to use for each API call (optional). */
+  params?: RunnerModelParams;
 }): Prompt.Runner<Content> {
   /** Return the content string or an empty string if null. */
   function defaultValidateContent(content: string | null): Content {
@@ -46,14 +52,13 @@ export function createRunner<Content extends any = string>(args: {
       maxIterations = 5,
       functionCallConcurrency,
       systemMessage,
+      params: runnerModelParams,
+      validateContent = defaultValidateContent,
+      shouldBreakLoop = defaultShouldBreakLoop,
     } = args;
 
     // Add the functions/tools to the model params
     const additonalParams = getParams({ functions, mode });
-
-    // Set the default validateContent and shouldBreakLoop functions with defaults
-    const validateContent = args.validateContent ?? defaultValidateContent;
-    const shouldBreakLoop = args.shouldBreakLoop ?? defaultShouldBreakLoop;
 
     // Create a message from the input if it's a string
     const { messages, ...modelParams }: Model.Chat.Run =
@@ -68,16 +73,23 @@ export function createRunner<Content extends any = string>(args: {
 
     let iterations = 0;
 
-    // Iterate until the shouldBreakLoop function returns true or the maxIterations is reached
+    // Iterate until the shouldBreakLoop function returns true or the maxIterations
+    // is reached
     while (iterations < maxIterations) {
       iterations++;
+
       try {
         // Run the model with the current messages and functions/tools
-        const runParams = { ...modelParams, ...additonalParams, messages };
+        const runParams = {
+          ...runnerModelParams,
+          ...modelParams,
+          ...additonalParams,
+          messages,
+        };
         const { message } = await chatModel.run(runParams, context);
         messages.push(message);
 
-        // Run functions from tool/function call messages and return the new messages
+        // Run functions from tool/function call messages and append the new messages
         const newMessages = await handleFunctionCallMessage({
           message,
           functions,
@@ -88,14 +100,17 @@ export function createRunner<Content extends any = string>(args: {
         // Check if the last message should break the loop
         const lastMessage = messages[messages.length - 1];
         if (shouldBreakLoop(lastMessage)) {
-          const content = validateContent(lastMessage.content);
+          const content = await Promise.resolve(
+            validateContent(lastMessage.content)
+          );
           return { status: 'success', messages, content };
         }
-      } catch (error) {
+      } catch (error: any) {
         // Halt the runner and return an error if the error is an AbortError
-        if (error instanceof AbortError) {
+        if (error.name === 'AbortError') {
           return { status: 'error', messages, error };
         }
+
         // Otherwise, create a message with the error and continue iterating
         const errMessage = getErrorMsg(error);
         messages.push(
@@ -108,7 +123,7 @@ export function createRunner<Content extends any = string>(args: {
 
     // Return an error if the maxIterations is reached
     const error = new Error(
-      `Failed to get a response from the model after ${maxIterations} iterations.`
+      `Failed to get a valid response from the model after ${maxIterations} iterations.`
     );
     return { status: 'error', messages, error };
   };
@@ -121,7 +136,7 @@ function getParams(args: {
 }): Pick<Model.Chat.Config, 'functions' | 'tools'> {
   const { functions } = args;
   // Return an empty object if there are no functions
-  if (functions === undefined || functions.length === 0) {
+  if (!functions?.length) {
     return {};
   }
 
@@ -160,7 +175,19 @@ export async function handleFunctionCallMessage(args: {
     if (!func) {
       throw new Error(`No function found with name: ${name}`);
     }
-    return func(funcArgs);
+
+    try {
+      return await func(funcArgs);
+    } catch (err: any) {
+      if (err.name === 'AbortError') {
+        throw err;
+      }
+
+      // Augment any function errors with the name of the function
+      throw new Error(`Error running function "${name}": ${err.message}`, {
+        cause: err,
+      });
+    }
   }
 
   // Run the function with the given name and arguments and add the result messages.

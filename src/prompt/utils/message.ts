@@ -83,12 +83,11 @@ export class Msg {
       name?: string;
     }
   ): Prompt.Msg.FuncCall {
-    const { name: msgName } = opts ?? {};
     return {
+      ...opts,
       role: 'assistant',
       content: null,
       function_call,
-      ...(msgName ? { name: msgName } : {}),
     };
   }
 
@@ -106,22 +105,25 @@ export class Msg {
       name?: string;
     }
   ): Prompt.Msg.ToolCall {
-    const { name: msgName } = opts ?? {};
     return {
+      ...opts,
       role: 'assistant',
       content: null,
       tool_calls,
-      ...(msgName ? { name: msgName } : {}),
     };
   }
 
   /** Create a tool call result message. */
   static toolResult(
     content: Jsonifiable,
-    tool_call_id: string
+    tool_call_id: string,
+    opts?: {
+      /** The name of the tool which was called */
+      name?: string;
+    }
   ): Prompt.Msg.ToolResult {
     const contentString = stringifyForModel(content);
-    return { role: 'tool', tool_call_id, content: contentString };
+    return { ...opts, role: 'tool', tool_call_id, content: contentString };
   }
 
   /** Get the narrowed message from an EnrichedResponse. */

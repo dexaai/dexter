@@ -10,5 +10,9 @@ export function stringifyForModel(jsonObject: Jsonifiable | void): string {
     return '';
   }
 
+  if (typeof jsonObject === 'string') {
+    return jsonObject;
+  }
+
   return JSON.stringify(jsonObject, null, 0);
 }

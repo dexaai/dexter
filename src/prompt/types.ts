@@ -3,9 +3,6 @@ import type { SetOptional } from 'type-fest';
 import type { Model } from '../index.js';
 
 export namespace Prompt {
-  export type ChainParams = Record<string, any> | void;
-  export type ChainResult = string | Record<string, any>;
-
   /**
    * A runner that iteratively calls the model and handles function calls.
    */
@@ -13,6 +10,7 @@ export namespace Prompt {
     params: string | Runner.Params,
     context?: Model.Ctx
   ) => Promise<Runner.Response<Content>>;
+
   export namespace Runner {
     /** Parameters to execute a runner */
     export type Params = SetOptional<
@@ -45,26 +43,6 @@ export namespace Prompt {
     context?: Model.Ctx
   ) => Promise<z.infer<Schema>>;
 
-  /**
-   * A prompt chain that coordinates the template, functions, and validator.
-   */
-  export type Chain<
-    Params extends ChainParams = void,
-    Result extends ChainResult = string
-  > = (params: Params) => Promise<Result>;
-
-  /**
-   * Turn structured data into a message.
-   */
-  export type Template<T extends Record<string, any> | void = void> = (
-    params: T
-  ) => Promise<Msg[]> | Msg[];
-
-  /**
-   * Validate the output of an LLM call
-   */
-  export type Validator<T> = (input: Msg) => Promise<T> | T;
-
   export interface AIFunctionSpec {
     name: string;
     description?: string;
@@ -80,26 +58,6 @@ export namespace Prompt {
   > {
     /** The implementation of the function, with arg parsing and validation. */
     (input: string | Msg): Promise<Return>;
-    /** The Zod schema for the arguments string. */
-    argsSchema: Schema;
-    /** Parse the function arguments from a message. */
-    parseArgs(input: string | Msg): z.infer<Schema>;
-    /** The function spec for the OpenAI API `functions` property. */
-    spec: AIFunctionSpec;
-  }
-
-  export interface AIFunction2<
-    Schema extends z.ZodObject<any> = z.ZodObject<any>,
-    Return extends any = any
-  > {
-    /** Call the function and return the result. */
-    call: (input: string | Msg) => Promise<Return>;
-    /** Run the model with the function call. */
-    run: (args: {
-      chatModel: Model.Chat.Model;
-      messages: Prompt.Msg[];
-      maxRetries?: number;
-    }) => Promise<Return>;
     /** The Zod schema for the arguments string. */
     argsSchema: Schema;
     /** Parse the function arguments from a message. */
