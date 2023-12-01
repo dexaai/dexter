@@ -3,10 +3,6 @@ import { Msg, getErrorMsg } from '../index.js';
 import type { Prompt } from '../types.js';
 import type { Model } from '../../index.js';
 
-type RunnerModelParams = Partial<
-  Omit<Model.Chat.Run & Model.Chat.Config, 'messages' | 'functions' | 'tools'>
->;
-
 /**
  * Creates a function to run a chat model in a loop
  * - Handles parsing, running, and inserting responses for function & tool call messages
@@ -31,7 +27,9 @@ export function createAIRunner<Content extends any = string>(args: {
   /** Add a system message to the beginning of the messages array. */
   systemMessage?: string;
   /** Model params to use for each API call (optional). */
-  params?: RunnerModelParams;
+  params?: Prompt.Runner.ModelParams;
+  /** Optional context to pass to ChatModel.run calls */
+  context?: Model.Ctx;
 }): Prompt.Runner<Content> {
   /** Return the content string or an empty string if null. */
   function defaultValidateContent(content: string | null): Content {
@@ -53,9 +51,15 @@ export function createAIRunner<Content extends any = string>(args: {
       functionCallConcurrency,
       systemMessage,
       params: runnerModelParams,
+      context: runnerContext,
       validateContent = defaultValidateContent,
       shouldBreakLoop = defaultShouldBreakLoop,
     } = args;
+
+    const mergedContext = {
+      ...runnerContext,
+      ...context,
+    };
 
     // Add the functions/tools to the model params
     const additonalParams = getParams({ functions, mode });
@@ -86,7 +90,7 @@ export function createAIRunner<Content extends any = string>(args: {
           ...additonalParams,
           messages,
         };
-        const { message } = await chatModel.run(runParams, context);
+        const { message } = await chatModel.run(runParams, mergedContext);
         messages.push(message);
 
         // Run functions from tool/function call messages and append the new messages

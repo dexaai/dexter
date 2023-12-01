@@ -18,6 +18,13 @@ export namespace Prompt {
       'model'
     >;
 
+    export type ModelParams = Partial<
+      Omit<
+        Model.Chat.Run & Model.Chat.Config,
+        'messages' | 'functions' | 'tools'
+      >
+    >;
+
     /** Response from executing a runner */
     export type Response<Content extends any = string> =
       | {

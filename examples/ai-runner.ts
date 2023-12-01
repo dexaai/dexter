@@ -4,7 +4,6 @@ import {
   ChatModel,
   Msg,
   createAIFunction,
-  createAIExtractFunction,
   createAIRunner,
 } from '@dexaai/dexter';
 
@@ -69,30 +68,10 @@ const weatherCapitalRunner = createAIRunner({
   systemMessage: `You use functions to answer questions about the weather and capital cities.`,
 });
 
-/** A function to extract people names from a message. */
-const extractPeopleNamesRunner = createAIExtractFunction({
-  chatModel: new ChatModel({ params: { model: 'gpt-4-1106-preview' } }),
-  systemMessage: `You use functions to extract people names from a message.`,
-  name: 'log_people_names',
-  description: `Use this to log the full names of people from a message. Don't include duplicate names.`,
-  schema: z.object({
-    names: z.array(
-      z
-        .string()
-        .describe(
-          `The name of a person from the message. Normalize the name by removing suffixes, prefixes, and fixing capitalization`
-        )
-    ),
-  }),
-});
-
+/**
+ * npx tsx examples/ai-runner.ts
+ */
 async function main() {
-  // Use OpenAI functions to extract data adhering to a Zod schema
-  const peopleNames = await extractPeopleNamesRunner(
-    `Dr. Andrew Huberman interviewed Tony Hawk, an idol of Andrew Hubermans.`
-  );
-  console.log('peopleNames', peopleNames);
-
   // Run with a string input
   const rString = await weatherCapitalRunner(
     `Whats the capital of California and NY and the weather for both`
