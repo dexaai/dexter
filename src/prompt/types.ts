@@ -1,24 +1,47 @@
 import type { z } from 'zod';
+import type { SetOptional } from 'type-fest';
+import type { Model } from '../index.js';
 
 export namespace Prompt {
   /**
-   * A prompt chain that coordinates the template, functions, and validator.
+   * A runner that iteratively calls the model and handles function calls.
    */
-  export type Chain<Args extends Record<string, any>, Result extends any> = (
-    args: Args
-  ) => Promise<Result>;
+  export type Runner<Content extends any = string> = (
+    params: string | Runner.Params,
+    context?: Model.Ctx
+  ) => Promise<Runner.Response<Content>>;
+
+  export namespace Runner {
+    /** Parameters to execute a runner */
+    export type Params = SetOptional<
+      Model.Chat.Run & Model.Chat.Config,
+      'model'
+    >;
+
+    /** Response from executing a runner */
+    export type Response<Content extends any = string> =
+      | {
+          status: 'success';
+          messages: Prompt.Msg[];
+          content: Content;
+        }
+      | {
+          status: 'error';
+          messages: Prompt.Msg[];
+          error: Error;
+        };
+
+    /** Controls use of functions or tool_calls from OpenAI API */
+    export type Mode = 'tools' | 'functions';
+  }
 
   /**
-   * Turn structured data into a message.
+   * A function used to extract data using OpenAI function calling.
    */
-  export type Template<T = Record<string, any>> = (
-    params: T
-  ) => Promise<Msg[]> | Msg[];
-
-  /**
-   * Validate the output of an LLM call
-   */
-  export type Validator<T> = (input: Msg) => Promise<T> | T;
+  export type ExtractFunction<Schema extends z.ZodObject<any>> = (
+    params: string | Runner.Params,
+    context?: Model.Ctx
+  ) => Promise<z.infer<Schema>>;
 
   export interface AIFunctionSpec {
     name: string;

@@ -8,6 +8,7 @@ const FAKE_RESPONSE: Model.Chat.Response = {
     role: 'assistant',
   },
   cached: false,
+  latency: 0,
   cost: 0,
   created: 0,
   id: 'fake-id',

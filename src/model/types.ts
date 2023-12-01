@@ -34,6 +34,7 @@ export namespace Model {
     export interface Params extends Config, Run {}
     export interface Response {
       cached: boolean;
+      latency?: number;
       cost?: number;
     }
     export type Model = AbstractModel<Client, Config, Run, Response, any>;

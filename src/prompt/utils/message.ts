@@ -1,11 +1,15 @@
 import dedent from 'dedent';
+import type { Jsonifiable } from 'type-fest';
 import type { Prompt } from '../types.js';
+import { stringifyForModel } from '../functions/stringify-for-model.js';
 
 /**
  * Clean a string by removing extra newlines and indentation.
  * @see: https://github.com/dmnd/dedent
  */
 export function cleanString(text: string): string {
+  // TODO: Should this trim the output as well? could be useful for multiline
+  // templated strings which begin or end with unnecessary newlines.
   const dedenter = dedent.withOptions({ escapeSpecialCharacters: true });
   return dedenter(text);
 }
@@ -79,22 +83,17 @@ export class Msg {
       name?: string;
     }
   ): Prompt.Msg.FuncCall {
-    const { name: msgName } = opts ?? {};
     return {
+      ...opts,
       role: 'assistant',
       content: null,
       function_call,
-      ...(msgName ? { name: msgName } : {}),
     };
   }
 
   /** Create a function result message. */
-  static funcResult(
-    content: string | object | unknown[],
-    name: string
-  ): Prompt.Msg.FuncResult {
-    const contentString =
-      typeof content === 'string' ? content : JSON.stringify(content);
+  static funcResult(content: Jsonifiable, name: string): Prompt.Msg.FuncResult {
+    const contentString = stringifyForModel(content);
     return { role: 'function', content: contentString, name };
   }
 
@@ -106,23 +105,25 @@ export class Msg {
       name?: string;
     }
   ): Prompt.Msg.ToolCall {
-    const { name: msgName } = opts ?? {};
     return {
+      ...opts,
       role: 'assistant',
       content: null,
       tool_calls,
-      ...(msgName ? { name: msgName } : {}),
     };
   }
 
   /** Create a tool call result message. */
   static toolResult(
-    content: string | object | unknown[],
-    tool_call_id: string
+    content: Jsonifiable,
+    tool_call_id: string,
+    opts?: {
+      /** The name of the tool which was called */
+      name?: string;
+    }
   ): Prompt.Msg.ToolResult {
-    const contentString =
-      typeof content === 'string' ? content : JSON.stringify(content);
-    return { role: 'tool', tool_call_id, content: contentString };
+    const contentString = stringifyForModel(content);
+    return { ...opts, role: 'tool', tool_call_id, content: contentString };
   }
 
   /** Get the narrowed message from an EnrichedResponse. */

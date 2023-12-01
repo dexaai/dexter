@@ -34,7 +34,7 @@ export class ChatModel extends AbstractModel<
     params = params ?? { model: 'gpt-3.5-turbo' };
     super({ client, params, ...rest });
     if (args?.debug) {
-      this.mergeEvents(args.events || {}, {
+      this.addEvents({
         onStart: [logInput],
         onComplete: [logResponse],
       });
@@ -72,6 +72,7 @@ export class ChatModel extends AbstractModel<
         ...response,
         message: response.choices[0].message,
         cached: false,
+        latency: Date.now() - start,
         cost: calculateCost({ model: params.model, tokens: response.usage }),
       };
 
@@ -174,6 +175,7 @@ export class ChatModel extends AbstractModel<
         ...response,
         message: response.choices[0].message,
         cached: false,
+        latency: Date.now() - start,
         cost: calculateCost({ model: params.model, tokens: response.usage }),
       };
 
@@ -214,14 +216,14 @@ function logResponse(args: {
       completion_tokens: number;
       prompt_tokens: number;
     };
-    latency?: number;
     cached: boolean;
+    latency?: number;
     choices: { message: Model.Message }[];
     cost?: number;
   };
   params: { messages: Model.Message[] };
 }) {
-  const { usage, latency, cost, choices } = args.response;
+  const { usage, cost, latency, choices } = args.response;
   const tokens = {
     prompt: usage?.prompt_tokens ?? 0,
     completion: usage?.completion_tokens ?? 0,
@@ -229,7 +231,7 @@ function logResponse(args: {
   };
   const message = choices[0].message;
   const tokensStr = `[Tokens: ${tokens.prompt} + ${tokens.completion} = ${tokens.total}]`;
-  const latencyStr = `[Latency: ${latency}ms]`;
+  const latencyStr = latency ? `[Latency: ${latency}ms]` : '';
   const costStr =
     typeof cost === 'number'
       ? `[Cost: $${(cost / 100).toFixed(5)}]`

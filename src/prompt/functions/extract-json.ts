@@ -8,12 +8,15 @@ export function extractJsonObject(str: string): JsonObject {
   const start = str.indexOf('{');
   const end = str.lastIndexOf('}');
   const objectString = str.slice(start, end ? end + 1 : str.length);
+  let repairedObjectString = objectString;
+
   try {
-    const json: JsonObject = JSON.parse(jsonrepair(objectString));
+    repairedObjectString = jsonrepair(objectString);
+    const json: JsonObject = JSON.parse(repairedObjectString);
     return json;
   } catch (error) {
     // Parse again with parse-json for better error messages.
-    const json: JsonObject = parseJson(objectString);
+    const json: JsonObject = parseJson(repairedObjectString);
     return json;
   }
 }

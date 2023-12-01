@@ -19,6 +19,8 @@ _If you're a TypeScript AI engineer, check it out!_ 😊
   - [Basic](#basic)
   - [Caching](#caching)
   - [Redis Caching](#redis-caching)
+  - [AI Function](#ai-function)
+  - [AI Runner](#ai-runner)
   - [Chatbot](#chatbot)
 - [License](#license)
 
@@ -120,6 +122,28 @@ npx tsx examples/caching-redis.ts
 ```
 
 [source](./examples/caching-redis.ts)
+
+### AI Function
+
+This example shows how to use `createAIFunction` to handle `function` and `tool_calls` with the OpenAI chat completions API and Zod.
+
+```bash
+npx tsx examples/ai-function.ts
+```
+
+[source](./examples/ai-function.ts)
+
+### AI Runner
+
+This example shows how to use `createAIRunner` to easily invoke a chain of OpenAI chat completion calls, resolving tool / function calls, retrying when necessary, and optionally validating the resulting output via Zod.
+
+Note that `createAIRunner` takes in a `functions` array of `AIFunction` objects created by `createAIFunction`, as the two utility functions are meant to used together.
+
+```bash
+npx tsx examples/ai-runner.ts
+```
+
+[source](./examples/ai-runner.ts)
 
 ### Chatbot
 
