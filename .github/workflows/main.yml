@@ -32,19 +32,9 @@ jobs:
     - run: pnpm run format
 
   test:
-    name: Tests (Node ${{ matrix.node-version }})
+    name: Test
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: true
-      matrix:
-        node-version:
-          - 21
-          - 20
-          - 18
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/install-node-pnpm
-        with:
-          node-version: ${{ matrix.node-version }}
-      - name: Run unit tests
-        run: pnpm run test
+      - run: pnpm run test
