@@ -13,6 +13,6 @@ export function defaultCacheKey<Params extends Record<string, any>>(
   params: Params
 ): string {
   return hashObject(params, {
-    algorithm: 'sha256',
+    algorithm: 'sha512',
   });
 }
