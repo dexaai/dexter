@@ -26,8 +26,6 @@ export function createAIRunner<Content extends any = string>(args: {
   mode?: Prompt.Runner.Mode;
   /** Add a system message to the beginning of the messages array. */
   systemMessage?: string;
-  /** Model params to use for each API call (optional). */
-  params?: Prompt.Runner.ModelParams;
 }): Prompt.Runner<Content> {
   /** Return the content string or an empty string if null. */
   function defaultValidateContent(content: string | null): Content {
@@ -48,7 +46,6 @@ export function createAIRunner<Content extends any = string>(args: {
       maxIterations = 5,
       functionCallConcurrency,
       systemMessage,
-      params: runnerModelParams,
       validateContent = defaultValidateContent,
       shouldBreakLoop = defaultShouldBreakLoop,
     } = args;
@@ -77,7 +74,6 @@ export function createAIRunner<Content extends any = string>(args: {
       try {
         // Run the model with the current messages and functions/tools
         const runParams = {
-          ...runnerModelParams,
           ...modelParams,
           ...additonalParams,
           messages,

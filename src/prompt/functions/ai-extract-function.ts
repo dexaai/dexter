@@ -15,7 +15,6 @@ export function createAIExtractFunction<Schema extends z.ZodObject<any>>(
     schema,
     maxRetries = 0,
     systemMessage,
-    params,
     functionCallConcurrency,
   }: {
     /** The ChatModel used to make API calls. */
@@ -30,8 +29,6 @@ export function createAIExtractFunction<Schema extends z.ZodObject<any>>(
     maxRetries?: number;
     /** Add a system message to the beginning of the messages array. */
     systemMessage?: string;
-    /** Model params to use for each API call (optional). */
-    params?: Prompt.Runner.ModelParams;
     /** The number of function calls to make concurrently. */
     functionCallConcurrency?: number;
   },
@@ -60,16 +57,14 @@ export function createAIExtractFunction<Schema extends z.ZodObject<any>>(
   // Create a runner that will call the function, validate the args and retry
   // if necessary, and return the result.
   const runner = createAIRunner({
-    chatModel,
+    chatModel: chatModel.addParams({
+      function_call: { name },
+    }),
     systemMessage,
     functions: [extractFunction],
     mode: 'functions',
     maxIterations: maxRetries + 1,
     functionCallConcurrency,
-    params: {
-      ...params,
-      function_call: { name },
-    },
     shouldBreakLoop: (message) => Msg.isFuncResult(message),
     validateContent: (content) => {
       return extractFunction.parseArgs(content || '');
