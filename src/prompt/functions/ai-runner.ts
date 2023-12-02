@@ -28,8 +28,6 @@ export function createAIRunner<Content extends any = string>(args: {
   systemMessage?: string;
   /** Model params to use for each API call (optional). */
   params?: Prompt.Runner.ModelParams;
-  /** Optional context to pass to ChatModel.run calls */
-  context?: Model.Ctx;
 }): Prompt.Runner<Content> {
   /** Return the content string or an empty string if null. */
   function defaultValidateContent(content: string | null): Content {
@@ -51,15 +49,9 @@ export function createAIRunner<Content extends any = string>(args: {
       functionCallConcurrency,
       systemMessage,
       params: runnerModelParams,
-      context: runnerContext,
       validateContent = defaultValidateContent,
       shouldBreakLoop = defaultShouldBreakLoop,
     } = args;
-
-    const mergedContext = {
-      ...runnerContext,
-      ...context,
-    };
 
     // Add the functions/tools to the model params
     const additonalParams = getParams({ functions, mode });
@@ -90,7 +82,7 @@ export function createAIRunner<Content extends any = string>(args: {
           ...additonalParams,
           messages,
         };
-        const { message } = await chatModel.run(runParams, mergedContext);
+        const { message } = await chatModel.run(runParams, context);
         messages.push(message);
 
         // Run functions from tool/function call messages and append the new messages
