@@ -90,26 +90,26 @@ describe('ChatModel', () => {
     });
   });
 
-  it('implements clone', async () => {
+  it('implements extend', async () => {
     const chatModel = new ChatModel({
       client: Client,
       context: { userId: '123' },
       params: { model: 'gpt-fake' },
       events: { onApiResponse: [() => {}] },
     });
-    const clonedModel = chatModel.clone({
+    const clonedModel = chatModel.extend({
       context: { cloned: true },
       params: { model: 'gpt-fake-cloned' },
       events: { onApiResponse: [() => {}] },
     });
-    expect(clonedModel.getContext()).toEqual({
+    expect(clonedModel.context).toEqual({
       userId: '123',
       cloned: true,
     });
-    expect(clonedModel.getParams()).toEqual({
+    expect(clonedModel.params).toEqual({
       model: 'gpt-fake-cloned',
     });
-    expect(clonedModel.getEvents()?.onApiResponse?.length).toBe(2);
+    expect(clonedModel.events.onApiResponse?.length).toBe(2);
   });
 
   it('can cache responses', async () => {

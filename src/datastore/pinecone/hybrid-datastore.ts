@@ -1,9 +1,17 @@
+import { mergeEvents } from '../../utils/helpers.js';
 import type { Model } from '../../model/index.js';
 import { AbstractHybridDatastore } from '../hybrid-datastore.js';
 import type { Datastore, Prettify } from '../types.js';
 import type { PineconeClient } from './client.js';
 import { createPineconeClient } from './client.js';
 import type { Pinecone } from './types.js';
+
+export type PineconeHybridDatastoreArgs<DocMeta extends Datastore.BaseMeta> =
+  Prettify<
+    Datastore.OptsHybrid<DocMeta, Pinecone.QueryFilter<DocMeta>> & {
+      pinecone?: PineconeClient<DocMeta>;
+    }
+  >;
 
 export class PineconeHybridDatastore<
   DocMeta extends Datastore.BaseMeta,
@@ -12,13 +20,7 @@ export class PineconeHybridDatastore<
   datastoreProvider = 'pinecone' as const;
   private readonly pinecone: PineconeClient<DocMeta>;
 
-  constructor(
-    args: Prettify<
-      Datastore.OptsHybrid<DocMeta, Pinecone.QueryFilter<DocMeta>> & {
-        pinecone?: PineconeClient<DocMeta>;
-      }
-    >
-  ) {
+  constructor(args: PineconeHybridDatastoreArgs<DocMeta>) {
     const { pinecone, ...rest } = args;
     super(rest);
     this.pinecone =
@@ -179,5 +181,22 @@ export class PineconeHybridDatastore<
 
   async deleteAll(): Promise<void> {
     return this.pinecone.delete({ deleteAll: true });
+  }
+
+  /** Clones the datastore, optionally modifying it's config */
+  extend(args?: Partial<PineconeHybridDatastoreArgs<DocMeta>>): this {
+    return new PineconeHybridDatastore({
+      contentKey: this.contentKey,
+      namespace: this.namespace,
+      embeddingModel: this.embeddingModel,
+      cacheKey: this.cacheKey,
+      cache: this.cache,
+      context: this.context,
+      debug: this.debug,
+      pinecone: this.pinecone,
+      spladeModel: this.spladeModel,
+      ...args,
+      events: mergeEvents(this.events, args?.events),
+    }) as unknown as this;
   }
 }

@@ -1,11 +1,11 @@
 import type { Model } from '../model/index.js';
 import type { Datastore } from './types.js';
-import { deepMerge } from '../utils/helpers.js';
 import {
   type CacheKey,
   type CacheStorage,
   defaultCacheKey,
 } from '../utils/cache.js';
+import { mergeEvents } from '../utils/helpers.js';
 
 export abstract class AbstractDatastore<
   DocMeta extends Datastore.BaseMeta,
@@ -22,16 +22,29 @@ export abstract class AbstractDatastore<
   abstract delete(docIds: string[]): Promise<void>;
   abstract deleteAll(): Promise<void>;
 
-  abstract datastoreType: Datastore.Type;
-  abstract datastoreProvider: Datastore.Provider;
+  /** Clones the datastore, optionally modifying it's config */
+  abstract extend<Args extends Datastore.Opts<DocMeta, Filter>>(
+    args?: Partial<Args>
+  ): this;
 
-  protected contentKey: keyof DocMeta;
-  protected embeddingModel: Model.Embedding.Model;
-  protected namespace?: string;
-  protected cacheKey: CacheKey<Datastore.Query<DocMeta, Filter>, string>;
-  protected cache?: CacheStorage<string, Datastore.QueryResult<DocMeta>>;
-  protected events: Datastore.Events<DocMeta, Filter>;
-  protected context: Datastore.Ctx;
+  public abstract readonly datastoreType: Datastore.Type;
+  public abstract readonly datastoreProvider: Datastore.Provider;
+
+  protected readonly cacheKey: CacheKey<
+    Datastore.Query<DocMeta, Filter>,
+    string
+  >;
+  protected readonly cache?: CacheStorage<
+    string,
+    Datastore.QueryResult<DocMeta>
+  >;
+
+  public readonly contentKey: keyof DocMeta;
+  public readonly embeddingModel: Model.Embedding.Model;
+  public readonly namespace?: string;
+  public readonly events: Datastore.Events<DocMeta, Filter>;
+  public readonly context: Datastore.Ctx;
+  public readonly debug: boolean;
 
   constructor(args: Datastore.Opts<DocMeta, Filter>) {
     this.namespace = args.namespace;
@@ -40,14 +53,17 @@ export abstract class AbstractDatastore<
     this.cacheKey = args.cacheKey ?? defaultCacheKey;
     this.cache = args.cache;
     this.context = args.context ?? {};
-    this.events = args.events ?? {};
-    if (args.debug) {
-      this.addEvents({
-        onQueryStart: [console.debug],
-        onQueryComplete: [console.debug],
-        onError: [console.error],
-      });
-    }
+    this.debug = args.debug ?? false;
+    this.events = mergeEvents(
+      args.events,
+      args.debug
+        ? {
+            onQueryStart: [console.debug],
+            onQueryComplete: [console.debug],
+            onError: [console.error],
+          }
+        : {}
+    );
   }
 
   async query(
@@ -142,32 +158,5 @@ export abstract class AbstractDatastore<
       );
       throw error;
     }
-  }
-
-  /** Get the current event handlers */
-  getEvents() {
-    return this.events;
-  }
-
-  /** Add event handlers to the datastore. */
-  addEvents(events: typeof this.events): this {
-    this.events = this.mergeEvents(this.events, events);
-    return this;
-  }
-
-  /**
-   * Set the event handlers to a new set of events. Removes all existing event handlers.
-   * Set to empty object `{}` to remove all events.
-   */
-  setEvents(events: typeof this.events): this {
-    this.events = events;
-    return this;
-  }
-
-  protected mergeEvents(
-    existingEvents: typeof this.events,
-    newEvents: typeof this.events
-  ): typeof this.events {
-    return deepMerge(existingEvents, newEvents);
   }
 }

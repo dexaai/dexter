@@ -1,3 +1,4 @@
+import type { PartialDeep } from 'type-fest';
 import pThrottle from 'p-throttle';
 import pMap from 'p-map';
 import type { SetOptional } from 'type-fest';
@@ -6,7 +7,7 @@ import type { Model } from './types.js';
 import { calculateCost } from './utils/calculate-cost.js';
 import { createOpenAIClient } from './clients/openai.js';
 import { AbstractModel } from './model.js';
-import { deepMerge } from '../utils/helpers.js';
+import { deepMerge, mergeEvents, type Prettify } from '../utils/helpers.js';
 
 export type EmbeddingModelArgs = SetOptional<
   ModelArgs<
@@ -16,6 +17,11 @@ export type EmbeddingModelArgs = SetOptional<
     Model.Embedding.Response
   >,
   'client' | 'params'
+>;
+
+export type PartialSparseVectorModelArgs = Prettify<
+  PartialDeep<Pick<EmbeddingModelArgs, 'params'>> &
+    Partial<Omit<EmbeddingModelArgs, 'params'>>
 >;
 
 type BulkEmbedder = (
@@ -44,12 +50,14 @@ export class EmbeddingModel extends AbstractModel<
   modelProvider = 'openai' as const;
   throttledModel: BulkEmbedder;
 
-  /** Doesn't accept OpenAIClient because retry needs to be handled at the model level. */
-  constructor(args?: EmbeddingModelArgs) {
-    let { client, params, ...rest } = args || {};
-    client = client || createOpenAIClient();
-    params = params || { model: DEFAULTS.model };
+  constructor(args: EmbeddingModelArgs = {}) {
+    const {
+      client = createOpenAIClient(),
+      params = { model: DEFAULTS.model },
+      ...rest
+    } = args;
     super({ client, params, ...rest });
+
     const interval = DEFAULTS.throttleInterval;
     const limit =
       this.params.throttle?.maxRequestsPerMin || DEFAULTS.maxRequestsPerMin;
@@ -114,7 +122,7 @@ export class EmbeddingModel extends AbstractModel<
       options: this.params.batch,
     });
 
-    const mergedContext = deepMerge(this.context, context) as Model.Ctx;
+    const mergedContext = deepMerge(this.context, context);
 
     // Make the requests in parallel, respecting concurrency setting
     const embeddingBatches = await pMap(
@@ -160,20 +168,17 @@ export class EmbeddingModel extends AbstractModel<
   }
 
   /** Clone the model and merge/orverride the given properties. */
-  clone(args?: EmbeddingModelArgs): this {
-    const { cacheKey, cache, client, context, debug, params, events } =
-      args ?? {};
-
-    // @ts-ignore
+  extend(args?: PartialSparseVectorModelArgs): this {
     return new EmbeddingModel({
-      cacheKey: cacheKey ?? this.cacheKey,
-      cache: cache ?? this.cache,
-      client: client ?? this.client,
-      context: this.mergeContext(this.context, context),
-      debug: debug ?? this.debug,
-      params: this.mergeParams(this.params, params ?? {}),
-      events: this.mergeEvents(this.events, events || {}),
-    });
+      cacheKey: this.cacheKey,
+      cache: this.cache,
+      client: this.client,
+      debug: this.debug,
+      ...args,
+      context: deepMerge(this.context, args?.context),
+      params: deepMerge(this.params, args?.params),
+      events: mergeEvents(this.events, args?.events),
+    }) as unknown as this;
   }
 }
 
