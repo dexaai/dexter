@@ -48,20 +48,20 @@
   ],
   "scripts": {
     "build": "tsc --project tsconfig.dist.json",
-    "prebuild": "rimraf dist",
     "clean": "rimraf node_modules dist",
     "dev": "tsc --watch",
-    "prepare": "run-s build",
-    "release": "np",
-    "predocs": "rimraf docs/pages/docs",
-    "docs": "run-s docs:*",
-    "docs:typedoc": "typedoc",
+    "docs": "pnpm run docs:transform && pnpm run docs:typedoc",
     "docs:transform": "tsx docs/bin/transform-docs.ts",
-    "test": "run-p test:*",
-    "test:lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
-    "test:format": "prettier --check \"**/*.{js,ts,tsx}\"",
-    "test:unit": "dotenv -e .env.example -- vitest",
-    "test:typecheck": "tsc --noEmit"
+    "docs:typedoc": "typedoc",
+    "format": "prettier --check \"**/*.{js,ts,tsx}\"",
+    "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
+    "prebuild": "rimraf dist",
+    "predocs": "rimraf docs/pages/docs",
+    "prepare": "pnpm run build",
+    "prepublishOnly": "pnpm run lint && pnpm run typecheck",
+    "release": "np",
+    "test": "dotenv -e .env.example -- vitest",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@fastify/deepmerge": "^1.3.0",
@@ -86,7 +86,6 @@
     "eslint": "^8.54.0",
     "globby": "^14.0.0",
     "np": "^8.0.4",
-    "npm-run-all": "^4.1.5",
     "prettier": "^2.8.8",
     "rimraf": "^5.0.5",
     "tsx": "^4.1.4",
@@ -114,5 +113,6 @@
     "rules": {
       "no-console": "off"
     }
-  }
+  },
+  "packageManager": "pnpm@8.6.12"
 }
