@@ -39,9 +39,6 @@ class Tokenizer implements Model.ITokenizer {
     try {
       this.tiktoken = encoding_for_model(model as TiktokenModel);
     } catch (e) {
-      console.error(
-        `Failed to create tokenizer for model: ${model}. Using gpt-3.5-turbo as a fallback.`
-      );
       this.tiktoken = encoding_for_model('gpt-3.5-turbo');
     }
   }
