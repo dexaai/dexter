@@ -12,9 +12,14 @@ vi.mock('../../model/index.js', () => {
     .fn()
     .mockImplementation((args: { input: string[] }) => {
       if (args.input.length === 1) {
-        return { data: [{ embedding: [1, 1] }] };
+        return { embeddings: [[1, 1]] };
       } else {
-        return { data: [{ embedding: [1, 1] }, { embedding: [2, 2] }] };
+        return {
+          embeddings: [
+            [1, 1],
+            [2, 2],
+          ],
+        };
       }
     });
   SparseVectorModel.prototype.run = vi

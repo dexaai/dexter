@@ -38,13 +38,13 @@ export class PineconeDatastore<
 
     // If no query embedding is provided, run the query embedder
     if (!queryEmbedding) {
-      const { data } = await this.embeddingModel.run(
+      const { embeddings } = await this.embeddingModel.run(
         {
           input: [query.query],
         },
         mergedContext
       );
-      const embedding = data[0].embedding;
+      const embedding = embeddings[0];
       queryEmbedding = embedding;
     }
 
@@ -108,7 +108,7 @@ export class PineconeDatastore<
         { input: textsToEmbed },
         mergedContext
       );
-      const embeddings = embeddingRes.data.map((item) => item.embedding);
+      const embeddings = embeddingRes.embeddings;
 
       // Merge the existing embeddings and sparse vectors with the generated ones
       const docsWithEmbeddings = docs.map((doc) => {

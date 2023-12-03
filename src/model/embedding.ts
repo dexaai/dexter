@@ -143,6 +143,7 @@ export class EmbeddingModel extends AbstractModel<
       ...firstBatch,
       usage,
       data: embeddingsObjs,
+      embeddings: embeddingBatches.map((batch) => batch.embeddings).flat(),
       cached: false,
       cost: calculateCost({ model: params.model, tokens: usage }),
     };
