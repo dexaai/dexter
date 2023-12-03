@@ -38,13 +38,13 @@ export class PineconeHybridDatastore<
     const queryEmbedding = query.embedding;
     const querySparseVector = query.sparseVector;
     const [
-      { data },
+      { embeddings },
       {
         vectors: [sparseVector],
       },
     ] = await Promise.all([
       queryEmbedding
-        ? { data: [{ embedding: queryEmbedding }] }
+        ? { embeddings: [queryEmbedding] }
         : this.embeddingModel.run(
             {
               input: [query.query],
@@ -60,7 +60,7 @@ export class PineconeHybridDatastore<
             mergedContext
           ),
     ]);
-    const embedding = data[0].embedding;
+    const embedding = embeddings[0];
 
     // Query Pinecone
     const response = await this.pinecone.query({
@@ -125,7 +125,7 @@ export class PineconeHybridDatastore<
         this.spladeModel.run({ input: textsToEmbed }, mergedContext),
       ]);
 
-      const embeddings = embeddingRes.data.map((item) => item.embedding);
+      const embeddings = embeddingRes.embeddings;
 
       // Merge the existing embeddings and sparse vectors with the generated ones
       const docsWithEmbeddings = docs.map((doc) => {
