@@ -12,7 +12,7 @@ vi.mock('../../model/index.js', () => {
     .fn()
     .mockImplementation((args: { input: string[] }) => {
       if (args.input.length === 1) {
-        return { embedings: [[1, 1]] };
+        return { embeddings: [[1, 1]] };
       } else {
         return {
           embeddings: [
