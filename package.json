@@ -59,7 +59,7 @@
     "predocs": "rimraf docs/pages/docs",
     "prepare": "pnpm run build",
     "prepublishOnly": "pnpm run lint && pnpm run typecheck",
-    "release": "np",
+    "release": "np --no-cleanup",
     "test": "dotenv -e .env.example -- vitest",
     "typecheck": "tsc --noEmit"
   },
