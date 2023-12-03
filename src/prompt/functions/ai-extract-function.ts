@@ -57,8 +57,12 @@ export function createAIExtractFunction<Schema extends z.ZodObject<any>>(
   // Create a runner that will call the function, validate the args and retry
   // if necessary, and return the result.
   const runner = createAIRunner({
-    chatModel: chatModel.addParams({
-      function_call: { name },
+    chatModel: chatModel.clone({
+      params: {
+        // @TODO: use deep partial on clone/extend input
+        model: chatModel.getParams().model,
+        function_call: { name },
+      },
     }),
     systemMessage,
     functions: [extractFunction],
