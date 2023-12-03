@@ -22,11 +22,14 @@ export const createTokenizer: (model: string) => Tokenizer = (
 const GPT_4_MODELS = [
   'gpt-4',
   'gpt-4-0314',
-  'gpt-4-32k',
-  'gpt-4-32k-0314',
-  'gpt-4-turbo',
+  'gpt-4-0613',
   'gpt-4-1106',
   'gpt-4-1106-preview',
+  'gpt-4-32k',
+  'gpt-4-32k-0314',
+  'gpt-4-32k-0613',
+  'gpt-4-turbo',
+  'gpt-4-vision-preview',
 ] as const;
 type Gpt4ModelName = (typeof GPT_4_MODELS)[number];
 
@@ -39,9 +42,6 @@ class Tokenizer implements Model.ITokenizer {
     try {
       this.tiktoken = encoding_for_model(model as TiktokenModel);
     } catch (e) {
-      console.error(
-        `Failed to create tokenizer for model: ${model}. Using gpt-3.5-turbo as a fallback.`
-      );
       this.tiktoken = encoding_for_model('gpt-3.5-turbo');
     }
   }
