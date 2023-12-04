@@ -1,4 +1,4 @@
-import { mergeEvents } from '../../utils/helpers.js';
+import { deepMerge, mergeEvents } from '../../utils/helpers.js';
 import type { Model } from '../../model/index.js';
 import { AbstractHybridDatastore } from '../hybrid-datastore.js';
 import type { Datastore, Prettify } from '../types.js';
@@ -191,11 +191,11 @@ export class PineconeHybridDatastore<
       embeddingModel: this.embeddingModel,
       cacheKey: this.cacheKey,
       cache: this.cache,
-      context: this.context,
       debug: this.debug,
       pinecone: this.pinecone,
       spladeModel: this.spladeModel,
       ...args,
+      context: deepMerge(this.context, args?.context),
       events: mergeEvents(this.events, args?.events),
     }) as unknown as this;
   }
