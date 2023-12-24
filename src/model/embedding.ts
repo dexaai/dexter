@@ -100,6 +100,7 @@ export class EmbeddingModel extends AbstractModel<
     params: Model.Embedding.Run & Model.Embedding.Config,
     context: Model.Ctx
   ): Promise<Model.Embedding.Response> {
+    const start = Date.now();
     // Batch the inputs for the requests
     const batches = batchInputs({
       input: params.input,
@@ -146,6 +147,7 @@ export class EmbeddingModel extends AbstractModel<
       embeddings: embeddingBatches.map((batch) => batch.embeddings).flat(),
       cached: false,
       cost: calculateCost({ model: params.model, tokens: usage }),
+      latency: Date.now() - start,
     };
 
     return modelResponse;

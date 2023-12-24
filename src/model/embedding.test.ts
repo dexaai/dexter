@@ -19,6 +19,7 @@ const FAKE_RESPONSE: Model.Embedding.Response = {
   embeddings: [[1, 2, 3]],
   cached: false,
   cost: 0,
+  latency: 0,
 };
 
 describe('EmbeddingModel', () => {
