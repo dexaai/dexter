@@ -45,6 +45,7 @@ export class SparseVectorModel extends AbstractModel<
     params: Model.SparseVector.Run & Model.SparseVector.Config,
     context: Model.Ctx
   ): Promise<Model.SparseVector.Response> {
+    const start = Date.now();
     const interval = params.throttleInterval ?? 1000 * 60; // 1 minute
     const limit = params.throttleLimit ?? 600;
     const concurrency = params.concurrency ?? 10;
@@ -65,6 +66,7 @@ export class SparseVectorModel extends AbstractModel<
     return {
       vectors: responses.map((r) => r.vector),
       cached: false,
+      latency: Date.now() - start,
     };
   }
 
