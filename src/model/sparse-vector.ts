@@ -1,10 +1,11 @@
+import type { PartialDeep } from 'type-fest';
 import pThrottle from 'p-throttle';
 import pMap from 'p-map';
 import type { ModelArgs } from './model.js';
 import { AbstractModel } from './model.js';
 import type { Model } from './types.js';
 import { createSpladeClient } from './clients/splade.js';
-import type { Prettify } from '../utils/helpers.js';
+import { deepMerge, mergeEvents, type Prettify } from '../utils/helpers.js';
 
 export type SparseVectorModelArgs = Prettify<
   Omit<
@@ -18,6 +19,11 @@ export type SparseVectorModelArgs = Prettify<
   > & {
     serviceUrl?: string;
   }
+>;
+
+export type PartialSparseVectorModelArgs = Prettify<
+  PartialDeep<Pick<SparseVectorModelArgs, 'params'>> &
+    Partial<Omit<SparseVectorModelArgs, 'params'>>
 >;
 
 export class SparseVectorModel extends AbstractModel<
@@ -104,16 +110,16 @@ export class SparseVectorModel extends AbstractModel<
   }
 
   /** Clone the model and merge/orverride the given properties. */
-  clone(args?: SparseVectorModelArgs): this {
-    const { cacheKey, cache, context, debug, params, events } = args ?? {};
-    // @ts-ignore
+  extend(args?: PartialSparseVectorModelArgs): this {
     return new SparseVectorModel({
-      cacheKey: cacheKey || this.cacheKey,
-      cache: cache || this.cache,
-      context: this.mergeContext(this.context, context),
-      debug: debug || this.debug,
-      params: this.mergeParams(this.params, params ?? {}),
-      events: this.mergeEvents(this.events, events || {}),
-    });
+      cacheKey: this.cacheKey,
+      cache: this.cache,
+      debug: this.debug,
+      serviceUrl: this.serviceUrl,
+      ...args,
+      context: deepMerge(this.context, args?.context),
+      params: deepMerge(this.params, args?.params),
+      events: mergeEvents(this.events, args?.events),
+    }) as unknown as this;
   }
 }

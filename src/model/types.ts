@@ -156,34 +156,34 @@ export namespace Model {
       timestamp: string;
       modelType: Type;
       modelProvider: Provider;
-      params: MParams;
-      context: Ctx;
+      params: Readonly<MParams>;
+      context: Readonly<Ctx>;
     }) => void | Promise<void>)[];
     onApiResponse?: ((event: {
       timestamp: string;
       modelType: Type;
       modelProvider: Provider;
-      params: MParams;
-      response: AResponse;
+      params: Readonly<MParams>;
+      response: Readonly<AResponse>;
       latency: number;
-      context: Ctx;
+      context: Readonly<Ctx>;
     }) => void | Promise<void>)[];
     onComplete?: ((event: {
       timestamp: string;
       modelType: Type;
       modelProvider: Provider;
-      params: MParams;
-      response: MResponse;
-      context: Ctx;
+      params: Readonly<MParams>;
+      response: Readonly<MResponse>;
+      context: Readonly<Ctx>;
       cached: boolean;
     }) => void | Promise<void>)[];
     onError?: ((event: {
       timestamp: string;
       modelType: Type;
       modelProvider: Provider;
-      params: MParams;
+      params: Readonly<MParams>;
       error: unknown;
-      context: Ctx;
+      context: Readonly<Ctx>;
     }) => void | Promise<void>)[];
   }
 
