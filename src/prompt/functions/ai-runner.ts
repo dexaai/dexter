@@ -68,6 +68,9 @@ export function createAIRunner<Content extends any = string>(args: {
 
     let iterations = 0;
 
+    // Store the last error to return if the maxIterations is reached
+    let lastError: unknown | undefined;
+
     // Iterate until the shouldBreakLoop function returns true or the maxIterations
     // is reached
     while (iterations < maxIterations) {
@@ -108,6 +111,9 @@ export function createAIRunner<Content extends any = string>(args: {
         // Call the onRetriableError callback if provided
         args.onRetriableError?.(error);
 
+        // Update the last error
+        lastError = error;
+
         // Otherwise, create a message with the error and continue iterating
         const errMessage = getErrorMsg(error);
         messages.push(
@@ -118,11 +124,15 @@ export function createAIRunner<Content extends any = string>(args: {
       }
     }
 
-    // Return an error if the maxIterations is reached
-    const error = new Error(
-      `Failed to get a valid response from the model after ${maxIterations} iterations.`
-    );
-    return { status: 'error', messages, error };
+    // Return the last error if present, otherwise return a generic error
+    if (lastError !== undefined) {
+      return { status: 'error', messages, error: lastError };
+    } else {
+      const error = new Error(
+        `Failed to get a valid response from the model after ${maxIterations} iterations.`
+      );
+      return { status: 'error', messages, error };
+    }
   };
 }
 
