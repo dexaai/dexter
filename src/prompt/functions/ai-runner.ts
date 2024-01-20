@@ -127,10 +127,8 @@ export function createAIRunner<Content extends any = string>(args: {
             messages.push(
               Msg.toolResult(
                 {
-                  error: {
-                    name: 'ToolArgumentsValidationError',
-                    message: errMessage,
-                  },
+                  message: `There was an error validating the tool arguments. Please check the error message and try again with new arguments.`,
+                  errorMessage: errMessage,
                 },
                 toolCall.id
               )
