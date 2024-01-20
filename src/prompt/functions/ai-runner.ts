@@ -26,6 +26,8 @@ export function createAIRunner<Content extends any = string>(args: {
   mode?: Prompt.Runner.Mode;
   /** Add a system message to the beginning of the messages array. */
   systemMessage?: string;
+  /** Called when a retriable error occurs. */
+  onRetriableError?: (error: Error) => void;
 }): Prompt.Runner<Content> {
   /** Return the content string or an empty string if null. */
   function defaultValidateContent(content: string | null): Content {
@@ -102,6 +104,9 @@ export function createAIRunner<Content extends any = string>(args: {
         if (error.name === 'AbortError') {
           return { status: 'error', messages, error };
         }
+
+        // Call the onRetriableError callback if provided
+        args.onRetriableError?.(error);
 
         // Otherwise, create a message with the error and continue iterating
         const errMessage = getErrorMsg(error);
