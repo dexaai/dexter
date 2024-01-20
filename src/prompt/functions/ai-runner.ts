@@ -26,6 +26,8 @@ export function createAIRunner<Content extends any = string>(args: {
   mode?: Prompt.Runner.Mode;
   /** Add a system message to the beginning of the messages array. */
   systemMessage?: string;
+  /** Called when a retriable error occurs. */
+  onRetriableError?: (error: Error) => void;
 }): Prompt.Runner<Content> {
   /** Return the content string or an empty string if null. */
   function defaultValidateContent(content: string | null): Content {
@@ -66,6 +68,12 @@ export function createAIRunner<Content extends any = string>(args: {
 
     let iterations = 0;
 
+    // Store the last error to return if the maxIterations is reached
+    let lastError: unknown | undefined;
+
+    // Store the last response message from the model
+    let lastResponseMessage: Prompt.Msg | undefined;
+
     // Iterate until the shouldBreakLoop function returns true or the maxIterations
     // is reached
     while (iterations < maxIterations) {
@@ -79,6 +87,7 @@ export function createAIRunner<Content extends any = string>(args: {
           messages,
         };
         const { message } = await chatModel.run(runParams, context);
+        lastResponseMessage = message;
         messages.push(message);
 
         // Run functions from tool/function call messages and append the new messages
@@ -103,21 +112,49 @@ export function createAIRunner<Content extends any = string>(args: {
           return { status: 'error', messages, error };
         }
 
-        // Otherwise, create a message with the error and continue iterating
+        // Update the last error
+        lastError = error;
+
+        // Call the onRetriableError callback if provided
+        args.onRetriableError?.(error);
+
+        // Otherwise, create a message with the error and continue iterating,
+        // with special handling for tool_calls errors that must be followed
+        // by a tools message.
         const errMessage = getErrorMsg(error);
-        messages.push(
-          Msg.user(
-            `There was an error validating the response. Please check the error message and try again.\nError:\n${errMessage}`
-          )
-        );
+        if (lastResponseMessage && Msg.isToolCall(lastResponseMessage)) {
+          lastResponseMessage.tool_calls.forEach((toolCall) => {
+            messages.push(
+              Msg.toolResult(
+                {
+                  error: {
+                    name: 'ToolArgumentsValidationError',
+                    message: errMessage,
+                  },
+                },
+                toolCall.id
+              )
+            );
+          });
+        } else {
+          messages.push(
+            Msg.user(
+              `There was an error validating the response. Please check the error message and try again.\nError:\n${errMessage}`
+            )
+          );
+        }
       }
     }
 
-    // Return an error if the maxIterations is reached
-    const error = new Error(
-      `Failed to get a valid response from the model after ${maxIterations} iterations.`
-    );
-    return { status: 'error', messages, error };
+    // Return the last error if present, otherwise return a generic error
+    if (lastError !== undefined) {
+      return { status: 'error', messages, error: lastError };
+    } else {
+      const error = new Error(
+        `Failed to get a valid response from the model after ${maxIterations} iterations.`
+      );
+      return { status: 'error', messages, error };
+    }
   };
 }
 
