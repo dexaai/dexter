@@ -114,15 +114,29 @@ export class ChatModel extends AbstractModel<
         }
 
         // Merge the delta into the chunk
-        const { content, function_call } = delta;
+        const { content, tool_calls } = delta;
+                
         if (content) {
-          chunk.choices[0].delta.content = `${chunk.choices[0].delta.content}${content}`;
+            chunk.choices[0].delta.content = `${chunk.choices[0].delta.content}${content}`;
         }
-        if (function_call) {
-          chunk.choices[0].delta.function_call = deepMerge(
-            chunk.choices[0].delta.function_call,
-            function_call
-          );
+        
+        if (tool_calls) {
+          
+            const mergedToolCalls = chunk.choices[0].delta.tool_calls || [];
+
+              tool_calls.forEach((new_call) => {
+                const index = new_call.index;
+                let existing_call = mergedToolCalls.find(call => call.index === index);
+
+                if (existing_call) {
+                  existing_call.function.arguments += new_call.function.arguments;
+                } else {
+                  mergedToolCalls.push(new_call);
+                }
+              });
+
+              chunk.choices[0].delta.tool_calls = mergedToolCalls;
+
         }
       }
 
