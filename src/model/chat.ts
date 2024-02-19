@@ -117,26 +117,24 @@ export class ChatModel extends AbstractModel<
         const { content, tool_calls } = delta;
                 
         if (content) {
-            chunk.choices[0].delta.content = `${chunk.choices[0].delta.content}${content}`;
+          chunk.choices[0].delta.content = `${chunk.choices[0].delta.content}${content}`;
         }
         
         if (tool_calls) {
-          
-            const mergedToolCalls = chunk.choices[0].delta.tool_calls || [];
+          const mergedToolCalls = chunk.choices[0].delta.tool_calls || [];
 
-              tool_calls.forEach((new_call) => {
-                const index = new_call.index;
-                let existing_call = mergedToolCalls.find(call => call.index === index);
+          tool_calls.forEach((new_call) => {
+            const index = new_call.index;
+            let existing_call = mergedToolCalls.find(call => call.index === index);
 
-                if (existing_call) {
-                  existing_call.function.arguments += new_call.function.arguments;
-                } else {
-                  mergedToolCalls.push(new_call);
-                }
-              });
+            if (existing_call) {
+              existing_call.function.arguments += new_call.function.arguments;
+            } else {
+              mergedToolCalls.push(new_call);
+            }
+          });
 
-              chunk.choices[0].delta.tool_calls = mergedToolCalls;
-
+          chunk.choices[0].delta.tool_calls = mergedToolCalls;
         }
       }
 
