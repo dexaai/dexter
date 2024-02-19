@@ -4,7 +4,6 @@ import type { Model } from './types.js';
 import { calculateCost } from './utils/calculate-cost.js';
 import { createOpenAIClient } from './clients/openai.js';
 import { AbstractModel } from './model.js';
-import { deepMerge } from '../utils/helpers.js';
 
 export type ChatModelArgs = SetOptional<
   ModelArgs<
@@ -124,13 +123,15 @@ export class ChatModel extends AbstractModel<
           const mergedToolCalls = chunk.choices[0].delta.tool_calls || [];
 
           tool_calls.forEach((new_call) => {
-            const index = new_call.index;
-            let existing_call = mergedToolCalls.find(call => call.index === index);
+            if (new_call.function && typeof new_call.function.arguments === 'string') {
+              const index = new_call.index;
+              let existing_call = mergedToolCalls.find(call => call.index === index);
 
-            if (existing_call) {
-              existing_call.function.arguments += new_call.function.arguments;
-            } else {
-              mergedToolCalls.push(new_call);
+              if (existing_call && existing_call.function) {
+                existing_call.function.arguments = (existing_call.function.arguments || '') + new_call.function.arguments;
+              } else {
+                mergedToolCalls.push({...new_call, function: { ...new_call.function } });
+              }
             }
           });
 
