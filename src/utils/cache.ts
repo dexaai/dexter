@@ -7,7 +7,7 @@ export type CacheStorage<KeyType, ValueType extends any> = {
 
 export type CacheKey<Params extends Record<string, any>, KeyType = string> = (
   params: Params
-) => KeyType;
+) => KeyType | Promise<KeyType>;
 
 export function defaultCacheKey<Params extends Record<string, any>>(
   params: Params
