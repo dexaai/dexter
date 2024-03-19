@@ -71,7 +71,7 @@ export abstract class AbstractDatastore<
       ) ?? []
     );
 
-    const cacheKey = this.cacheKey(query);
+    const cacheKey = await this.cacheKey(query);
 
     // Return cached response if available
     const cached = await Promise.resolve(this.cache?.get(cacheKey));

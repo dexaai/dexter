@@ -97,7 +97,7 @@ export abstract class AbstractModel<
       ) ?? []
     );
 
-    const cacheKey = this.cacheKey(mergedParams);
+    const cacheKey = await this.cacheKey(mergedParams);
 
     try {
       // Check the cache
