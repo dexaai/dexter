@@ -91,6 +91,12 @@ export class EmbeddingModel extends AbstractModel<
           cost: calculateCost({ model: params.model, tokens: response.usage }),
         };
 
+        if (modelResponse.embeddings.length !== params.input.length) {
+          throw new Error(
+            'Number of embeddings does not match number of inputs.'
+          );
+        }
+
         return modelResponse;
       }
     );
