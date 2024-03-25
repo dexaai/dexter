@@ -92,7 +92,9 @@ export class EmbeddingModel extends AbstractModel<
         };
 
         if (modelResponse.embeddings.length !== params.input.length) {
-          throw new Error("Number of embeddings does not match number of inputs.");
+          throw new Error(
+            'Number of embeddings does not match number of inputs.'
+          );
         }
 
         return modelResponse;
