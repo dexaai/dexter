@@ -118,7 +118,5 @@ function getCost(model: string): Cost | null {
   if (model.startsWith('ada:ft')) return COSTS['ft-legacy:ada'];
   if (model.startsWith('babbage:ft')) return COSTS['ft-legacy:babbage'];
 
-  console.warn(`No OpenAI cost found for model "${model}"`);
-
   return null;
 }
