@@ -139,6 +139,7 @@ export class ChatModel extends AbstractModel<
               choice.finish_reason as Model.Chat.Response['choices'][0]['finish_reason'],
             index: choice.index,
             message: choice.delta as Model.Message & { role: 'assistant' },
+            logprobs: choice.logprobs || null,
           },
         ],
       };

@@ -22,6 +22,7 @@ export function createOpenAIClient(
   return client;
 }
 
+// deprecated?
 /** Reformat name to adhere to OpenAI's naming restrictions: /^[a-zA-Z0-9_-]{1,64}$/ */
 export function formatName<Msg extends ChatMessage>(message: Msg): Msg {
   const { name, role, content } = message;

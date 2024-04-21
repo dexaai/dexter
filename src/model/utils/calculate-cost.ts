@@ -15,16 +15,16 @@ const COSTS: Record<string, Cost> = {
     output: 0.012,
   },
   'gpt-3.5-turbo': {
-    input: 0.00015,
-    output: 0.0002,
+    input: 0.00005,
+    output: 0.00015,
   },
   'gpt-3.5-turbo-16k': {
     input: 0.0003,
     output: 0.0004,
   },
   'gpt-3.5-turbo-1106': {
-    input: 0.0001,
-    output: 0.0002,
+    input: 0.00005,
+    output: 0.00015,
   },
   'gpt-3.5-turbo-instruct': {
     input: 0.00015,
@@ -41,6 +41,14 @@ const COSTS: Record<string, Cost> = {
   'text-embedding-ada-002': {
     input: 0.00001,
     output: 0.00001,
+  },
+  'text-embedding-3-large': {
+    input: 0.000013,
+    output: 0.000013,
+  },
+  'text-embedding-3-small': {
+    input: 0.000002,
+    output: 0.000002,
   },
   'ft:gpt-3.5-turbo': {
     input: 0.0012,
@@ -89,7 +97,11 @@ function getCost(model: string): Cost | null {
   // Eg: gpt-3.5-turbo-0613
 
   if (model.startsWith('gpt-4')) {
-    if (model.startsWith('gpt-4-1106') || model.includes('turbo')) {
+    if (
+      model.startsWith('gpt-4-1106') ||
+      model.startsWith('gpt-4-0125') ||
+      model.includes('turbo')
+    ) {
       return COSTS['gpt-4-turbo'];
     } else {
       return COSTS[model.includes('32k') ? 'gpt-4-32k' : 'gpt-4'];
