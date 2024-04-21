@@ -5,7 +5,7 @@ import { createPineconeClient } from './client.js';
 import type { Pinecone } from './types.js';
 
 export class PineconeDatastore<
-  DocMeta extends Datastore.BaseMeta
+  DocMeta extends Datastore.BaseMeta,
 > extends AbstractDatastore<DocMeta, Pinecone.QueryFilter<DocMeta>> {
   datastoreType = 'embedding' as const;
   datastoreProvider = 'pinecone' as const;

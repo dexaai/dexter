@@ -9,7 +9,7 @@ import {
 
 export abstract class AbstractDatastore<
   DocMeta extends Datastore.BaseMeta,
-  Filter extends Datastore.BaseFilter<DocMeta>
+  Filter extends Datastore.BaseFilter<DocMeta>,
 > {
   protected abstract runQuery(
     query: Datastore.Query<DocMeta, Filter>,

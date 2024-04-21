@@ -61,7 +61,7 @@ export namespace Prompt {
    */
   export interface AIFunction<
     Schema extends z.ZodObject<any> = z.ZodObject<any>,
-    Return extends any = any
+    Return extends any = any,
   > {
     /** The implementation of the function, with arg parsing and validation. */
     (input: string | Msg): Promise<Return>;

@@ -150,7 +150,7 @@ export namespace Model {
   export interface Events<
     MParams extends Base.Params,
     MResponse extends Base.Response,
-    AResponse extends any = any
+    AResponse extends any = any,
   > {
     onStart?: ((event: {
       timestamp: string;
