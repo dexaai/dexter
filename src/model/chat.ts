@@ -211,9 +211,15 @@ export class ChatModel extends AbstractModel<
       client: this.client,
       debug: this.debug,
       ...args,
-      context: deepMerge(this.context, args?.context),
       params: deepMerge(this.params, args?.params),
-      events: mergeEvents(this.events, args?.events),
+      context:
+        args?.context && Object.keys(args.context).length === 0
+          ? undefined
+          : deepMerge(this.context, args?.context),
+      events:
+        args?.events && Object.keys(args.events).length === 0
+          ? undefined
+          : mergeEvents(this.events, args?.events),
     }) as unknown as this;
   }
 }

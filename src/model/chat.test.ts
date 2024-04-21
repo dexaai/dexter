@@ -141,4 +141,107 @@ describe('ChatModel', () => {
     expect(completeEvent).toHaveBeenCalledTimes(2);
     expect(Client.createChatCompletion).toHaveBeenCalledOnce();
   });
+
+  it('can be extended', async () => {
+    // Create a mocked cache (Map) to ensure that the cache is passed down
+    const cache = new Map();
+    const getSpy = vi.spyOn(cache, 'get');
+    const onComplete1 = vi.fn();
+    const onComplete2 = vi.fn();
+    const onError = vi.fn();
+    const onApiResponse = vi.fn();
+
+    // Create a ChatModel instance and make a request
+    const chatModel = new ChatModel({
+      cache,
+      client: Client,
+      params: { model: 'gpt-fake' },
+      context: { level: 1, userId: '123' },
+      events: {
+        onApiResponse: [onApiResponse],
+        onComplete: [onComplete1, onComplete2],
+        onError: [onError],
+      },
+    });
+    await chatModel.run({ messages: [{ role: 'user', content: 'content2' }] });
+
+    // Ensure the base model works as expected
+    expect(getSpy).toHaveBeenCalledOnce();
+    expect(onApiResponse).toHaveBeenCalledOnce();
+    expect(onComplete1).toHaveBeenCalledOnce();
+    expect(onComplete1).toHaveBeenCalledOnce();
+    expect(onError).not.toHaveBeenCalled();
+    expect(chatModel.params.model).toBe('gpt-fake');
+    expect(chatModel.context).toEqual({ level: 1, userId: '123' });
+
+    const newOnComplete = vi.fn();
+
+    // Extend the model and make another request
+    const secondChatModel = chatModel.extend({
+      params: { model: 'gpt-fake-extended' },
+      context: { level: 2 },
+      events: { onComplete: [newOnComplete] },
+    });
+    await secondChatModel.run({
+      messages: [{ role: 'user', content: 'content' }],
+    });
+
+    // Ensure the old model is unchanged
+    expect(chatModel.params.model).toBe('gpt-fake');
+    expect(chatModel.context).toEqual({ level: 1, userId: '123' });
+
+    // Ensure the new model works as expected
+    expect(onApiResponse).toHaveBeenCalledTimes(2);
+    expect(onComplete1).toHaveBeenCalledTimes(2); // these are kept when extending
+    expect(onComplete2).toHaveBeenCalledTimes(2); // these are kept when extending
+    expect(newOnComplete).toHaveBeenCalledOnce();
+    expect(onError).not.toHaveBeenCalled();
+    expect(getSpy).toHaveBeenCalledTimes(2);
+    expect(secondChatModel.params.model).toBe('gpt-fake-extended');
+    expect(secondChatModel.context).toEqual({ level: 2, userId: '123' });
+
+    const cache2 = new Map();
+    const getSpy2 = vi.spyOn(cache2, 'get');
+
+    // Extend again to clear properties
+    const thirdChatModel = secondChatModel.extend({
+      cache: cache2,
+      params: { model: 'gpt-fake-extended-2' },
+      context: {},
+      events: {},
+    });
+    await thirdChatModel.run({
+      messages: [{ role: 'user', content: 'content3' }],
+    });
+
+    expect(thirdChatModel.params).toEqual({ model: 'gpt-fake-extended-2' });
+    expect(thirdChatModel.context).toEqual({});
+    expect(thirdChatModel.events).toEqual({});
+
+    expect(getSpy2).toHaveBeenCalledOnce();
+    expect(getSpy).toHaveBeenCalledTimes(2);
+    expect(newOnComplete).toHaveBeenCalledOnce();
+    expect(onError).not.toHaveBeenCalled();
+    expect(getSpy).toHaveBeenCalledTimes(2);
+    expect(secondChatModel.params.model).toBe('gpt-fake-extended');
+  });
+
+  it(`mutating event data doesn't impact the models context and params`, async () => {
+    const onComplete = vi.fn().mockImplementation((e: any) => {
+      e.userId = 'mutated';
+      e.params.model = 'mutated';
+    });
+
+    const chatModel = new ChatModel({
+      client: Client,
+      params: { model: 'gpt-fake' },
+      events: { onComplete: [onComplete] },
+      context: { userId: '123' },
+    });
+    await chatModel.run({ messages: [{ role: 'user', content: 'content2' }] });
+
+    expect(onComplete).toHaveBeenCalledOnce();
+    expect(chatModel.context.userId).toBe('123');
+    expect(chatModel.params.model).toBe('gpt-fake');
+  });
 });
