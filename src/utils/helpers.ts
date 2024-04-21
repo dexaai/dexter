@@ -13,7 +13,7 @@ const deepMergeEventsImpl: DeepMerge = deepmergeInit({
 // Slightly custom deepMerge which handles `undefined` arguments as empty objects.
 export function deepMerge<
   T1 extends object | undefined | null,
-  T2 extends object | undefined | null
+  T2 extends object | undefined | null,
 >(t1?: T1, t2?: T2): T1 & T2 {
   return deepMergeImpl<T1, T2>(
     t1 ?? ({} as T1),
@@ -25,7 +25,7 @@ export function deepMerge<
 // and ensures that we remove duplicate event handlers.
 export function mergeEvents<
   T1 extends object | undefined,
-  T2 extends object | undefined
+  T2 extends object | undefined,
 >(t1?: T1, t2?: T2): T1 & T2 {
   return deepMergeEventsImpl<T1, T2>(
     t1 ?? ({} as T1),

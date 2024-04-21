@@ -40,7 +40,7 @@ export type PartialModelArgs<
   MClient extends Model.Base.Client,
   MConfig extends Model.Base.Config,
   MRun extends Model.Base.Run,
-  MResponse extends Model.Base.Response
+  MResponse extends Model.Base.Response,
 > = Prettify<
   PartialDeep<Pick<ModelArgs<MClient, MConfig, MRun, MResponse>, 'params'>> &
     Partial<Omit<ModelArgs<MClient, MConfig, MRun, MResponse>, 'params'>>
@@ -61,7 +61,7 @@ export abstract class AbstractModel<
 
   /** Clones the model, optionally modifying its config */
   abstract extend<
-    Args extends PartialModelArgs<MClient, MConfig, MRun, MResponse>
+    Args extends PartialModelArgs<MClient, MConfig, MRun, MResponse>,
   >(args?: Args): this;
 
   public abstract readonly modelType: Model.Type;
