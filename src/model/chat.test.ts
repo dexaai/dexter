@@ -27,6 +27,7 @@ const FAKE_RESPONSE: Model.Chat.Response = {
         content: 'Hi from fake AI',
         role: 'assistant',
       },
+      logprobs: null,
     },
   ],
 };

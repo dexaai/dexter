@@ -11,7 +11,7 @@ const FAKE_RESPONSE: Model.Embedding.Response = {
     },
   ],
   model: 'fake-model',
-  object: 'embedding',
+  object: 'list',
   usage: {
     prompt_tokens: 1,
     total_tokens: 1,
