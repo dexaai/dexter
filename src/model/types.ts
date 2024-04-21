@@ -9,6 +9,7 @@ import type {
   EmbeddingResponse,
   OpenAIClient,
 } from 'openai-fetch';
+import type { ReadonlyDeep } from 'type-fest';
 import type { AbstractModel } from './model.js';
 import type { ChatModel } from './chat.js';
 import type { CompletionModel } from './completion.js';
@@ -108,7 +109,7 @@ export namespace Model {
   }
 
   /** Generic metadata object. */
-  export type Ctx = { [key: string]: any };
+  export type Ctx = ReadonlyDeep<{ [key: string]: any }>;
 
   /**
    * Embedding Model
