@@ -1,10 +1,11 @@
+import type { PartialDeep } from 'type-fest';
 import type { SetOptional } from 'type-fest';
 import type { ModelArgs } from './model.js';
 import type { Model } from './types.js';
 import { calculateCost } from './utils/calculate-cost.js';
 import { createOpenAIClient } from './clients/openai.js';
 import { AbstractModel } from './model.js';
-import { deepMerge } from '../utils/helpers.js';
+import { deepMerge, mergeEvents, type Prettify } from '../utils/helpers.js';
 
 export type ChatModelArgs = SetOptional<
   ModelArgs<
@@ -14,6 +15,11 @@ export type ChatModelArgs = SetOptional<
     Model.Chat.Response
   >,
   'client' | 'params'
+>;
+
+export type PartialChatModelArgs = Prettify<
+  PartialDeep<Pick<ChatModelArgs, 'params'>> &
+    Partial<Omit<ChatModelArgs, 'params'>>
 >;
 
 export class ChatModel extends AbstractModel<
@@ -26,19 +32,32 @@ export class ChatModel extends AbstractModel<
   modelType = 'chat' as const;
   modelProvider = 'openai' as const;
 
-  constructor(args?: ChatModelArgs) {
-    let { client, params, ...rest } = args ?? {};
-    // Add a default client if none is provided
-    client = client ?? createOpenAIClient();
-    // Set default model if no params are provided
-    params = params ?? { model: 'gpt-3.5-turbo' };
-    super({ client, params, ...rest });
-    if (args?.debug) {
-      this.addEvents({
-        onStart: [logInput],
-        onComplete: [logResponse],
-      });
-    }
+  constructor(args: ChatModelArgs = {}) {
+    const {
+      // Add a default client if none is provided
+      client = createOpenAIClient(),
+      // Set default model if no params are provided
+      params = { model: 'gpt-3.5-turbo' },
+      debug,
+      events,
+      ...rest
+    } = args;
+
+    super({
+      client,
+      params,
+      debug,
+      events: mergeEvents(
+        events,
+        debug
+          ? {
+              onStart: [logInput],
+              onComplete: [logResponse],
+            }
+          : {}
+      ),
+      ...rest,
+    });
   }
 
   protected async runModel(
@@ -185,20 +204,23 @@ export class ChatModel extends AbstractModel<
   }
 
   /** Clone the model and merge/orverride the given properties. */
-  clone(args?: ChatModelArgs): this {
-    const { cacheKey, cache, client, context, debug, params, events } =
-      args ?? {};
-
-    // @ts-ignore
+  extend(args?: PartialChatModelArgs): this {
     return new ChatModel({
-      cacheKey: cacheKey ?? this.cacheKey,
-      cache: cache ?? this.cache,
-      client: client ?? this.client,
-      context: this.mergeContext(this.context, context),
-      debug: debug ?? this.debug,
-      params: this.mergeParams(this.params, params ?? {}),
-      events: this.mergeEvents(this.events, events || {}),
-    });
+      cacheKey: this.cacheKey,
+      cache: this.cache,
+      client: this.client,
+      debug: this.debug,
+      ...args,
+      params: deepMerge(this.params, args?.params),
+      context:
+        args?.context && Object.keys(args.context).length === 0
+          ? undefined
+          : deepMerge(this.context, args?.context),
+      events:
+        args?.events && Object.keys(args.events).length === 0
+          ? undefined
+          : mergeEvents(this.events, args?.events),
+    }) as unknown as this;
   }
 }
 

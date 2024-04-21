@@ -1,6 +1,7 @@
+import type { PartialDeep } from 'type-fest';
 import { createTokenizer } from './utils/tokenizer.js';
 import type { Model } from './types.js';
-import { type Prettify, deepMerge } from '../utils/helpers.js';
+import { deepMerge, type Prettify } from '../utils/helpers.js';
 import {
   type CacheKey,
   type CacheStorage,
@@ -35,6 +36,16 @@ export interface ModelArgs<
   debug?: boolean;
 }
 
+export type PartialModelArgs<
+  MClient extends Model.Base.Client,
+  MConfig extends Model.Base.Config,
+  MRun extends Model.Base.Run,
+  MResponse extends Model.Base.Response,
+> = Prettify<
+  PartialDeep<Pick<ModelArgs<MClient, MConfig, MRun, MResponse>, 'params'>> &
+    Partial<Omit<ModelArgs<MClient, MConfig, MRun, MResponse>, 'params'>>
+>;
+
 export abstract class AbstractModel<
   MClient extends Model.Base.Client,
   MConfig extends Model.Base.Config,
@@ -48,21 +59,22 @@ export abstract class AbstractModel<
     context: Model.Ctx
   ): Promise<MResponse>;
 
-  /** Clone the model, optionally adding new arguments */
-  abstract clone<Args extends ModelArgs<MClient, MConfig, MRun, MResponse>>(
-    args?: Args
-  ): this;
+  /** Clones the model, optionally modifying its config */
+  abstract extend<
+    Args extends PartialModelArgs<MClient, MConfig, MRun, MResponse>,
+  >(args?: Args): this;
 
-  abstract modelType: Model.Type;
-  abstract modelProvider: Model.Provider;
-  protected cacheKey: CacheKey<MRun & MConfig, string>;
-  protected cache?: CacheStorage<string, MResponse>;
-  protected client: MClient;
-  protected context: Model.Ctx;
-  protected debug: boolean;
-  protected params: MConfig & Partial<MRun>;
-  protected events: Model.Events<MRun & MConfig, MResponse, AResponse>;
-  public tokenizer: Model.ITokenizer;
+  public abstract readonly modelType: Model.Type;
+  public abstract readonly modelProvider: Model.Provider;
+
+  protected readonly cacheKey: CacheKey<MRun & MConfig, string>;
+  protected readonly cache?: CacheStorage<string, MResponse>;
+  public readonly client: MClient;
+  public readonly context: Model.Ctx;
+  public readonly debug: boolean;
+  public readonly params: MConfig & Partial<MRun>;
+  public readonly events: Model.Events<MRun & MConfig, MResponse, AResponse>;
+  public readonly tokenizer: Model.ITokenizer;
 
   constructor(args: ModelArgs<MClient, MConfig, MRun, MResponse>) {
     this.cacheKey = args.cacheKey ?? defaultCacheKey;
@@ -80,8 +92,8 @@ export abstract class AbstractModel<
     context?: Model.Ctx
   ): Promise<MResponse> {
     const start = Date.now();
-    const mergedContext = this.mergeContext(this.context, context);
-    const mergedParams = deepMerge(this.params, params) as MRun & MConfig;
+    const mergedContext = deepMerge(this.context, context);
+    const mergedParams = deepMerge(this.params, params);
 
     await Promise.allSettled(
       this.events.onStart?.map((event) =>
@@ -168,103 +180,5 @@ export abstract class AbstractModel<
       );
       throw error;
     }
-  }
-
-  /** Set the cache to a new cache. Set to undefined to remove existing. */
-  setCache(cache: typeof this.cache | undefined): this {
-    this.cache = cache;
-    return this;
-  }
-
-  /** Get the current client */
-  getClient() {
-    return this.client;
-  }
-
-  /** Set the client to a new OpenAI API client. */
-  setClient(client: typeof this.client): this {
-    this.client = client;
-    return this;
-  }
-
-  /** Get the current context */
-  getContext() {
-    return this.context;
-  }
-
-  /** Add the context. Overrides existing keys. */
-  updateContext(context: typeof this.context): this {
-    this.context = this.mergeContext(this.context, context);
-    return this;
-  }
-
-  /** Set the context to a new context. Removes all existing values. */
-  setContext(context: Model.Ctx): this {
-    this.context = context;
-    return this;
-  }
-
-  /** Get the current params */
-  getParams() {
-    return this.params;
-  }
-
-  /** Add the params. Overrides existing keys. */
-  addParams(params: Partial<typeof this.params>): this {
-    const modelChanged = params.model && params.model !== this.params.model;
-    this.params = this.mergeParams(this.params, params);
-    if (modelChanged) {
-      this.tokenizer = createTokenizer(this.params.model);
-    }
-    return this;
-  }
-
-  /** Set the params to a new params. Removes all existing values. */
-  setParams(params: typeof this.params): this {
-    this.params = params;
-    this.tokenizer = createTokenizer(this.params.model);
-    return this;
-  }
-
-  /** Get the current event handlers */
-  getEvents() {
-    return this.events;
-  }
-
-  /** Add event handlers to the model. */
-  addEvents(events: typeof this.events): this {
-    this.events = this.mergeEvents(this.events, events);
-    return this;
-  }
-
-  /**
-   * Set the event handlers to a new set of events. Removes all existing event handlers.
-   * Set to empty object `{}` to remove all events.
-   */
-  setEvents(events: typeof this.events): this {
-    this.events = events;
-    return this;
-  }
-
-  protected mergeContext(
-    classContext: Model.Ctx,
-    newContext?: Model.Ctx
-  ): Model.Ctx {
-    if (!newContext) return classContext;
-    return deepMerge(classContext, newContext);
-  }
-
-  protected mergeParams(
-    classParams: Partial<typeof this.params>,
-    newParams: Partial<typeof this.params>
-  ): typeof this.params {
-    return deepMerge(classParams, newParams) as any;
-  }
-
-  protected mergeEvents(
-    existingEvents: typeof this.events,
-    newEvents: typeof this.events
-  ): typeof this.events {
-    return deepMerge(existingEvents, newEvents);
   }
 }

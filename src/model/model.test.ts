@@ -25,7 +25,7 @@ class Test extends AbstractModel<
       cached: false,
     });
   }
-  clone() {
+  extend() {
     return this;
   }
 }
@@ -33,7 +33,7 @@ class Test extends AbstractModel<
 describe('AbstractModel', () => {
   it('can be instantiated', () => {
     const test = new Test({ params: { model: 'testmodel' }, client: false });
-    expect(test.getParams()).toEqual({
+    expect(test.params).toEqual({
       model: 'testmodel',
     });
   });

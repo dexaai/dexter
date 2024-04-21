@@ -9,6 +9,7 @@ import type {
   EmbeddingResponse,
   OpenAIClient,
 } from 'openai-fetch';
+import type { ReadonlyDeep } from 'type-fest';
 import type { AbstractModel } from './model.js';
 import type { ChatModel } from './chat.js';
 import type { CompletionModel } from './completion.js';
@@ -108,7 +109,7 @@ export namespace Model {
   }
 
   /** Generic metadata object. */
-  export type Ctx = { [key: string]: any };
+  export type Ctx = ReadonlyDeep<{ [key: string]: any }>;
 
   /**
    * Embedding Model
@@ -156,34 +157,34 @@ export namespace Model {
       timestamp: string;
       modelType: Type;
       modelProvider: Provider;
-      params: MParams;
-      context: Ctx;
+      params: Readonly<MParams>;
+      context: Readonly<Ctx>;
     }) => void | Promise<void>)[];
     onApiResponse?: ((event: {
       timestamp: string;
       modelType: Type;
       modelProvider: Provider;
-      params: MParams;
-      response: AResponse;
+      params: Readonly<MParams>;
+      response: Readonly<AResponse>;
       latency: number;
-      context: Ctx;
+      context: Readonly<Ctx>;
     }) => void | Promise<void>)[];
     onComplete?: ((event: {
       timestamp: string;
       modelType: Type;
       modelProvider: Provider;
-      params: MParams;
-      response: MResponse;
-      context: Ctx;
+      params: Readonly<MParams>;
+      response: Readonly<MResponse>;
+      context: Readonly<Ctx>;
       cached: boolean;
     }) => void | Promise<void>)[];
     onError?: ((event: {
       timestamp: string;
       modelType: Type;
       modelProvider: Provider;
-      params: MParams;
+      params: Readonly<MParams>;
       error: unknown;
-      context: Ctx;
+      context: Readonly<Ctx>;
     }) => void | Promise<void>)[];
   }
 
