@@ -1,5 +1,9 @@
 *.env
+*.yml
+*.yaml
+*.md
 *.log
+*.json
 *.jsonl
 **/node_modules
 **/dist

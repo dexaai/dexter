@@ -15,7 +15,7 @@ import { cleanString } from '../utils/message.js';
  */
 export function createAIFunction<
   Schema extends z.ZodObject<any>,
-  Return extends any
+  Return extends any,
 >(
   spec: {
     /** Name of the function. */

@@ -4,7 +4,7 @@ import type { Datastore } from './types.js';
 
 export abstract class AbstractHybridDatastore<
   DocMeta extends Datastore.BaseMeta,
-  Filter extends Datastore.BaseFilter<DocMeta>
+  Filter extends Datastore.BaseFilter<DocMeta>,
 > extends AbstractDatastore<DocMeta, Filter> {
   protected spladeModel: Model.SparseVector.Model;
 

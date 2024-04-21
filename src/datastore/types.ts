@@ -29,7 +29,7 @@ export namespace Datastore {
    */
   export interface Events<
     DocMeta extends BaseMeta,
-    Filter extends BaseFilter<DocMeta>
+    Filter extends BaseFilter<DocMeta>,
   > {
     onQueryStart?: ((event: {
       timestamp: string;
@@ -62,7 +62,7 @@ export namespace Datastore {
    */
   export type Datastore<
     DocMeta extends BaseMeta,
-    Filter extends BaseFilter<DocMeta>
+    Filter extends BaseFilter<DocMeta>,
   > = AbstractDatastore<DocMeta, Filter>;
 
   /**
@@ -70,7 +70,7 @@ export namespace Datastore {
    */
   export interface Opts<
     DocMeta extends BaseMeta,
-    Filter extends BaseFilter<DocMeta>
+    Filter extends BaseFilter<DocMeta>,
   > {
     /**
      * The metadata key of the content that is embedded.
@@ -104,7 +104,7 @@ export namespace Datastore {
    */
   export interface OptsHybrid<
     DocMeta extends BaseMeta,
-    Filter extends BaseFilter<DocMeta>
+    Filter extends BaseFilter<DocMeta>,
   > extends Opts<DocMeta, Filter> {
     /** Splade instance for creating sparse vectors */
     spladeModel: Model.SparseVector.Model;
@@ -118,7 +118,7 @@ export namespace Datastore {
    */
   export interface Query<
     Meta extends BaseMeta,
-    Filter extends BaseFilter<Meta>
+    Filter extends BaseFilter<Meta>,
   > {
     query: string;
     embedding?: number[];

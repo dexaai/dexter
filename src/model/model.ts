@@ -11,7 +11,7 @@ export interface ModelArgs<
   MClient extends Model.Base.Client,
   MConfig extends Model.Base.Config,
   MRun extends Model.Base.Run,
-  MResponse extends Model.Base.Response
+  MResponse extends Model.Base.Response,
 > {
   /**
    * A function that returns a cache key for the given params.
@@ -40,7 +40,7 @@ export abstract class AbstractModel<
   MConfig extends Model.Base.Config,
   MRun extends Model.Base.Run,
   MResponse extends Model.Base.Response,
-  AResponse extends any = any
+  AResponse extends any = any,
 > {
   /** This is used to implement specific model calls */
   protected abstract runModel(
