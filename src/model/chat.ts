@@ -203,7 +203,7 @@ export class ChatModel extends AbstractModel<
     }
   }
 
-  /** Clone the model and merge/orverride the given properties. */
+  /** Clone the model and merge/override the given properties. */
   extend(args?: PartialChatModelArgs): this {
     return new ChatModel({
       cacheKey: this.cacheKey,

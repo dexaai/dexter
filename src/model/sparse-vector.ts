@@ -109,7 +109,7 @@ export class SparseVectorModel extends AbstractModel<
     return { vector, tokens };
   }
 
-  /** Clone the model and merge/orverride the given properties. */
+  /** Clone the model and merge/override the given properties. */
   extend(args?: PartialSparseVectorModelArgs): this {
     return new SparseVectorModel({
       cacheKey: this.cacheKey,

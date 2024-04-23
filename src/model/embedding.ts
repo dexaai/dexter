@@ -167,7 +167,7 @@ export class EmbeddingModel extends AbstractModel<
     return modelResponse;
   }
 
-  /** Clone the model and merge/orverride the given properties. */
+  /** Clone the model and merge/override the given properties. */
   extend(args?: PartialSparseVectorModelArgs): this {
     return new EmbeddingModel({
       cacheKey: this.cacheKey,
