@@ -79,7 +79,10 @@ describe('EmbeddingModel', () => {
   });
 
   it('implements extend', async () => {
-    const model = new EmbeddingModel({
+    const model = new EmbeddingModel<{
+      userId: string;
+      cloned?: boolean;
+    }>({
       client: Client,
       context: { userId: '123' },
       params: { model: 'gpt-fake' },

@@ -7,32 +7,36 @@ import { createOpenAIClient } from './clients/openai.js';
 import { AbstractModel } from './model.js';
 import { deepMerge, mergeEvents, type Prettify } from '../index.js';
 
-export type CompletionModelArgs = SetOptional<
+export type CompletionModelArgs<CustomCtx extends Model.Ctx> = SetOptional<
   ModelArgs<
     Model.Completion.Client,
     Model.Completion.Config,
     Model.Completion.Run,
-    Model.Completion.Response
+    Model.Completion.Response,
+    CustomCtx
   >,
   'client' | 'params'
 >;
 
-export type PartialCompletionModelArgs = Prettify<
-  PartialDeep<Pick<CompletionModelArgs, 'params'>> &
-    Partial<Omit<CompletionModelArgs, 'params'>>
+export type PartialCompletionModelArgs<CustomCtx extends Model.Ctx> = Prettify<
+  PartialDeep<Pick<CompletionModelArgs<Partial<CustomCtx>>, 'params'>> &
+    Partial<Omit<CompletionModelArgs<Partial<CustomCtx>>, 'params'>>
 >;
 
-export class CompletionModel extends AbstractModel<
+export class CompletionModel<
+  CustomCtx extends Model.Ctx = Model.Ctx,
+> extends AbstractModel<
   Model.Completion.Client,
   Model.Completion.Config,
   Model.Completion.Run,
   Model.Completion.Response,
-  Model.Completion.ApiResponse
+  Model.Completion.ApiResponse,
+  CustomCtx
 > {
   modelType = 'completion' as const;
   modelProvider = 'openai' as const;
 
-  constructor(args?: CompletionModelArgs) {
+  constructor(args?: CompletionModelArgs<CustomCtx>) {
     let { client, params, ...rest } = args ?? {};
     // Add a default client if none is provided
     client = client ?? createOpenAIClient();
@@ -43,7 +47,7 @@ export class CompletionModel extends AbstractModel<
 
   protected async runModel(
     params: Model.Completion.Run & Model.Completion.Config,
-    context: Model.Ctx
+    context: CustomCtx
   ): Promise<Model.Completion.Response> {
     const start = Date.now();
 
@@ -77,7 +81,7 @@ export class CompletionModel extends AbstractModel<
   }
 
   /** Clone the model and merge/override the given properties. */
-  extend(args?: PartialCompletionModelArgs): this {
+  extend(args?: PartialCompletionModelArgs<CustomCtx>): this {
     return new CompletionModel({
       cacheKey: this.cacheKey,
       cache: this.cache,

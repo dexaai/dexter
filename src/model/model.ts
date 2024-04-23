@@ -13,6 +13,7 @@ export interface ModelArgs<
   MConfig extends Model.Base.Config,
   MRun extends Model.Base.Run,
   MResponse extends Model.Base.Response,
+  Ctx extends Model.Ctx,
 > {
   /**
    * A function that returns a cache key for the given params.
@@ -29,9 +30,9 @@ export interface ModelArgs<
    */
   cache?: CacheStorage<string, MResponse>;
   client: MClient;
-  context?: Model.Ctx;
+  context?: Ctx;
   params: MConfig & Partial<MRun>;
-  events?: Model.Events<MRun & MConfig, MResponse>;
+  events?: Model.Events<MRun & MConfig, MResponse, Ctx>;
   /** Whether or not to add default `console.log` event handlers */
   debug?: boolean;
 }
@@ -41,9 +42,20 @@ export type PartialModelArgs<
   MConfig extends Model.Base.Config,
   MRun extends Model.Base.Run,
   MResponse extends Model.Base.Response,
+  CustomCtx extends Model.Ctx,
 > = Prettify<
-  PartialDeep<Pick<ModelArgs<MClient, MConfig, MRun, MResponse>, 'params'>> &
-    Partial<Omit<ModelArgs<MClient, MConfig, MRun, MResponse>, 'params'>>
+  PartialDeep<
+    Pick<
+      ModelArgs<MClient, MConfig, MRun, MResponse, Partial<CustomCtx>>,
+      'params'
+    >
+  > &
+    Partial<
+      Omit<
+        ModelArgs<MClient, MConfig, MRun, MResponse, Partial<CustomCtx>>,
+        'params'
+      >
+    >
 >;
 
 export abstract class AbstractModel<
@@ -52,16 +64,17 @@ export abstract class AbstractModel<
   MRun extends Model.Base.Run,
   MResponse extends Model.Base.Response,
   AResponse extends any = any,
+  CustomCtx extends Model.Ctx = Model.Ctx,
 > {
   /** This is used to implement specific model calls */
   protected abstract runModel(
     params: Prettify<MRun & MConfig>,
-    context: Model.Ctx
+    context: CustomCtx
   ): Promise<MResponse>;
 
   /** Clones the model, optionally modifying its config */
   abstract extend<
-    Args extends PartialModelArgs<MClient, MConfig, MRun, MResponse>,
+    Args extends PartialModelArgs<MClient, MConfig, MRun, MResponse, CustomCtx>,
   >(args?: Args): this;
 
   public abstract readonly modelType: Model.Type;
@@ -70,17 +83,22 @@ export abstract class AbstractModel<
   protected readonly cacheKey: CacheKey<MRun & MConfig, string>;
   protected readonly cache?: CacheStorage<string, MResponse>;
   public readonly client: MClient;
-  public readonly context: Model.Ctx;
+  public readonly context: CustomCtx;
   public readonly debug: boolean;
   public readonly params: MConfig & Partial<MRun>;
-  public readonly events: Model.Events<MRun & MConfig, MResponse, AResponse>;
+  public readonly events: Model.Events<
+    MRun & MConfig,
+    MResponse,
+    CustomCtx,
+    AResponse
+  >;
   public readonly tokenizer: Model.ITokenizer;
 
-  constructor(args: ModelArgs<MClient, MConfig, MRun, MResponse>) {
+  constructor(args: ModelArgs<MClient, MConfig, MRun, MResponse, CustomCtx>) {
     this.cacheKey = args.cacheKey ?? defaultCacheKey;
     this.cache = args.cache;
     this.client = args.client;
-    this.context = args.context ?? {};
+    this.context = args.context ?? ({} as CustomCtx);
     this.debug = args.debug ?? false;
     this.params = args.params;
     this.events = args.events || {};
@@ -89,7 +107,7 @@ export abstract class AbstractModel<
 
   async run(
     params: Prettify<MRun & Partial<MConfig>>,
-    context?: Model.Ctx
+    context?: CustomCtx
   ): Promise<MResponse> {
     const start = Date.now();
     const mergedContext = deepMerge(this.context, context);

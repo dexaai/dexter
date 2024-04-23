@@ -9,7 +9,6 @@ import type {
   EmbeddingResponse,
   OpenAIClient,
 } from 'openai-fetch';
-import type { ReadonlyDeep } from 'type-fest';
 import type { AbstractModel } from './model.js';
 import type { ChatModel } from './chat.js';
 import type { CompletionModel } from './completion.js';
@@ -109,7 +108,7 @@ export namespace Model {
   }
 
   /** Generic metadata object. */
-  export type Ctx = ReadonlyDeep<{ [key: string]: any }>;
+  export type Ctx = { [key: string]: any };
 
   /**
    * Embedding Model
@@ -151,6 +150,7 @@ export namespace Model {
   export interface Events<
     MParams extends Base.Params,
     MResponse extends Base.Response,
+    MCtx extends Model.Ctx,
     AResponse extends any = any,
   > {
     onStart?: ((event: {
@@ -158,7 +158,7 @@ export namespace Model {
       modelType: Type;
       modelProvider: Provider;
       params: Readonly<MParams>;
-      context: Readonly<Ctx>;
+      context: Readonly<MCtx>;
     }) => void | Promise<void>)[];
     onApiResponse?: ((event: {
       timestamp: string;
@@ -167,7 +167,7 @@ export namespace Model {
       params: Readonly<MParams>;
       response: Readonly<AResponse>;
       latency: number;
-      context: Readonly<Ctx>;
+      context: Readonly<MCtx>;
     }) => void | Promise<void>)[];
     onComplete?: ((event: {
       timestamp: string;
@@ -175,7 +175,7 @@ export namespace Model {
       modelProvider: Provider;
       params: Readonly<MParams>;
       response: Readonly<MResponse>;
-      context: Readonly<Ctx>;
+      context: Readonly<MCtx>;
       cached: boolean;
     }) => void | Promise<void>)[];
     onError?: ((event: {
@@ -184,7 +184,7 @@ export namespace Model {
       modelProvider: Provider;
       params: Readonly<MParams>;
       error: unknown;
-      context: Readonly<Ctx>;
+      context: Readonly<MCtx>;
     }) => void | Promise<void>)[];
   }
 
@@ -248,6 +248,7 @@ export namespace Model {
     export interface Response extends Model.Base.Response {
       vectors: Vector[];
     }
+    export type ApiResponse = Vector;
     export type Model = SparseVectorModel;
   }
 

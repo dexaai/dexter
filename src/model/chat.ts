@@ -7,32 +7,36 @@ import { createOpenAIClient } from './clients/openai.js';
 import { AbstractModel } from './model.js';
 import { deepMerge, mergeEvents, type Prettify } from '../utils/helpers.js';
 
-export type ChatModelArgs = SetOptional<
+export type ChatModelArgs<CustomCtx extends Model.Ctx> = SetOptional<
   ModelArgs<
     Model.Chat.Client,
     Model.Chat.Config,
     Model.Chat.Run,
-    Model.Chat.Response
+    Model.Chat.Response,
+    CustomCtx
   >,
   'client' | 'params'
 >;
 
-export type PartialChatModelArgs = Prettify<
-  PartialDeep<Pick<ChatModelArgs, 'params'>> &
-    Partial<Omit<ChatModelArgs, 'params'>>
+export type PartialChatModelArgs<CustomCtx extends Model.Ctx> = Prettify<
+  PartialDeep<Pick<ChatModelArgs<Partial<CustomCtx>>, 'params'>> &
+    Partial<Omit<ChatModelArgs<Partial<CustomCtx>>, 'params'>>
 >;
 
-export class ChatModel extends AbstractModel<
+export class ChatModel<
+  CustomCtx extends Model.Ctx = Model.Ctx,
+> extends AbstractModel<
   Model.Chat.Client,
   Model.Chat.Config,
   Model.Chat.Run,
   Model.Chat.Response,
-  Model.Chat.ApiResponse
+  Model.Chat.ApiResponse,
+  CustomCtx
 > {
   modelType = 'chat' as const;
   modelProvider = 'openai' as const;
 
-  constructor(args: ChatModelArgs = {}) {
+  constructor(args: ChatModelArgs<CustomCtx> = {}) {
     const {
       // Add a default client if none is provided
       client = createOpenAIClient(),
@@ -62,7 +66,7 @@ export class ChatModel extends AbstractModel<
 
   protected async runModel(
     { handleUpdate, ...params }: Model.Chat.Run & Model.Chat.Config,
-    context: Model.Ctx
+    context: CustomCtx
   ): Promise<Model.Chat.Response> {
     const start = Date.now();
 
@@ -204,7 +208,7 @@ export class ChatModel extends AbstractModel<
   }
 
   /** Clone the model and merge/override the given properties. */
-  extend(args?: PartialChatModelArgs): this {
+  extend(args?: PartialChatModelArgs<CustomCtx>): this {
     return new ChatModel({
       cacheKey: this.cacheKey,
       cache: this.cache,

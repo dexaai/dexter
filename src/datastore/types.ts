@@ -78,7 +78,7 @@ export namespace Datastore {
      */
     contentKey: keyof DocMeta;
     namespace?: string;
-    embeddingModel: Model.Embedding.Model;
+    embeddingModel: any;
     /**
      * A function that returns a cache key for the given params.
      *
@@ -107,7 +107,7 @@ export namespace Datastore {
     Filter extends BaseFilter<DocMeta>,
   > extends Opts<DocMeta, Filter> {
     /** Splade instance for creating sparse vectors */
-    spladeModel: Model.SparseVector.Model;
+    spladeModel: any;
   }
 
   /** The provider of the vector database. */

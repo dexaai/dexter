@@ -21,6 +21,7 @@ async function main() {
   // Pinecone datastore with cache
   const store = new PineconeDatastore<{ content: string }>({
     contentKey: 'content',
+    // @ts-ignore
     embeddingModel,
     events: { onQueryComplete: [console.log] },
     cache: new Map(),

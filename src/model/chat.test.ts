@@ -91,7 +91,10 @@ describe('ChatModel', () => {
   });
 
   it('implements extend', async () => {
-    const chatModel = new ChatModel({
+    const chatModel = new ChatModel<{
+      userId: string;
+      cloned?: boolean;
+    }>({
       client: Client,
       context: { userId: '123' },
       params: { model: 'gpt-fake' },
