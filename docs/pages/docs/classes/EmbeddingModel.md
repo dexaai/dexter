@@ -104,7 +104,7 @@ Add the params. Overrides existing keys.
 
 > **clone**(`args`?): [`EmbeddingModel`](EmbeddingModel.md)
 
-Clone the model and merge/orverride the given properties.
+Clone the model and merge/override the given properties.
 
 #### Parameters
 

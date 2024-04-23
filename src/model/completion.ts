@@ -76,7 +76,7 @@ export class CompletionModel extends AbstractModel<
     return modelResponse;
   }
 
-  /** Clone the model and merge/orverride the given properties. */
+  /** Clone the model and merge/override the given properties. */
   extend(args?: PartialCompletionModelArgs): this {
     return new CompletionModel({
       cacheKey: this.cacheKey,

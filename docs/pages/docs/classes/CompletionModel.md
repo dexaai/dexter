@@ -101,7 +101,7 @@ Add the params. Overrides existing keys.
 
 > **clone**(`args`?): [`CompletionModel`](CompletionModel.md)
 
-Clone the model and merge/orverride the given properties.
+Clone the model and merge/override the given properties.
 
 #### Parameters
 
