@@ -7,13 +7,14 @@ import type { Model } from './types.js';
 import { createSpladeClient } from './clients/splade.js';
 import { deepMerge, mergeEvents, type Prettify } from '../utils/helpers.js';
 
-export type SparseVectorModelArgs = Prettify<
+export type SparseVectorModelArgs<CustomCtx extends Model.Ctx> = Prettify<
   Omit<
     ModelArgs<
       Model.SparseVector.Client,
       Model.SparseVector.Config,
       Model.SparseVector.Run,
-      Model.SparseVector.Response
+      Model.SparseVector.Response,
+      CustomCtx
     >,
     'client'
   > & {
@@ -21,22 +22,27 @@ export type SparseVectorModelArgs = Prettify<
   }
 >;
 
-export type PartialSparseVectorModelArgs = Prettify<
-  PartialDeep<Pick<SparseVectorModelArgs, 'params'>> &
-    Partial<Omit<SparseVectorModelArgs, 'params'>>
->;
+export type PartialSparseVectorModelArgs<CustomCtx extends Model.Ctx> =
+  Prettify<
+    PartialDeep<Pick<SparseVectorModelArgs<Partial<CustomCtx>>, 'params'>> &
+      Partial<Omit<SparseVectorModelArgs<Partial<CustomCtx>>, 'params'>>
+  >;
 
-export class SparseVectorModel extends AbstractModel<
+export class SparseVectorModel<
+  CustomCtx extends Model.Ctx = Model.Ctx,
+> extends AbstractModel<
   Model.SparseVector.Client,
   Model.SparseVector.Config,
   Model.SparseVector.Run,
-  Model.SparseVector.Response
+  Model.SparseVector.Response,
+  Model.SparseVector.ApiResponse,
+  CustomCtx
 > {
   modelType = 'sparse-vector' as const;
   modelProvider = 'custom' as const;
   serviceUrl: string;
 
-  constructor(args: SparseVectorModelArgs) {
+  constructor(args: SparseVectorModelArgs<CustomCtx>) {
     const { serviceUrl, ...rest } = args;
     super({ client: createSpladeClient(), ...rest });
     const safeProcess = globalThis.process || { env: {} };
@@ -49,7 +55,7 @@ export class SparseVectorModel extends AbstractModel<
 
   protected async runModel(
     params: Model.SparseVector.Run & Model.SparseVector.Config,
-    context: Model.Ctx
+    context: CustomCtx
   ): Promise<Model.SparseVector.Response> {
     const start = Date.now();
     const interval = params.throttleInterval ?? 1000 * 60; // 1 minute
@@ -78,13 +84,18 @@ export class SparseVectorModel extends AbstractModel<
 
   protected async runSingle(
     params: { input: string; model: string },
-    context: Model.Ctx
-  ) {
+    context: CustomCtx
+  ): Promise<{
+    vector: Model.SparseVector.Vector;
+    tokens: {
+      prompt: number;
+      completion: number;
+      total: number;
+    };
+  }> {
     const start = Date.now();
-    const vector = await this.client.createSparseVector(
-      params,
-      this.serviceUrl
-    );
+    const vector: Model.SparseVector.Vector =
+      await this.client.createSparseVector(params, this.serviceUrl);
     const latency = Date.now() - start;
 
     // Don't need tokens for this model
@@ -110,7 +121,7 @@ export class SparseVectorModel extends AbstractModel<
   }
 
   /** Clone the model and merge/override the given properties. */
-  extend(args?: PartialSparseVectorModelArgs): this {
+  extend(args?: PartialSparseVectorModelArgs<CustomCtx>): this {
     return new SparseVectorModel({
       cacheKey: this.cacheKey,
       cache: this.cache,

@@ -51,6 +51,7 @@ export class PineconeDatastore<
     }
 
     // Query Pinecone
+    // @ts-ignore
     const response = await this.pinecone.query({
       topK: query.topK ?? 10,
       ...(typeof query.minScore === 'number'
@@ -67,6 +68,7 @@ export class PineconeDatastore<
 
     const queryResult: Datastore.QueryResult<DocMeta> = {
       query: query.query,
+      // @ts-ignore
       docs: response.matches,
     };
 

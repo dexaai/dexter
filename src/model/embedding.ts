@@ -9,24 +9,25 @@ import { createOpenAIClient } from './clients/openai.js';
 import { AbstractModel } from './model.js';
 import { deepMerge, mergeEvents, type Prettify } from '../utils/helpers.js';
 
-export type EmbeddingModelArgs = SetOptional<
+export type EmbeddingModelArgs<CustomCtx extends Model.Ctx> = SetOptional<
   ModelArgs<
     Model.Embedding.Client,
     Model.Embedding.Config,
     Model.Embedding.Run,
-    Model.Embedding.Response
+    Model.Embedding.Response,
+    CustomCtx
   >,
   'client' | 'params'
 >;
 
-export type PartialSparseVectorModelArgs = Prettify<
-  PartialDeep<Pick<EmbeddingModelArgs, 'params'>> &
-    Partial<Omit<EmbeddingModelArgs, 'params'>>
+export type PartialEmbeddingModelArgs<CustomCtx extends Model.Ctx> = Prettify<
+  PartialDeep<Pick<EmbeddingModelArgs<Partial<CustomCtx>>, 'params'>> &
+    Partial<Omit<EmbeddingModelArgs<Partial<CustomCtx>>, 'params'>>
 >;
 
-type BulkEmbedder = (
+type BulkEmbedder<CustomCtx extends Model.Ctx> = (
   params: Model.Embedding.Run & Model.Embedding.Config,
-  context: Model.Ctx
+  context: CustomCtx
 ) => Promise<Model.Embedding.Response>;
 
 const DEFAULTS = {
@@ -39,18 +40,21 @@ const DEFAULTS = {
   model: 'text-embedding-ada-002',
 } as const;
 
-export class EmbeddingModel extends AbstractModel<
+export class EmbeddingModel<
+  CustomCtx extends Model.Ctx = Model.Ctx,
+> extends AbstractModel<
   Model.Embedding.Client,
   Model.Embedding.Config,
   Model.Embedding.Run,
   Model.Embedding.Response,
-  Model.Embedding.ApiResponse
+  Model.Embedding.ApiResponse,
+  CustomCtx
 > {
   modelType = 'embedding' as const;
   modelProvider = 'openai' as const;
-  throttledModel: BulkEmbedder;
+  throttledModel: BulkEmbedder<CustomCtx>;
 
-  constructor(args: EmbeddingModelArgs = {}) {
+  constructor(args: EmbeddingModelArgs<CustomCtx> = {}) {
     const {
       client = createOpenAIClient(),
       params = { model: DEFAULTS.model },
@@ -66,7 +70,7 @@ export class EmbeddingModel extends AbstractModel<
     this.throttledModel = pThrottle({ limit, interval })(
       async (
         params: Model.Embedding.Run & Model.Embedding.Config,
-        context: Model.Ctx
+        context: CustomCtx
       ) => {
         const start = Date.now();
 
@@ -112,7 +116,7 @@ export class EmbeddingModel extends AbstractModel<
 
   protected async runModel(
     params: Model.Embedding.Run & Model.Embedding.Config,
-    context: Model.Ctx
+    context: CustomCtx
   ): Promise<Model.Embedding.Response> {
     const start = Date.now();
     // Batch the inputs for the requests
@@ -168,8 +172,8 @@ export class EmbeddingModel extends AbstractModel<
   }
 
   /** Clone the model and merge/override the given properties. */
-  extend(args?: PartialSparseVectorModelArgs): this {
-    return new EmbeddingModel({
+  extend(args?: PartialEmbeddingModelArgs<CustomCtx>): this {
+    return new EmbeddingModel<CustomCtx>({
       cacheKey: this.cacheKey,
       cache: this.cache,
       client: this.client,

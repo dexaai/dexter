@@ -1,4 +1,3 @@
-import type { Model } from '../model/index.js';
 import type { Datastore } from './types.js';
 import {
   type CacheKey,
@@ -40,7 +39,7 @@ export abstract class AbstractDatastore<
   >;
 
   public readonly contentKey: keyof DocMeta;
-  public readonly embeddingModel: Model.Embedding.Model;
+  public readonly embeddingModel: any;
   public readonly namespace?: string;
   public readonly events: Datastore.Events<DocMeta, Filter>;
   public readonly context: Datastore.Ctx;
