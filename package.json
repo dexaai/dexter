@@ -1,7 +1,7 @@
 {
   "name": "@dexaai/dexter",
   "type": "module",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "LLM tools used in production at Dexa, with a focus on real-world RAG.",
   "repository": "dexaai/dexter",
   "license": "MIT",
