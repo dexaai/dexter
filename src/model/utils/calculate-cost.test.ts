@@ -34,6 +34,18 @@ describe('Calculates cost for', () => {
       completion: 1000,
       expected: 4,
     },
+    {
+      model: 'gpt-4o',
+      prompt: 1000,
+      completion: 1000,
+      expected: 2,
+    },
+    {
+      model: 'gpt-4o-2024-05-13',
+      prompt: 1000,
+      completion: 1000,
+      expected: 2,
+    },
     { model: 'gpt-4-0613', prompt: 1000, completion: 1000, expected: 9 },
     { model: 'gpt-4-32k', prompt: 1000, completion: 1000, expected: 18 },
     { model: 'gpt-4-32k-0613', prompt: 1000, completion: 1000, expected: 18 },
