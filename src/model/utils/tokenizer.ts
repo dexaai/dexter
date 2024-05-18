@@ -34,6 +34,8 @@ const GPT_4_MODELS = [
   'gpt-4-vision-preview',
   'gpt-4-turbo-2024-04-09',
   'gpt-4-1106-vision-preview',
+  'gpt-4o',
+  'gpt-4o-2024-05-13',
 ] as const;
 type Gpt4ModelName = (typeof GPT_4_MODELS)[number];
 
