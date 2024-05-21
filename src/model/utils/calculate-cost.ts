@@ -10,6 +10,10 @@ const COSTS: Record<string, Cost> = {
     input: 0.001,
     output: 0.003,
   },
+  'gpt-4o': {
+    input: 0.0005,
+    output: 0.0015,
+  },
   'gpt-4-32k': {
     input: 0.006,
     output: 0.012,
@@ -95,6 +99,10 @@ function getCost(model: string): Cost | null {
 
   // Handle model names with versions that have the same price.
   // Eg: gpt-3.5-turbo-0613
+
+  if (model === 'gpt-4o' || model.startsWith('gpt-4o-')) {
+    return COSTS['gpt-4o'];
+  }
 
   if (model.startsWith('gpt-4')) {
     if (
