@@ -50,6 +50,9 @@ export namespace Model {
     };
     export interface Run extends Base.Run {
       messages: Model.Message[];
+      opts?: {
+        signal?: AbortSignal;
+      };
     }
     export interface Config extends Base.Config {
       /** Handle new chunk from streaming requests. */
