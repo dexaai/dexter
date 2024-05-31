@@ -16,7 +16,6 @@ import type { CompletionModel } from './completion.js';
 import type { EmbeddingModel } from './embedding.js';
 import type { SparseVectorModel } from './sparse-vector.js';
 
-
 type InnerType<T> = T extends ReadableStream<infer U> ? U : never;
 
 /**

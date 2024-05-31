@@ -51,7 +51,6 @@ export class CompletionModel<
   ): Promise<Model.Completion.Response> {
     const start = Date.now();
 
-
     // Make the OpenAI API request
     const response = await this.client.createCompletions(params, requestOpts);
 

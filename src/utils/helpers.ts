@@ -4,7 +4,8 @@ import { deepmerge as deepmergeInit } from '@fastify/deepmerge';
 export type Prettify<T> = { [K in keyof T]: T[K] } & {};
 
 type DeepMerge = ReturnType<typeof deepmergeInit>;
-const deepMergeImpl: DeepMerge = deepmergeInit();
+export const deepMergeImpl: DeepMerge = deepmergeInit();
+
 const deepMergeEventsImpl: DeepMerge = deepmergeInit({
   // Note: this is not using a recursive deep merge since it isn't used for events.
   mergeArray: () => (a: any[], b: any[]) => stableDedupe([...a, ...b]),

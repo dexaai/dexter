@@ -6,17 +6,23 @@ import type { Model } from './types.js';
 class Test extends AbstractModel<
   any,
   { model: string },
-  { input: string, requestOpts?: {
-    signal?: AbortSignal
-  } },
+  {
+    input: string;
+    requestOpts?: {
+      signal?: AbortSignal;
+    };
+  },
   { output: string; cached: boolean }
 > {
   modelType = 'completion' as Model.Type;
   modelProvider = 'custom' as Model.Provider;
   async runModel(
-    params: { input: string, requestOpts?: {
-      signal?: AbortSignal
-    } },
+    params: {
+      input: string;
+      requestOpts?: {
+        signal?: AbortSignal;
+      };
+    },
     context: Model.Ctx
   ): Promise<{ output: string; cached: boolean }> {
     if (params.input === 'throw error') {
@@ -101,17 +107,26 @@ describe('AbstractModel', () => {
   it('can take in a signal', async () => {
     const abortController = new AbortController();
     const test = new Test({ params: { model: 'testmodel' }, client: false });
-    const result = await test.run({ input: 'fooin', requestOpts: {
-      signal: abortController.signal
-    } }, { userId: '123' });
+    const result = await test.run(
+      {
+        input: 'fooin',
+        requestOpts: {
+          signal: abortController.signal,
+        },
+      },
+      { userId: '123' }
+    );
 
     const runModelSpy = vi.spyOn(test, 'runModel');
-    await test.run({ input: 'fooin', requestOpts: { signal: abortController.signal } }, { userId: '123' });
+    await test.run(
+      { input: 'fooin', requestOpts: { signal: abortController.signal } },
+      { userId: '123' }
+    );
     expect(runModelSpy).toHaveBeenCalledWith(
       expect.objectContaining({
         requestOpts: expect.objectContaining({
-          signal: abortController.signal
-        })
+          signal: abortController.signal,
+        }),
       }),
       expect.objectContaining({ userId: '123' })
     );

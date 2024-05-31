@@ -55,7 +55,10 @@ export class SparseVectorModel<
   }
 
   protected async runModel(
-    { requestOpts, ...params }: Model.SparseVector.Run & Model.SparseVector.Config,
+    {
+      requestOpts,
+      ...params
+    }: Model.SparseVector.Run & Model.SparseVector.Config,
     context: CustomCtx
   ): Promise<Model.SparseVector.Response> {
     const start = Date.now();
@@ -86,10 +89,10 @@ export class SparseVectorModel<
   protected async runSingle(
     params: {
       input: string;
-      model: string,
+      model: string;
       requestOpts?: {
-        headers?: KYOptions['headers']
-      }
+        headers?: KYOptions['headers'];
+      };
     },
     context: CustomCtx
   ): Promise<{

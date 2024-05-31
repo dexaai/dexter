@@ -14,21 +14,18 @@ async function main() {
     },
   });
 
-  const messages: Prompt.Msg[] = [
-    Msg.user(`Write a short story`),
-  ];
+  const messages: Prompt.Msg[] = [Msg.user(`Write a short story`)];
 
   {
-    const abortController = new AbortController()
+    const abortController = new AbortController();
     abortController.signal.addEventListener('abort', () => {
-      console.log('\n\nAborted')
-    })
+      console.log('\n\nAborted');
+    });
 
     try {
-
       setTimeout(() => {
-        abortController.abort()
-      }, 2000)
+        abortController.abort();
+      }, 2000);
 
       // Invoke the chat model with the result
       await chatModel.run({
@@ -40,12 +37,11 @@ async function main() {
           // Note: The abort doesn't always cancel the request, so we need to handle when the request is aborted
           // here as well.
           if (abortController.signal.aborted) {
-            return
+            return;
           }
-          process.stdout.write(c)
-        }
+          process.stdout.write(c);
+        },
       });
-
 
       // console.log(message.content);
     } catch (error) {

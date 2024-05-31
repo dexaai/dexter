@@ -8,7 +8,6 @@ import {
   defaultCacheKey,
 } from '../utils/cache.js';
 
-
 export interface ModelArgs<
   MClient extends Model.Base.Client,
   MConfig extends Model.Base.Config,
@@ -113,11 +112,12 @@ export abstract class AbstractModel<
     const start = Date.now();
 
     const mergedContext = deepMerge(this.context, context);
-    const mergedParams = {
-      ...this.params,
-      ...params,
-    }
+    const mergedParams = deepMerge(this.params, params);
 
+    // Handle signal separately since it's a instance of AbortSignal
+    if (params.requestOpts?.signal && mergedParams.requestOpts) {
+      mergedParams.requestOpts.signal = params.requestOpts.signal;
+    }
 
     await Promise.allSettled(
       this.events.onStart?.map((event) =>
