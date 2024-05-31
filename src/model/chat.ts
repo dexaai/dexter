@@ -65,7 +65,7 @@ export class ChatModel<
   }
 
   protected async runModel(
-    { handleUpdate, opts, ...params }: Model.Chat.Run & Model.Chat.Config,
+    { handleUpdate, requestOpts, ...params }: Model.Chat.Run & Model.Chat.Config,
     context: CustomCtx
   ): Promise<Model.Chat.Response> {
     const start = Date.now();
@@ -73,7 +73,7 @@ export class ChatModel<
     // Use non-streaming API if no handler is provided
     if (!handleUpdate) {
       // Make the OpenAI API request
-      const response = await this.client.createChatCompletion(params, opts);
+      const response = await this.client.createChatCompletion(params, requestOpts);
 
       await Promise.allSettled(
         this.events?.onApiResponse?.map((event) =>
@@ -102,7 +102,7 @@ export class ChatModel<
       return modelResponse;
     } else {
       // Use the streaming API if a handler is provided
-      const stream = await this.client.streamChatCompletion(params);
+      const stream = await this.client.streamChatCompletion(params, requestOpts);
 
       // Keep track of the stream's output
       let chunk = {} as Model.Chat.CompletionChunk;

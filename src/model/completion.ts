@@ -46,13 +46,14 @@ export class CompletionModel<
   }
 
   protected async runModel(
-    params: Model.Completion.Run & Model.Completion.Config,
+    { requestOpts, ...params }: Model.Completion.Run & Model.Completion.Config,
     context: CustomCtx
   ): Promise<Model.Completion.Response> {
     const start = Date.now();
 
+
     // Make the OpenAI API request
-    const response = await this.client.createCompletions(params);
+    const response = await this.client.createCompletions(params, requestOpts);
 
     await Promise.allSettled(
       this.events?.onApiResponse?.map((event) =>

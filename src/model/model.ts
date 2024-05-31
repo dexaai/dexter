@@ -8,6 +8,7 @@ import {
   defaultCacheKey,
 } from '../utils/cache.js';
 
+
 export interface ModelArgs<
   MClient extends Model.Base.Client,
   MConfig extends Model.Base.Config,
@@ -110,8 +111,13 @@ export abstract class AbstractModel<
     context?: CustomCtx
   ): Promise<MResponse> {
     const start = Date.now();
+
     const mergedContext = deepMerge(this.context, context);
-    const mergedParams = deepMerge(this.params, params);
+    const mergedParams = {
+      ...this.params,
+      ...params,
+    }
+
 
     await Promise.allSettled(
       this.events.onStart?.map((event) =>

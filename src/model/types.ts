@@ -9,11 +9,13 @@ import type {
   EmbeddingResponse,
   OpenAIClient,
 } from 'openai-fetch';
+import { type Options as KYOptions } from 'ky';
 import type { AbstractModel } from './model.js';
 import type { ChatModel } from './chat.js';
 import type { CompletionModel } from './completion.js';
 import type { EmbeddingModel } from './embedding.js';
 import type { SparseVectorModel } from './sparse-vector.js';
+
 
 type InnerType<T> = T extends ReadableStream<infer U> ? U : never;
 
@@ -30,7 +32,13 @@ export namespace Model {
     export interface Config {
       model: string;
     }
-    export interface Run {}
+    export interface Run {
+      [key: string]: any;
+      requestOpts?: {
+        signal?: AbortSignal;
+        headers?: KYOptions['headers'];
+      };
+    }
     export interface Params extends Config, Run {}
     export interface Response {
       cached: boolean;
@@ -50,9 +58,6 @@ export namespace Model {
     };
     export interface Run extends Base.Run {
       messages: Model.Message[];
-      opts?: {
-        signal?: AbortSignal;
-      };
     }
     export interface Config extends Base.Config {
       /** Handle new chunk from streaming requests. */
@@ -231,6 +236,9 @@ export namespace Model {
         params: {
           input: string;
           model: string;
+          requestOpts?: {
+            headers?: KYOptions['headers'];
+          };
         },
         serviceUrl: string
       ) => Promise<SparseVector.Vector>;

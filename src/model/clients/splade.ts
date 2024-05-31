@@ -1,4 +1,4 @@
-import ky from 'ky';
+import ky, { type Options as KYOptions } from 'ky';
 import type { Model } from '../types.js';
 
 export const createSpladeClient = () => ({
@@ -6,6 +6,9 @@ export const createSpladeClient = () => ({
     params: {
       input: string;
       model: string;
+      requestOpts?: {
+        headers?: KYOptions['headers'];
+      };
     },
     serviceUrl: string
   ): Promise<Model.SparseVector.Vector> {
@@ -14,6 +17,7 @@ export const createSpladeClient = () => ({
         .post(serviceUrl, {
           timeout: 1000 * 60,
           json: { text: params.input },
+          headers: params.requestOpts?.headers,
         })
         .json<Model.SparseVector.Vector>();
       return sparseValues;

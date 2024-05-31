@@ -115,7 +115,7 @@ export class EmbeddingModel<
   }
 
   protected async runModel(
-    params: Model.Embedding.Run & Model.Embedding.Config,
+    { requestOpts, ...params }: Model.Embedding.Run & Model.Embedding.Config,
     context: CustomCtx
   ): Promise<Model.Embedding.Response> {
     const start = Date.now();
@@ -136,6 +136,7 @@ export class EmbeddingModel<
           {
             input: batch,
             model: this.params.model,
+            requestOpts,
           },
           mergedContext
         );
