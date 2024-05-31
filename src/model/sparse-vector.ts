@@ -1,6 +1,7 @@
 import type { PartialDeep } from 'type-fest';
 import pThrottle from 'p-throttle';
 import pMap from 'p-map';
+import { type Options as KYOptions } from 'ky';
 import type { ModelArgs } from './model.js';
 import { AbstractModel } from './model.js';
 import type { Model } from './types.js';
@@ -54,7 +55,10 @@ export class SparseVectorModel<
   }
 
   protected async runModel(
-    params: Model.SparseVector.Run & Model.SparseVector.Config,
+    {
+      requestOpts,
+      ...params
+    }: Model.SparseVector.Run & Model.SparseVector.Config,
     context: CustomCtx
   ): Promise<Model.SparseVector.Response> {
     const start = Date.now();
@@ -83,7 +87,13 @@ export class SparseVectorModel<
   }
 
   protected async runSingle(
-    params: { input: string; model: string },
+    params: {
+      input: string;
+      model: string;
+      requestOpts?: {
+        headers?: KYOptions['headers'];
+      };
+    },
     context: CustomCtx
   ): Promise<{
     vector: Model.SparseVector.Vector;

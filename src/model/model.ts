@@ -110,8 +110,14 @@ export abstract class AbstractModel<
     context?: CustomCtx
   ): Promise<MResponse> {
     const start = Date.now();
+
     const mergedContext = deepMerge(this.context, context);
     const mergedParams = deepMerge(this.params, params);
+
+    // Handle signal separately since it's a instance of AbortSignal
+    if (params.requestOpts?.signal && mergedParams.requestOpts) {
+      mergedParams.requestOpts.signal = params.requestOpts.signal;
+    }
 
     await Promise.allSettled(
       this.events.onStart?.map((event) =>

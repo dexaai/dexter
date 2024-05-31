@@ -6,13 +6,23 @@ import type { Model } from './types.js';
 class Test extends AbstractModel<
   any,
   { model: string },
-  { input: string },
+  {
+    input: string;
+    requestOpts?: {
+      signal?: AbortSignal;
+    };
+  },
   { output: string; cached: boolean }
 > {
   modelType = 'completion' as Model.Type;
   modelProvider = 'custom' as Model.Provider;
-  protected async runModel(
-    params: { input: string },
+  async runModel(
+    params: {
+      input: string;
+      requestOpts?: {
+        signal?: AbortSignal;
+      };
+    },
     context: Model.Ctx
   ): Promise<{ output: string; cached: boolean }> {
     if (params.input === 'throw error') {
@@ -92,5 +102,38 @@ describe('AbstractModel', () => {
     // onComplete is called for cached responses
     expect(completeEvent).toHaveBeenCalledTimes(2);
     expect(completeEvent.mock.lastCall[0].cached).toBe(true);
+  });
+
+  it('can take in a signal', async () => {
+    const abortController = new AbortController();
+    const test = new Test({ params: { model: 'testmodel' }, client: false });
+    const result = await test.run(
+      {
+        input: 'fooin',
+        requestOpts: {
+          signal: abortController.signal,
+        },
+      },
+      { userId: '123' }
+    );
+
+    const runModelSpy = vi.spyOn(test, 'runModel');
+    await test.run(
+      { input: 'fooin', requestOpts: { signal: abortController.signal } },
+      { userId: '123' }
+    );
+    expect(runModelSpy).toHaveBeenCalledWith(
+      expect.objectContaining({
+        requestOpts: expect.objectContaining({
+          signal: abortController.signal,
+        }),
+      }),
+      expect.objectContaining({ userId: '123' })
+    );
+
+    expect(result).toEqual({
+      output: 'fooin > AI response with context: {"userId":"123"}',
+      cached: false,
+    });
   });
 });
