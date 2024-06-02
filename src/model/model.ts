@@ -132,6 +132,16 @@ export abstract class AbstractModel<
     return Sentry.startSpan({ name: spanName, op: 'llm' }, async (span) => {
       const start = Date.now();
 
+      // Add tags for the prompt name and version if present
+      Sentry.setTags({
+        ...(typeof mergedContext?.promptName === 'string'
+          ? { promptName: mergedContext.promptName }
+          : {}),
+        ...(typeof mergedContext?.promptVersion === 'string'
+          ? { promptVersion: Number(mergedContext.promptVersion) }
+          : {}),
+      });
+
       span.setAttributes({
         ...extractAttrsFromContext(mergedContext),
         ...extractAttrsFromParams({
