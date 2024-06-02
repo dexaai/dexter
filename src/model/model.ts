@@ -1,4 +1,11 @@
 import type { PartialDeep } from 'type-fest';
+import * as Sentry from '@sentry/node';
+import {
+  extractAttrsFromContext,
+  extractAttrsFromParams,
+  extractAttrsFromResponse,
+  getSpanName,
+} from './utils/telemetry.js';
 import { createTokenizer } from './utils/tokenizer.js';
 import type { Model } from './types.js';
 import { deepMerge, type Prettify } from '../utils/helpers.js';
@@ -109,8 +116,6 @@ export abstract class AbstractModel<
     params: Prettify<MRun & Partial<MConfig>>,
     context?: CustomCtx
   ): Promise<MResponse> {
-    const start = Date.now();
-
     const mergedContext = deepMerge(this.context, context);
     const mergedParams = deepMerge(this.params, params);
 
@@ -119,33 +124,74 @@ export abstract class AbstractModel<
       mergedParams.requestOpts.signal = params.requestOpts.signal;
     }
 
-    await Promise.allSettled(
-      this.events.onStart?.map((event) =>
-        Promise.resolve(
-          event({
-            timestamp: new Date().toISOString(),
-            modelType: this.modelType,
-            modelProvider: this.modelProvider,
-            params: mergedParams,
-            context: mergedContext,
-          })
-        )
-      ) ?? []
-    );
+    const spanName = getSpanName({
+      modelType: this.modelType,
+      ...mergedContext,
+    });
 
-    const cacheKey = await this.cacheKey(mergedParams);
+    return Sentry.startSpan({ name: spanName, op: 'llm' }, async (span) => {
+      const start = Date.now();
 
-    try {
-      // Check the cache
-      const cachedResponse =
-        this.cache && (await Promise.resolve(this.cache.get(cacheKey)));
-      if (cachedResponse) {
-        const response: MResponse = {
-          ...cachedResponse,
-          cached: true,
-          cost: 0,
-          latency: Date.now() - start,
-        };
+      span.setAttributes({
+        ...extractAttrsFromContext(mergedContext),
+        ...extractAttrsFromParams({
+          modelType: this.modelType,
+          modelProvider: this.modelProvider,
+          ...mergedParams,
+        }),
+      });
+
+      await Promise.allSettled(
+        this.events.onStart?.map((event) =>
+          Promise.resolve(
+            event({
+              timestamp: new Date().toISOString(),
+              modelType: this.modelType,
+              modelProvider: this.modelProvider,
+              params: mergedParams,
+              context: mergedContext,
+            })
+          )
+        ) ?? []
+      );
+
+      const cacheKey = await this.cacheKey(mergedParams);
+
+      try {
+        // Check the cache
+        const cachedResponse =
+          this.cache && (await Promise.resolve(this.cache.get(cacheKey)));
+        if (cachedResponse) {
+          const response: MResponse = {
+            ...cachedResponse,
+            cached: true,
+            cost: 0,
+            latency: Date.now() - start,
+          };
+          span.setAttributes(extractAttrsFromResponse(response));
+          await Promise.allSettled(
+            this.events.onComplete?.map((event) =>
+              Promise.resolve(
+                event({
+                  timestamp: new Date().toISOString(),
+                  modelType: this.modelType,
+                  modelProvider: this.modelProvider,
+                  params: mergedParams,
+                  response,
+                  context: mergedContext,
+                  cached: true,
+                })
+              )
+            ) ?? []
+          );
+          return response;
+        }
+
+        // Run the model (e.g. make the API request)
+        const response = await this.runModel(mergedParams, mergedContext);
+
+        span.setAttributes(extractAttrsFromResponse(response));
+
         await Promise.allSettled(
           this.events.onComplete?.map((event) =>
             Promise.resolve(
@@ -156,53 +202,33 @@ export abstract class AbstractModel<
                 params: mergedParams,
                 response,
                 context: mergedContext,
-                cached: true,
+                cached: false,
               })
             )
           ) ?? []
         );
+
+        // Update the cache
+        await Promise.resolve(this.cache?.set(cacheKey, response));
+
         return response;
+      } catch (error) {
+        await Promise.allSettled(
+          this.events?.onError?.map((event) =>
+            Promise.resolve(
+              event({
+                timestamp: new Date().toISOString(),
+                modelType: this.modelType,
+                modelProvider: this.modelProvider,
+                params: mergedParams,
+                error,
+                context: mergedContext,
+              })
+            )
+          ) ?? []
+        );
+        throw error;
       }
-
-      // Run the model (e.g. make the API request)
-      const response = await this.runModel(mergedParams, mergedContext);
-
-      await Promise.allSettled(
-        this.events.onComplete?.map((event) =>
-          Promise.resolve(
-            event({
-              timestamp: new Date().toISOString(),
-              modelType: this.modelType,
-              modelProvider: this.modelProvider,
-              params: mergedParams,
-              response,
-              context: mergedContext,
-              cached: false,
-            })
-          )
-        ) ?? []
-      );
-
-      // Update the cache
-      await Promise.resolve(this.cache?.set(cacheKey, response));
-
-      return response;
-    } catch (error) {
-      await Promise.allSettled(
-        this.events?.onError?.map((event) =>
-          Promise.resolve(
-            event({
-              timestamp: new Date().toISOString(),
-              modelType: this.modelType,
-              modelProvider: this.modelProvider,
-              params: mergedParams,
-              error,
-              context: mergedContext,
-            })
-          )
-        ) ?? []
-      );
-      throw error;
-    }
+    });
   }
 }
