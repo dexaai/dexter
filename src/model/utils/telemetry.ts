@@ -25,10 +25,15 @@ type AttrValue = string | number | boolean | undefined;
 type AttrMap = Record<string, AttrValue>;
 
 export function extractAttrsFromContext(context: any): AttrMap {
-  return Object.entries(context).reduce((acc, [key, value]) => {
-    acc[`context.${key}`] = JSON.stringify(value);
-    return acc;
-  }, {} as AttrMap);
+  try {
+    return Object.entries(context).reduce((acc, [key, value]) => {
+      acc[`context.${key}`] = JSON.stringify(value);
+      return acc;
+    }, {} as AttrMap);
+  } catch (e) {
+    console.error('Error extracting context attributes', e);
+    return {};
+  }
 }
 
 export function extractAttrsFromParams(params: {
@@ -43,17 +48,22 @@ export function extractAttrsFromParams(params: {
   prompt?: string | string[];
   input?: string[];
 }): AttrMap {
-  return {
-    [SpanAttrs.LLM_MODEL]: params.model,
-    [SpanAttrs.LLM_MODEL_TYPE]: params.modelType,
-    [SpanAttrs.LLM_PROVIDER]: params.modelProvider,
-    [SpanAttrs.LLM_MAX_TOKENS]: params?.max_tokens ?? undefined,
-    [SpanAttrs.LLM_TEMPERATURE]: params?.temperature ?? undefined,
-    ...extractAttrsFromMessages('prompt', params.messages),
-    ...extractAttrsFromStrings('prompt', params.prompt ?? params.input),
-    ...extractAttrsFromFunctions(params.functions),
-    ...extractAttrsFromTools(params.tools),
-  };
+  try {
+    return {
+      [SpanAttrs.LLM_MODEL]: params.model,
+      [SpanAttrs.LLM_MODEL_TYPE]: params.modelType,
+      [SpanAttrs.LLM_PROVIDER]: params.modelProvider,
+      [SpanAttrs.LLM_MAX_TOKENS]: params?.max_tokens ?? undefined,
+      [SpanAttrs.LLM_TEMPERATURE]: params?.temperature ?? undefined,
+      ...extractAttrsFromMessages('prompt', params.messages),
+      ...extractAttrsFromStrings('prompt', params.prompt ?? params.input),
+      ...extractAttrsFromFunctions(params.functions),
+      ...extractAttrsFromTools(params.tools),
+    };
+  } catch (e) {
+    console.error('Error extracting params attributes', e);
+    return {};
+  }
 }
 
 export function extractAttrsFromResponse(resp: {
@@ -66,21 +76,26 @@ export function extractAttrsFromResponse(resp: {
     total_tokens?: number;
   };
 }): AttrMap {
-  const completions = (resp.choices
-    ?.map((choice) => choice.text)
-    .filter(Boolean) ?? []) as string[];
-  const messages = (resp.choices
-    ?.map((choice) => choice.message)
-    .filter(Boolean) ?? []) as ChatMessage[];
-  return {
-    [SpanAttrs.LLM_CACHED]: resp.cached,
-    [SpanAttrs.LLM_COST]: resp.cost,
-    [SpanAttrs.LLM_TOKENS_COMPLETION]: resp?.usage?.completion_tokens,
-    [SpanAttrs.LLM_TOKENS_PROMPT]: resp?.usage?.prompt_tokens,
-    [SpanAttrs.LLM_TOKENS_TOTAL]: resp?.usage?.total_tokens,
-    ...extractAttrsFromMessages('completion', messages),
-    ...extractAttrsFromStrings('completion', completions),
-  };
+  try {
+    const completions = (resp.choices
+      ?.map((choice) => choice.text)
+      .filter(Boolean) ?? []) as string[];
+    const messages = (resp.choices
+      ?.map((choice) => choice.message)
+      .filter(Boolean) ?? []) as ChatMessage[];
+    return {
+      [SpanAttrs.LLM_CACHED]: resp.cached,
+      [SpanAttrs.LLM_COST]: resp.cost,
+      [SpanAttrs.LLM_TOKENS_COMPLETION]: resp?.usage?.completion_tokens,
+      [SpanAttrs.LLM_TOKENS_PROMPT]: resp?.usage?.prompt_tokens,
+      [SpanAttrs.LLM_TOKENS_TOTAL]: resp?.usage?.total_tokens,
+      ...extractAttrsFromMessages('completion', messages),
+      ...extractAttrsFromStrings('completion', completions),
+    };
+  } catch (e) {
+    console.error('Error extracting response attributes', e);
+    return {};
+  }
 }
 
 function extractAttrsFromFunctions(funcs?: ChatParams['functions']): AttrMap {
@@ -162,13 +177,18 @@ export function getSpanName(args: {
   promptName?: string;
   promptVersion?: string;
 }): string {
-  const { modelType, promptName, promptVersion } = args;
-  const typeName = modelType
-    .replace(/[^a-zA-Z0-9]/g, '')
-    .replace(/^./, (c) => c.toUpperCase());
+  try {
+    const { modelType, promptName, promptVersion } = args;
+    const typeName = modelType
+      .replace(/[^a-zA-Z0-9]/g, '')
+      .replace(/^./, (c) => c.toUpperCase());
 
-  const detailParts = [promptName, promptVersion ? `v${promptVersion}` : ''];
-  const details = detailParts.join(' ').trim();
+    const detailParts = [promptName, promptVersion ? `v${promptVersion}` : ''];
+    const details = detailParts.join(' ').trim();
 
-  return `${typeName}Model.run(${details})`;
+    return `${typeName}Model.run(${details})`;
+  } catch (e) {
+    console.error('Error getting span name', e);
+    return 'Model.run()';
+  }
 }
