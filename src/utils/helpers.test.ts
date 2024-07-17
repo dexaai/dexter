@@ -13,6 +13,64 @@ describe('utils.helpers', () => {
     });
   });
 
+  it('deepMerge tools', () => {
+    expect(
+      deepMerge(
+        {
+          foo: [
+            {
+              type: 'function',
+              function: {
+                name: 'foo',
+                description: 'foo function',
+                arguments: { bar: 'baz' },
+              },
+            },
+          ],
+        },
+        {
+          foo: [
+            {
+              type: 'function',
+              function: {
+                name: 'foo',
+                description: 'foo function',
+                arguments: { bar: 'baz' },
+              },
+            },
+            {
+              type: 'function',
+              function: {
+                name: 'foo2',
+                description: 'foo function2',
+                arguments: { bar: 'baz2' },
+              },
+            },
+          ],
+        }
+      )
+    ).toEqual({
+      foo: [
+        {
+          type: 'function',
+          function: {
+            name: 'foo',
+            description: 'foo function',
+            arguments: { bar: 'baz' },
+          },
+        },
+        {
+          type: 'function',
+          function: {
+            name: 'foo2',
+            description: 'foo function2',
+            arguments: { bar: 'baz2' },
+          },
+        },
+      ],
+    });
+  });
+
   it('mergeEvents', () => {
     expect(mergeEvents(undefined, {})).toEqual({});
     expect(mergeEvents({}, undefined)).toEqual({});
