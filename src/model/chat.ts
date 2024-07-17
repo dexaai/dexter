@@ -136,6 +136,10 @@ export class ChatModel<
 
         const delta = value.choices[0].delta;
 
+        if (Object.keys(chunk).length === 0) {
+          chunk = value;
+        }
+
         // Send an update to the caller
         const messageContent = delta?.content;
         if (typeof messageContent === 'string') {
@@ -147,15 +151,41 @@ export class ChatModel<
         }
 
         // Merge the delta into the chunk
-        const { content, function_call } = delta;
+        const { content, function_call, tool_calls } = delta;
         if (content) {
           chunk.choices[0].delta.content = `${chunk.choices[0].delta.content}${content}`;
         }
         if (function_call) {
-          chunk.choices[0].delta.function_call = deepMerge(
-            chunk.choices[0].delta.function_call,
-            function_call
-          );
+          const existingFunctionCall = chunk.choices[0].delta.function_call;
+          chunk.choices[0].delta.function_call = {
+            ...existingFunctionCall,
+            arguments: `${existingFunctionCall?.arguments ?? ''}${function_call.arguments}`,
+          };
+        }
+        if (tool_calls) {
+          const existingToolCalls = chunk.choices[0].delta.tool_calls;
+          if (!existingToolCalls) {
+            chunk.choices[0].delta.tool_calls = tool_calls;
+          } else {
+            chunk.choices[0].delta.tool_calls = existingToolCalls.map(
+              (existingToolCall) => {
+                const matchingToolCall = tool_calls.find(
+                  (toolCall) => toolCall.index === existingToolCall.index
+                );
+                if (!matchingToolCall) return existingToolCall;
+                const existingArgs = existingToolCall.function?.arguments ?? '';
+                const matchingArgs =
+                  matchingToolCall?.function?.arguments ?? '';
+                return {
+                  ...existingToolCall,
+                  function: {
+                    ...existingToolCall.function,
+                    arguments: `${existingArgs}${matchingArgs}`,
+                  },
+                };
+              }
+            );
+          }
         }
       }
 
