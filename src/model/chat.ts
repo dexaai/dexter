@@ -156,29 +156,35 @@ export class ChatModel<
           chunk.choices[0].delta.content = `${chunk.choices[0].delta.content}${content}`;
         }
         if (function_call) {
+          const existingFunctionCall = chunk.choices[0].delta.function_call;
           chunk.choices[0].delta.function_call = {
-            ...chunk.choices[0].delta.function_call,
-            arguments: `${chunk.choices[0].delta?.function_call?.arguments ?? ''}${function_call.arguments}`,
+            ...existingFunctionCall,
+            arguments: `${existingFunctionCall?.arguments ?? ''}${function_call.arguments}`,
           };
         }
         if (tool_calls) {
-          if (!chunk.choices[0].delta.tool_calls) {
+          const existingToolCalls = chunk.choices[0].delta.tool_calls;
+          if (!existingToolCalls) {
             chunk.choices[0].delta.tool_calls = tool_calls;
           } else {
-            chunk.choices[0].delta.tool_calls =
-              chunk.choices[0].delta.tool_calls.map((existingToolCall) => {
+            chunk.choices[0].delta.tool_calls = existingToolCalls.map(
+              (existingToolCall) => {
                 const matchingToolCall = tool_calls.find(
                   (toolCall) => toolCall.index === existingToolCall.index
                 );
                 if (!matchingToolCall) return existingToolCall;
+                const existingArgs = existingToolCall.function?.arguments ?? '';
+                const matchingArgs =
+                  matchingToolCall?.function?.arguments ?? '';
                 return {
                   ...existingToolCall,
                   function: {
                     ...existingToolCall.function,
-                    arguments: `${existingToolCall?.function?.arguments ?? ''}${matchingToolCall?.function?.arguments ?? ''}`,
+                    arguments: `${existingArgs}${matchingArgs}`,
                   },
                 };
-              });
+              }
+            );
           }
         }
       }
