@@ -8,21 +8,31 @@ import { calculateCost } from './utils/calculate-cost.js';
 import { createOpenAIClient } from './clients/openai.js';
 import { AbstractModel } from './model.js';
 import { deepMerge, mergeEvents, type Prettify } from '../utils/helpers.js';
+import type { Telemetry } from '../telemetry/types.js';
 
-export type EmbeddingModelArgs<CustomCtx extends Model.Ctx> = SetOptional<
+export type EmbeddingModelArgs<
+  CustomCtx extends Model.Ctx,
+  MTelemetry extends Telemetry.Base,
+> = SetOptional<
   ModelArgs<
     Model.Embedding.Client,
     Model.Embedding.Config,
     Model.Embedding.Run,
     Model.Embedding.Response,
-    CustomCtx
+    CustomCtx,
+    MTelemetry
   >,
   'client' | 'params'
 >;
 
-export type PartialEmbeddingModelArgs<CustomCtx extends Model.Ctx> = Prettify<
-  PartialDeep<Pick<EmbeddingModelArgs<Partial<CustomCtx>>, 'params'>> &
-    Partial<Omit<EmbeddingModelArgs<Partial<CustomCtx>>, 'params'>>
+export type PartialEmbeddingModelArgs<
+  CustomCtx extends Model.Ctx,
+  MTelemetry extends Telemetry.Base,
+> = Prettify<
+  PartialDeep<
+    Pick<EmbeddingModelArgs<Partial<CustomCtx>, MTelemetry>, 'params'>
+  > &
+    Partial<Omit<EmbeddingModelArgs<Partial<CustomCtx>, MTelemetry>, 'params'>>
 >;
 
 type BulkEmbedder<CustomCtx extends Model.Ctx> = (
@@ -42,19 +52,21 @@ const DEFAULTS = {
 
 export class EmbeddingModel<
   CustomCtx extends Model.Ctx = Model.Ctx,
+  MTelemetry extends Telemetry.Base = Telemetry.Base,
 > extends AbstractModel<
   Model.Embedding.Client,
   Model.Embedding.Config,
   Model.Embedding.Run,
   Model.Embedding.Response,
   Model.Embedding.ApiResponse,
-  CustomCtx
+  CustomCtx,
+  MTelemetry
 > {
   modelType = 'embedding' as const;
   modelProvider = 'openai' as const;
   throttledModel: BulkEmbedder<CustomCtx>;
 
-  constructor(args: EmbeddingModelArgs<CustomCtx> = {}) {
+  constructor(args: EmbeddingModelArgs<CustomCtx, MTelemetry> = {}) {
     const {
       client = createOpenAIClient(),
       params = { model: DEFAULTS.model },
@@ -173,12 +185,13 @@ export class EmbeddingModel<
   }
 
   /** Clone the model and merge/override the given properties. */
-  extend(args?: PartialEmbeddingModelArgs<CustomCtx>): this {
-    return new EmbeddingModel<CustomCtx>({
+  extend(args?: PartialEmbeddingModelArgs<CustomCtx, MTelemetry>): this {
+    return new EmbeddingModel<CustomCtx, MTelemetry>({
       cacheKey: this.cacheKey,
       cache: this.cache,
       client: this.client,
       debug: this.debug,
+      telemetry: this.telemetry,
       ...args,
       context: deepMerge(this.context, args?.context),
       params: deepMerge(this.params, args?.params),

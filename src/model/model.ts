@@ -1,5 +1,4 @@
 import type { PartialDeep } from 'type-fest';
-import * as Sentry from '@sentry/node';
 import {
   extractAttrsFromContext,
   extractAttrsFromParams,
@@ -14,6 +13,8 @@ import {
   type CacheStorage,
   defaultCacheKey,
 } from '../utils/cache.js';
+import type { Telemetry } from '../telemetry/types.js';
+import { DefaultTelemetry } from '../telemetry/default-telemetry.js';
 
 export interface ModelArgs<
   MClient extends Model.Base.Client,
@@ -21,6 +22,7 @@ export interface ModelArgs<
   MRun extends Model.Base.Run,
   MResponse extends Model.Base.Response,
   Ctx extends Model.Ctx,
+  MTelemetry extends Telemetry.Base,
 > {
   /**
    * A function that returns a cache key for the given params.
@@ -40,6 +42,7 @@ export interface ModelArgs<
   context?: Ctx;
   params: MConfig & Partial<MRun>;
   events?: Model.Events<MRun & MConfig, MResponse, Ctx>;
+  telemetry?: MTelemetry;
   /** Whether or not to add default `console.log` event handlers */
   debug?: boolean;
 }
@@ -50,16 +53,31 @@ export type PartialModelArgs<
   MRun extends Model.Base.Run,
   MResponse extends Model.Base.Response,
   CustomCtx extends Model.Ctx,
+  MTelemetry extends Telemetry.Base,
 > = Prettify<
   PartialDeep<
     Pick<
-      ModelArgs<MClient, MConfig, MRun, MResponse, Partial<CustomCtx>>,
+      ModelArgs<
+        MClient,
+        MConfig,
+        MRun,
+        MResponse,
+        Partial<CustomCtx>,
+        MTelemetry
+      >,
       'params'
     >
   > &
     Partial<
       Omit<
-        ModelArgs<MClient, MConfig, MRun, MResponse, Partial<CustomCtx>>,
+        ModelArgs<
+          MClient,
+          MConfig,
+          MRun,
+          MResponse,
+          Partial<CustomCtx>,
+          MTelemetry
+        >,
         'params'
       >
     >
@@ -72,6 +90,7 @@ export abstract class AbstractModel<
   MResponse extends Model.Base.Response,
   AResponse extends any = any,
   CustomCtx extends Model.Ctx = Model.Ctx,
+  MTelemetry extends Telemetry.Base = Telemetry.Base,
 > {
   /** This is used to implement specific model calls */
   protected abstract runModel(
@@ -81,7 +100,14 @@ export abstract class AbstractModel<
 
   /** Clones the model, optionally modifying its config */
   abstract extend<
-    Args extends PartialModelArgs<MClient, MConfig, MRun, MResponse, CustomCtx>,
+    Args extends PartialModelArgs<
+      MClient,
+      MConfig,
+      MRun,
+      MResponse,
+      CustomCtx,
+      MTelemetry
+    >,
   >(args?: Args): this;
 
   public abstract readonly modelType: Model.Type;
@@ -100,8 +126,11 @@ export abstract class AbstractModel<
     AResponse
   >;
   public readonly tokenizer: Model.ITokenizer;
+  public readonly telemetry: MTelemetry;
 
-  constructor(args: ModelArgs<MClient, MConfig, MRun, MResponse, CustomCtx>) {
+  constructor(
+    args: ModelArgs<MClient, MConfig, MRun, MResponse, CustomCtx, MTelemetry>
+  ) {
     this.cacheKey = args.cacheKey ?? defaultCacheKey;
     this.cache = args.cache;
     this.client = args.client;
@@ -109,6 +138,7 @@ export abstract class AbstractModel<
     this.debug = args.debug ?? false;
     this.params = args.params;
     this.events = args.events || {};
+    this.telemetry = args.telemetry ?? (DefaultTelemetry as MTelemetry);
     this.tokenizer = createTokenizer(args.params.model);
   }
 
@@ -129,56 +159,81 @@ export abstract class AbstractModel<
       ...mergedContext,
     });
 
-    return Sentry.startSpan({ name: spanName, op: 'llm' }, async (span) => {
-      const start = Date.now();
+    return this.telemetry.startSpan(
+      { name: spanName, op: 'llm' },
+      async (span) => {
+        const start = Date.now();
 
-      // Add tags for the prompt name and version if present
-      Sentry.setTags({
-        ...(typeof mergedContext?.promptName === 'string'
-          ? { promptName: mergedContext.promptName }
-          : {}),
-        ...(typeof mergedContext?.promptVersion === 'string'
-          ? { promptVersion: Number(mergedContext.promptVersion) }
-          : {}),
-      });
+        // Add tags for the prompt name and version if present
+        this.telemetry.setTags({
+          ...(typeof mergedContext?.promptName === 'string'
+            ? { promptName: mergedContext.promptName }
+            : {}),
+          ...(typeof mergedContext?.promptVersion === 'string'
+            ? { promptVersion: Number(mergedContext.promptVersion) }
+            : {}),
+        });
 
-      span.setAttributes({
-        ...extractAttrsFromContext(mergedContext),
-        ...extractAttrsFromParams({
-          modelType: this.modelType,
-          modelProvider: this.modelProvider,
-          ...mergedParams,
-        }),
-      });
+        span.setAttributes({
+          ...extractAttrsFromContext(mergedContext),
+          ...extractAttrsFromParams({
+            modelType: this.modelType,
+            modelProvider: this.modelProvider,
+            ...mergedParams,
+          }),
+        });
 
-      await Promise.allSettled(
-        this.events.onStart?.map((event) =>
-          Promise.resolve(
-            event({
-              timestamp: new Date().toISOString(),
-              modelType: this.modelType,
-              modelProvider: this.modelProvider,
-              params: mergedParams,
-              context: mergedContext,
-            })
-          )
-        ) ?? []
-      );
+        await Promise.allSettled(
+          this.events.onStart?.map((event) =>
+            Promise.resolve(
+              event({
+                timestamp: new Date().toISOString(),
+                modelType: this.modelType,
+                modelProvider: this.modelProvider,
+                params: mergedParams,
+                context: mergedContext,
+              })
+            )
+          ) ?? []
+        );
 
-      const cacheKey = await this.cacheKey(mergedParams);
+        const cacheKey = await this.cacheKey(mergedParams);
 
-      try {
-        // Check the cache
-        const cachedResponse =
-          this.cache && (await Promise.resolve(this.cache.get(cacheKey)));
-        if (cachedResponse) {
-          const response: MResponse = {
-            ...cachedResponse,
-            cached: true,
-            cost: 0,
-            latency: Date.now() - start,
-          };
+        try {
+          // Check the cache
+          const cachedResponse =
+            this.cache && (await Promise.resolve(this.cache.get(cacheKey)));
+          if (cachedResponse) {
+            const response: MResponse = {
+              ...cachedResponse,
+              cached: true,
+              cost: 0,
+              latency: Date.now() - start,
+            };
+            span.setAttributes(extractAttrsFromResponse(response));
+            await Promise.allSettled(
+              this.events.onComplete?.map((event) =>
+                Promise.resolve(
+                  event({
+                    timestamp: new Date().toISOString(),
+                    modelType: this.modelType,
+                    modelProvider: this.modelProvider,
+                    params: mergedParams,
+                    response,
+                    context: mergedContext,
+                    cached: true,
+                  })
+                )
+              ) ?? []
+            );
+            return response;
+          }
+
+          // Run the model (e.g. make the API request)
+          const response = await this.runModel(mergedParams, mergedContext);
+
           span.setAttributes(extractAttrsFromResponse(response));
+
           await Promise.allSettled(
             this.events.onComplete?.map((event) =>
               Promise.resolve(
@@ -189,56 +244,34 @@ export abstract class AbstractModel<
                   params: mergedParams,
                   response,
                   context: mergedContext,
-                  cached: true,
+                  cached: false,
                 })
               )
             ) ?? []
           );
+
+          // Update the cache
+          await Promise.resolve(this.cache?.set(cacheKey, response));
+
           return response;
+        } catch (error) {
+          await Promise.allSettled(
+            this.events?.onError?.map((event) =>
+              Promise.resolve(
+                event({
+                  timestamp: new Date().toISOString(),
+                  modelType: this.modelType,
+                  modelProvider: this.modelProvider,
+                  params: mergedParams,
+                  error,
+                  context: mergedContext,
+                })
+              )
+            ) ?? []
+          );
+          throw error;
         }
-
-        // Run the model (e.g. make the API request)
-        const response = await this.runModel(mergedParams, mergedContext);
-
-        span.setAttributes(extractAttrsFromResponse(response));
-
-        await Promise.allSettled(
-          this.events.onComplete?.map((event) =>
-            Promise.resolve(
-              event({
-                timestamp: new Date().toISOString(),
-                modelType: this.modelType,
-                modelProvider: this.modelProvider,
-                params: mergedParams,
-                response,
-                context: mergedContext,
-                cached: false,
-              })
-            )
-          ) ?? []
-        );
-
-        // Update the cache
-        await Promise.resolve(this.cache?.set(cacheKey, response));
-
-        return response;
-      } catch (error) {
-        await Promise.allSettled(
-          this.events?.onError?.map((event) =>
-            Promise.resolve(
-              event({
-                timestamp: new Date().toISOString(),
-                modelType: this.modelType,
-                modelProvider: this.modelProvider,
-                params: mergedParams,
-                error,
-                context: mergedContext,
-              })
-            )
-          ) ?? []
-        );
-        throw error;
       }
-    });
+    );
   }
 }

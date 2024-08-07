@@ -6,37 +6,49 @@ import { calculateCost } from './utils/calculate-cost.js';
 import { createOpenAIClient } from './clients/openai.js';
 import { AbstractModel } from './model.js';
 import { deepMerge, mergeEvents, type Prettify } from '../index.js';
+import type { Telemetry } from '../telemetry/types.js';
 
-export type CompletionModelArgs<CustomCtx extends Model.Ctx> = SetOptional<
+export type CompletionModelArgs<
+  CustomCtx extends Model.Ctx,
+  MTelemetry extends Telemetry.Base,
+> = SetOptional<
   ModelArgs<
     Model.Completion.Client,
     Model.Completion.Config,
     Model.Completion.Run,
     Model.Completion.Response,
-    CustomCtx
+    CustomCtx,
+    MTelemetry
   >,
   'client' | 'params'
 >;
 
-export type PartialCompletionModelArgs<CustomCtx extends Model.Ctx> = Prettify<
-  PartialDeep<Pick<CompletionModelArgs<Partial<CustomCtx>>, 'params'>> &
-    Partial<Omit<CompletionModelArgs<Partial<CustomCtx>>, 'params'>>
+export type PartialCompletionModelArgs<
+  CustomCtx extends Model.Ctx,
+  MTelemetry extends Telemetry.Base,
+> = Prettify<
+  PartialDeep<
+    Pick<CompletionModelArgs<Partial<CustomCtx>, MTelemetry>, 'params'>
+  > &
+    Partial<Omit<CompletionModelArgs<Partial<CustomCtx>, MTelemetry>, 'params'>>
 >;
 
 export class CompletionModel<
   CustomCtx extends Model.Ctx = Model.Ctx,
+  MTelemetry extends Telemetry.Base = Telemetry.Base,
 > extends AbstractModel<
   Model.Completion.Client,
   Model.Completion.Config,
   Model.Completion.Run,
   Model.Completion.Response,
   Model.Completion.ApiResponse,
-  CustomCtx
+  CustomCtx,
+  MTelemetry
 > {
   modelType = 'completion' as const;
   modelProvider = 'openai' as const;
 
-  constructor(args?: CompletionModelArgs<CustomCtx>) {
+  constructor(args?: CompletionModelArgs<CustomCtx, MTelemetry>) {
     let { client, params, ...rest } = args ?? {};
     // Add a default client if none is provided
     client = client ?? createOpenAIClient();
@@ -81,12 +93,13 @@ export class CompletionModel<
   }
 
   /** Clone the model and merge/override the given properties. */
-  extend(args?: PartialCompletionModelArgs<CustomCtx>): this {
+  extend(args?: PartialCompletionModelArgs<CustomCtx, MTelemetry>): this {
     return new CompletionModel({
       cacheKey: this.cacheKey,
       cache: this.cache,
       client: this.client,
       debug: this.debug,
+      telemetry: this.telemetry,
       ...args,
       context: deepMerge(this.context, args?.context),
       params: deepMerge(this.params, args?.params),

@@ -1,4 +1,5 @@
 import type { ChatMessage, ChatParams } from 'openai-fetch';
+import type { Telemetry } from '../../telemetry/types.js';
 
 const SpanAttrs = {
   LLM_MODEL: 'llm.model',
@@ -21,8 +22,7 @@ const SpanAttrs = {
   LLM_TOKENS_TOTAL: 'llm.tkns.total',
 };
 
-type AttrValue = string | number | boolean | undefined;
-type AttrMap = Record<string, AttrValue>;
+type AttrMap = Telemetry.SpanAttributes;
 
 export function extractAttrsFromContext(context: any): AttrMap {
   try {

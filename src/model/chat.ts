@@ -6,37 +6,47 @@ import { calculateCost } from './utils/calculate-cost.js';
 import { createOpenAIClient } from './clients/openai.js';
 import { AbstractModel } from './model.js';
 import { deepMerge, mergeEvents, type Prettify } from '../utils/helpers.js';
+import type { Telemetry } from '../telemetry/types.js';
 
-export type ChatModelArgs<CustomCtx extends Model.Ctx> = SetOptional<
+export type ChatModelArgs<
+  CustomCtx extends Model.Ctx,
+  MTelemetry extends Telemetry.Base,
+> = SetOptional<
   ModelArgs<
     Model.Chat.Client,
     Model.Chat.Config,
     Model.Chat.Run,
     Model.Chat.Response,
-    CustomCtx
+    CustomCtx,
+    MTelemetry
   >,
   'client' | 'params'
 >;
 
-export type PartialChatModelArgs<CustomCtx extends Model.Ctx> = Prettify<
-  PartialDeep<Pick<ChatModelArgs<Partial<CustomCtx>>, 'params'>> &
-    Partial<Omit<ChatModelArgs<Partial<CustomCtx>>, 'params'>>
+export type PartialChatModelArgs<
+  CustomCtx extends Model.Ctx,
+  MTelemetry extends Telemetry.Base,
+> = Prettify<
+  PartialDeep<Pick<ChatModelArgs<Partial<CustomCtx>, MTelemetry>, 'params'>> &
+    Partial<Omit<ChatModelArgs<Partial<CustomCtx>, MTelemetry>, 'params'>>
 >;
 
 export class ChatModel<
   CustomCtx extends Model.Ctx = Model.Ctx,
+  MTelemetry extends Telemetry.Base = Telemetry.Base,
 > extends AbstractModel<
   Model.Chat.Client,
   Model.Chat.Config,
   Model.Chat.Run,
   Model.Chat.Response,
   Model.Chat.ApiResponse,
-  CustomCtx
+  CustomCtx,
+  MTelemetry
 > {
   modelType = 'chat' as const;
   modelProvider = 'openai' as const;
 
-  constructor(args: ChatModelArgs<CustomCtx> = {}) {
+  constructor(args: ChatModelArgs<CustomCtx, MTelemetry> = {}) {
     const {
       // Add a default client if none is provided
       client = createOpenAIClient(),
@@ -248,12 +258,13 @@ export class ChatModel<
   }
 
   /** Clone the model and merge/override the given properties. */
-  extend(args?: PartialChatModelArgs<CustomCtx>): this {
+  extend(args?: PartialChatModelArgs<CustomCtx, MTelemetry>): this {
     return new ChatModel({
       cacheKey: this.cacheKey,
       cache: this.cache,
       client: this.client,
       debug: this.debug,
+      telemetry: this.telemetry,
       ...args,
       params: deepMerge(this.params, args?.params),
       context:

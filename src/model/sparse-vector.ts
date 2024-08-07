@@ -7,15 +7,20 @@ import { AbstractModel } from './model.js';
 import type { Model } from './types.js';
 import { createSpladeClient } from './clients/splade.js';
 import { deepMerge, mergeEvents, type Prettify } from '../utils/helpers.js';
+import type { Telemetry } from '../telemetry/types.js';
 
-export type SparseVectorModelArgs<CustomCtx extends Model.Ctx> = Prettify<
+export type SparseVectorModelArgs<
+  CustomCtx extends Model.Ctx,
+  MTelemetry extends Telemetry.Base,
+> = Prettify<
   Omit<
     ModelArgs<
       Model.SparseVector.Client,
       Model.SparseVector.Config,
       Model.SparseVector.Run,
       Model.SparseVector.Response,
-      CustomCtx
+      CustomCtx,
+      MTelemetry
     >,
     'client'
   > & {
@@ -23,27 +28,35 @@ export type SparseVectorModelArgs<CustomCtx extends Model.Ctx> = Prettify<
   }
 >;
 
-export type PartialSparseVectorModelArgs<CustomCtx extends Model.Ctx> =
-  Prettify<
-    PartialDeep<Pick<SparseVectorModelArgs<Partial<CustomCtx>>, 'params'>> &
-      Partial<Omit<SparseVectorModelArgs<Partial<CustomCtx>>, 'params'>>
-  >;
+export type PartialSparseVectorModelArgs<
+  CustomCtx extends Model.Ctx,
+  MTelemetry extends Telemetry.Base,
+> = Prettify<
+  PartialDeep<
+    Pick<SparseVectorModelArgs<Partial<CustomCtx>, MTelemetry>, 'params'>
+  > &
+    Partial<
+      Omit<SparseVectorModelArgs<Partial<CustomCtx>, MTelemetry>, 'params'>
+    >
+>;
 
 export class SparseVectorModel<
   CustomCtx extends Model.Ctx = Model.Ctx,
+  MTelemetry extends Telemetry.Base = Telemetry.Base,
 > extends AbstractModel<
   Model.SparseVector.Client,
   Model.SparseVector.Config,
   Model.SparseVector.Run,
   Model.SparseVector.Response,
   Model.SparseVector.ApiResponse,
-  CustomCtx
+  CustomCtx,
+  MTelemetry
 > {
   modelType = 'sparse-vector' as const;
   modelProvider = 'custom' as const;
   serviceUrl: string;
 
-  constructor(args: SparseVectorModelArgs<CustomCtx>) {
+  constructor(args: SparseVectorModelArgs<CustomCtx, MTelemetry>) {
     const { serviceUrl, ...rest } = args;
     super({ client: createSpladeClient(), ...rest });
     const safeProcess = globalThis.process || { env: {} };
@@ -131,12 +144,13 @@ export class SparseVectorModel<
   }
 
   /** Clone the model and merge/override the given properties. */
-  extend(args?: PartialSparseVectorModelArgs<CustomCtx>): this {
+  extend(args?: PartialSparseVectorModelArgs<CustomCtx, MTelemetry>): this {
     return new SparseVectorModel({
       cacheKey: this.cacheKey,
       cache: this.cache,
       debug: this.debug,
       serviceUrl: this.serviceUrl,
+      telemetry: this.telemetry,
       ...args,
       context: deepMerge(this.context, args?.context),
       params: deepMerge(this.params, args?.params),
