@@ -254,6 +254,7 @@ export class ChatModel<
       cache: this.cache,
       client: this.client,
       debug: this.debug,
+      telemetry: this.telemetry,
       ...args,
       params: deepMerge(this.params, args?.params),
       context:

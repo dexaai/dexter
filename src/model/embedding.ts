@@ -179,6 +179,7 @@ export class EmbeddingModel<
       cache: this.cache,
       client: this.client,
       debug: this.debug,
+      telemetry: this.telemetry,
       ...args,
       context: deepMerge(this.context, args?.context),
       params: deepMerge(this.params, args?.params),
