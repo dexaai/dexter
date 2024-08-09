@@ -41,7 +41,7 @@ export interface ModelArgs<
   context?: Ctx;
   params: MConfig & Partial<MRun>;
   events?: Model.Events<MRun & MConfig, MResponse, Ctx>;
-  telemetry?: Telemetry.Base;
+  telemetry?: Telemetry.Provider;
   /** Whether or not to add default `console.log` event handlers */
   debug?: boolean;
 }
@@ -102,7 +102,7 @@ export abstract class AbstractModel<
     AResponse
   >;
   public readonly tokenizer: Model.ITokenizer;
-  public readonly telemetry: Telemetry.Base;
+  public readonly telemetry: Telemetry.Provider;
 
   constructor(args: ModelArgs<MClient, MConfig, MRun, MResponse, CustomCtx>) {
     this.cacheKey = args.cacheKey ?? defaultCacheKey;

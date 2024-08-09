@@ -1,5 +1,5 @@
 export namespace Telemetry {
-  export interface Base {
+  export interface Provider {
     startSpan<T>(options: SpanOptions, callback: (span: Span) => T): T;
 
     setTags(tags: { [key: string]: Primitive }): void;

@@ -1,6 +1,6 @@
 import type { Telemetry } from './types.js';
 
-export const DefaultTelemetry: Telemetry.Base = {
+export const DefaultTelemetry: Telemetry.Provider = {
   startSpan<T>(
     _options: Telemetry.SpanOptions,
     callback: (span: Telemetry.Span) => T
