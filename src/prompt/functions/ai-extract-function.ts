@@ -13,6 +13,7 @@ export function createAIExtractFunction<Schema extends z.ZodObject<any>>(
     name,
     description,
     schema,
+    strict = false,
     maxRetries = 0,
     systemMessage,
     functionCallConcurrency,
@@ -25,6 +26,11 @@ export function createAIExtractFunction<Schema extends z.ZodObject<any>>(
     description?: string;
     /** The Zod schema for the data to extract. */
     schema: Schema;
+    /**
+     * Whether or not the response schema should use OpenAI's structured output
+     * generation.
+     */
+    strict?: boolean;
     /** The maximum number of times to retry the function call. */
     maxRetries?: number;
     /** Add a system message to the beginning of the messages array. */
@@ -47,6 +53,7 @@ export function createAIExtractFunction<Schema extends z.ZodObject<any>>(
       name,
       description,
       argsSchema: schema,
+      strict,
     },
     async (args): Promise<z.infer<Schema>> => {
       if (customExtractImplementation) return customExtractImplementation(args);
