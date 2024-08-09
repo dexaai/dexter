@@ -28,7 +28,6 @@ runs:
 
     - name: Get pnpm store directory
       id: pnpm-cache
-      shell: bash
       run: |
         echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
 
@@ -40,7 +39,8 @@ runs:
         restore-keys: |
           ${{ runner.os }}-pnpm-store-
 
-    # Run install with optional filter if present
     - name: Install pnpm dependencies
-      shell: bash
       run: pnpm install --frozen-lockfile
+
+    - name: Build
+      run: pnpm build
