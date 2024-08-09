@@ -136,6 +136,7 @@ export class SparseVectorModel<
       cacheKey: this.cacheKey,
       cache: this.cache,
       debug: this.debug,
+      telemetry: this.telemetry,
       serviceUrl: this.serviceUrl,
       ...args,
       context: deepMerge(this.context, args?.context),
