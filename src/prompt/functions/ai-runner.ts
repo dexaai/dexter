@@ -1,5 +1,5 @@
 import pMap from 'p-map';
-import { Msg, getErrorMsg } from '../index.js';
+import { AbortError, Msg, getErrorMsg } from '../index.js';
 import type { Prompt } from '../types.js';
 import type { Model } from '../../index.js';
 
@@ -90,6 +90,10 @@ export function createAIRunner<Content extends any = string>(args: {
         lastResponseMessage = message;
         messages.push(message);
 
+        if (Msg.isRefusal(message)) {
+          throw new AbortError(message.refusal);
+        }
+
         // Run functions from tool/function call messages and append the new messages
         const newMessages = await handleFunctionCallMessage({
           message,
@@ -100,9 +104,11 @@ export function createAIRunner<Content extends any = string>(args: {
 
         // Check if the last message should break the loop
         const lastMessage = messages[messages.length - 1];
-        if (shouldBreakLoop(lastMessage)) {
+        if (Msg.isRefusal(lastMessage)) {
+          throw new AbortError(lastMessage.refusal);
+        } else if (shouldBreakLoop(lastMessage)) {
           const content = await Promise.resolve(
-            validateContent(lastMessage.content)
+            validateContent(lastMessage.content!)
           );
           return { status: 'success', messages, content };
         }

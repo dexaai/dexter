@@ -15,6 +15,7 @@ import type { ChatModel } from './chat.js';
 import type { CompletionModel } from './completion.js';
 import type { EmbeddingModel } from './embedding.js';
 import type { SparseVectorModel } from './sparse-vector.js';
+import type { Simplify, SetRequired } from 'type-fest';
 
 type InnerType<T> = T extends ReadableStream<infer U> ? U : never;
 
@@ -77,7 +78,7 @@ export namespace Model {
       top_p?: ChatParams['top_p'];
     }
     export interface Response extends Base.Response, ChatResponse {
-      message: ChatMessage;
+      message: ResponseMessage;
     }
     /** Streaming response from the OpenAI API. */
     type StreamResponse = ChatStreamResponse;
@@ -85,6 +86,12 @@ export namespace Model {
     export type CompletionChunk = InnerType<StreamResponse>;
     export type ApiResponse = ChatResponse;
     export type Model = ChatModel;
+
+    export type ResponseMessage = Simplify<
+      SetRequired<ChatMessage, 'content'> & {
+        role: 'assistant';
+      }
+    >;
   }
 
   /**

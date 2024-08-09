@@ -5,6 +5,7 @@ import { ChatModel } from './chat.js';
 const FAKE_RESPONSE: Model.Chat.Response = {
   message: {
     content: 'Hi from fake AI',
+    refusal: null,
     role: 'assistant',
   },
   cached: false,
@@ -25,6 +26,7 @@ const FAKE_RESPONSE: Model.Chat.Response = {
       index: 0,
       message: {
         content: 'Hi from fake AI',
+        refusal: null,
         role: 'assistant',
       },
       logprobs: null,
