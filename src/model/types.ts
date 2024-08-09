@@ -10,12 +10,12 @@ import type {
   OpenAIClient,
 } from 'openai-fetch';
 import { type Options as KYOptions } from 'ky';
+import type { Simplify, SetRequired } from 'type-fest';
 import type { AbstractModel } from './model.js';
 import type { ChatModel } from './chat.js';
 import type { CompletionModel } from './completion.js';
 import type { EmbeddingModel } from './embedding.js';
 import type { SparseVectorModel } from './sparse-vector.js';
-import type { Simplify, SetRequired } from 'type-fest';
 
 type InnerType<T> = T extends ReadableStream<infer U> ? U : never;
 
