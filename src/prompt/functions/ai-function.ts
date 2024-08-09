@@ -24,6 +24,11 @@ export function createAIFunction<
     description?: string;
     /** Zod schema for the arguments string. */
     argsSchema: Schema;
+    /**
+     * Whether or not to enable structured output generation based on the given
+     * zod schema.
+     */
+    strict?: boolean;
   },
   /** Implementation of the function to call with the parsed arguments. */
   implementation: (params: z.infer<Schema>) => Promise<Return>
@@ -47,12 +52,15 @@ export function createAIFunction<
     return implementation(parsedArgs);
   };
 
+  const strict = !!spec.strict;
+
   aiFunction.parseArgs = parseArgs;
   aiFunction.argsSchema = spec.argsSchema;
   aiFunction.spec = {
     name: spec.name,
     description: cleanString(spec.description ?? ''),
-    parameters: zodToJsonSchema(spec.argsSchema),
+    parameters: zodToJsonSchema(spec.argsSchema, { strict }),
+    strict,
   };
 
   return aiFunction;

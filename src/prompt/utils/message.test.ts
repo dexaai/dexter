@@ -40,6 +40,8 @@ describe('Msg', () => {
     const msg = Msg.toolResult('Hello, World!', 'fake-tool-call-id');
     expectTypeOf(msg).toMatchTypeOf<Prompt.Msg.ToolResult>();
     expect(Msg.isToolResult(msg)).toBe(true);
+    expect(Msg.isRefusal(msg)).toBe(false);
+    expect(Msg.isAssistant(msg)).toBe(false);
   });
 
   it('prompt message types should interop with openai-fetch message types', () => {
@@ -54,5 +56,12 @@ describe('Msg', () => {
     expectTypeOf(
       {} as Prompt.Msg.FuncResult
     ).toMatchTypeOf<OpenAI.ChatMessage>();
+  });
+
+  it('handles message refusal', () => {
+    const msg = Msg.refusal('HAL 9000 I cannot do that.');
+    expectTypeOf(msg).toMatchTypeOf<Prompt.Msg.Refusal>();
+    expect(Msg.isRefusal(msg)).toBe(true);
+    expect(Msg.isAssistant(msg)).toBe(false);
   });
 });

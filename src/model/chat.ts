@@ -1,4 +1,4 @@
-import type { PartialDeep } from 'type-fest';
+import type { PartialDeep, SetRequired } from 'type-fest';
 import type { SetOptional } from 'type-fest';
 import type { ModelArgs } from './model.js';
 import type { Model } from './types.js';
@@ -201,7 +201,10 @@ export class ChatModel<
             finish_reason:
               choice.finish_reason as Model.Chat.Response['choices'][0]['finish_reason'],
             index: choice.index,
-            message: choice.delta as Model.Message & { role: 'assistant' },
+            message: choice.delta as SetRequired<
+              Model.Chat.ResponseMessage,
+              'refusal'
+            >,
             logprobs: choice.logprobs || null,
           },
         ],

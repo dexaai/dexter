@@ -70,6 +70,27 @@ export class Msg {
     };
   }
 
+  /**
+   * Create an assistant refusal message. Cleans indentation and newlines by
+   * default.
+   */
+  static refusal(
+    refusal: string,
+    opts?: {
+      /** Custom name for the message. */
+      name?: string;
+      /** Whether to clean extra newlines and indentation. Defaults to true. */
+      cleanRefusal?: boolean;
+    }
+  ): Prompt.Msg.Refusal {
+    const { name, cleanRefusal = true } = opts ?? {};
+    return {
+      role: 'assistant',
+      refusal: cleanRefusal ? cleanString(refusal) : refusal,
+      ...(name ? { name } : {}),
+    };
+  }
+
   /** Create a function call message with argumets. */
   static funcCall(
     function_call: {
@@ -131,7 +152,11 @@ export class Msg {
     // @TODO
     response: any
     // response: ChatModel.EnrichedResponse
-  ): Prompt.Msg.Assistant | Prompt.Msg.FuncCall | Prompt.Msg.ToolCall {
+  ):
+    | Prompt.Msg.Assistant
+    | Prompt.Msg.Refusal
+    | Prompt.Msg.FuncCall
+    | Prompt.Msg.ToolCall {
     const msg = response.choices[0].message as Prompt.Msg;
     return this.narrowResponseMessage(msg);
   }
@@ -139,12 +164,18 @@ export class Msg {
   /** Narrow a message received from the API. It only responds with role=assistant */
   static narrowResponseMessage(
     msg: Prompt.Msg
-  ): Prompt.Msg.Assistant | Prompt.Msg.FuncCall | Prompt.Msg.ToolCall {
-    if (msg.content === null && msg.tool_calls != null) {
+  ):
+    | Prompt.Msg.Assistant
+    | Prompt.Msg.Refusal
+    | Prompt.Msg.FuncCall
+    | Prompt.Msg.ToolCall {
+    if (msg.refusal != null) {
+      return Msg.refusal(msg.refusal);
+    } else if (msg.content === null && msg.tool_calls != null) {
       return Msg.toolCall(msg.tool_calls);
     } else if (msg.content === null && msg.function_call != null) {
       return Msg.funcCall(msg.function_call);
-    } else if (msg.content !== null) {
+    } else if (msg.content != null) {
       return Msg.assistant(msg.content);
     } else {
       // @TODO: probably don't want to error here
@@ -163,7 +194,11 @@ export class Msg {
   }
   /** Check if a message is an assistant message. */
   static isAssistant(message: Prompt.Msg): message is Prompt.Msg.Assistant {
-    return message.role === 'assistant' && message.content !== null;
+    return message.role === 'assistant' && message.content != null;
+  }
+  /** Check if a message is an assistant refusal message. */
+  static isRefusal(message: Prompt.Msg): message is Prompt.Msg.Refusal {
+    return message.role === 'assistant' && message.refusal !== null;
   }
   /** Check if a message is a function call message with arguments. */
   static isFuncCall(message: Prompt.Msg): message is Prompt.Msg.FuncCall {
@@ -186,6 +221,7 @@ export class Msg {
   static narrow(message: Prompt.Msg.System): Prompt.Msg.System;
   static narrow(message: Prompt.Msg.User): Prompt.Msg.User;
   static narrow(message: Prompt.Msg.Assistant): Prompt.Msg.Assistant;
+  static narrow(message: Prompt.Msg.Refusal): Prompt.Msg.Refusal;
   static narrow(message: Prompt.Msg.FuncCall): Prompt.Msg.FuncCall;
   static narrow(message: Prompt.Msg.FuncResult): Prompt.Msg.FuncResult;
   static narrow(message: Prompt.Msg.ToolCall): Prompt.Msg.ToolCall;
@@ -196,6 +232,7 @@ export class Msg {
     | Prompt.Msg.System
     | Prompt.Msg.User
     | Prompt.Msg.Assistant
+    | Prompt.Msg.Refusal
     | Prompt.Msg.FuncCall
     | Prompt.Msg.FuncResult
     | Prompt.Msg.ToolCall
@@ -207,6 +244,9 @@ export class Msg {
       return message;
     }
     if (this.isAssistant(message)) {
+      return message;
+    }
+    if (this.isRefusal(message)) {
       return message;
     }
     if (this.isFuncCall(message)) {
