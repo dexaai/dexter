@@ -9,7 +9,7 @@ The feature introduces a caching mechanism to store and retrieve responses effic
 
 We will cover:
 
-1. The structure of the cache storage.
+1. The structure of the <SwmToken path="/src/utils/cache.ts" pos="3:4:4" line-data="export type CacheStorage&lt;KeyType, ValueType extends any&gt; = {">`CacheStorage`</SwmToken>.
 2. The generation of cache keys.
 
 # Cache storage structure
