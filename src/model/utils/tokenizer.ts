@@ -35,8 +35,8 @@ class Tokenizer implements Model.ITokenizer {
     this.model = model;
     try {
       this.tiktoken = encoding_for_model(model as TiktokenModel);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (e) {
-      console.error(`Failed to create tokenizer for model ${model}`, e);
       this.tiktoken = encoding_for_model('gpt-3.5-turbo');
     }
   }
