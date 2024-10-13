@@ -1,7 +1,7 @@
 import 'dotenv/config';
 
+import { ChatModel } from '@dexaai/dexter';
 import { createAIExtractFunction } from '@dexaai/dexter/ai-function';
-import { ChatModel } from '@dexaai/dexter/model';
 import { z } from 'zod';
 
 /** A function to extract people names from text. */

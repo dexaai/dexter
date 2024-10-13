@@ -1,7 +1,7 @@
 import 'dotenv/config';
 
+import { ChatModel, type Msg, MsgUtil } from '@dexaai/dexter';
 import { createAIFunction } from '@dexaai/dexter/ai-function';
-import { ChatModel, type Msg, MsgUtil } from '@dexaai/dexter/model';
 import { z } from 'zod';
 
 /**

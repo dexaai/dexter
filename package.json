@@ -15,13 +15,13 @@
   },
   "exports": {
     "./package.json": "./package.json",
+    ".": {
+      "types": "./dist/model/index.d.ts",
+      "import": "./dist/model/index.js"
+    },
     "./ai-function": {
       "types": "./dist/ai-function/index.d.ts",
       "import": "./dist/ai-function/index.js"
-    },
-    "./model": {
-      "types": "./dist/model/index.d.ts",
-      "import": "./dist/model/index.js"
     }
   },
   "sideEffects": false,
