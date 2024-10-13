@@ -1,6 +1,6 @@
 import { type ChatMessage, type ChatParams } from 'openai-fetch';
 
-import { type Telemetry } from '../../telemetry/types.js';
+import { type Telemetry } from './types.js';
 
 const SpanAttrs = {
   LLM_MODEL: 'llm.model',
