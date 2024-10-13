@@ -1,4 +1,3 @@
-/* eslint-disable no-use-before-define */
 import { type SetOptional } from 'type-fest';
 import { type z } from 'zod';
 

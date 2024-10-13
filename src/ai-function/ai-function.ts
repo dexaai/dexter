@@ -1,10 +1,13 @@
 import { type z } from 'zod';
 
-import { type Msg, MsgUtil } from '../../model/index.js';
-import { cleanString } from '../../model/utils/message-util.js';
-import { type AIFunction } from '../types.js';
-import { extractZodObject } from './extract-zod-object.js';
-import { zodToJsonSchema } from './zod-to-json.js';
+import {
+  extractZodObject,
+  type Msg,
+  MsgUtil,
+  zodToJsonSchema,
+} from '../model/index.js';
+import { cleanString } from '../model/utils/message-util.js';
+import { type AIFunction } from './types.js';
 
 /**
  * Create a function meant to be used with OpenAI tool or function calling.

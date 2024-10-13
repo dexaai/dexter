@@ -2,14 +2,12 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { ChatModel } from './chat.js';
 import { type Model } from './types.js';
-import { RefusalError } from './utils/errors.js';
 import { MsgUtil } from './utils/message-util.js';
 
 const FAKE_RESPONSE: Model.Chat.Response = {
   message: {
     content: 'Hi from fake AI',
     role: 'assistant',
-    refusal: null,
   },
   cached: false,
   latency: 0,
@@ -90,7 +88,13 @@ describe('ChatModel', () => {
     const response = await chatModel.run({
       messages: [{ role: 'user', content: 'content' }],
     });
-    expect(response).toEqual(FAKE_RESPONSE);
+    expect(response).toEqual({
+      ...FAKE_RESPONSE,
+      message: {
+        ...FAKE_RESPONSE.message,
+        refusal: null,
+      },
+    });
   });
 
   it('triggers events', async () => {

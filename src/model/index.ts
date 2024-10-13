@@ -13,5 +13,8 @@ export type { Model, Msg } from './types.js';
 export { type CacheKey, type CacheStorage } from './utils/cache.js';
 export { calculateCost } from './utils/calculate-cost.js';
 export { AbortError, RefusalError } from './utils/errors.js';
+export { extractJsonObject } from './utils/extract-json.js';
+export { extractZodObject } from './utils/extract-zod-object.js';
 export { MsgUtil } from './utils/message-util.js';
 export { createTokenizer, type Tokenizer } from './utils/tokenizer.js';
+export { zodToJsonSchema } from './utils/zod-to-json-schema.js';

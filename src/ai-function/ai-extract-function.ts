@@ -1,9 +1,9 @@
 import { type z } from 'zod';
 
-import { type Model, MsgUtil } from '../../model/index.js';
-import { type ExtractFunction } from '../types.js';
+import { type Model, MsgUtil } from '../model/index.js';
 import { createAIFunction } from './ai-function.js';
 import { createAIRunner } from './ai-runner.js';
+import { type ExtractFunction } from './types.js';
 
 /**
  * Use OpenAI function calling to extract data from a message.

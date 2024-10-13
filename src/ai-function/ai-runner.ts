@@ -1,9 +1,9 @@
 import pMap from 'p-map';
 
-import { MsgUtil } from '../../model/index.js';
-import { type Model, type Msg } from '../../model/types.js';
-import { getErrorMsg } from '../../model/utils/errors.js';
-import { type AIFunction, type Runner } from '../types.js';
+import { MsgUtil } from '../model/index.js';
+import { type Model, type Msg } from '../model/types.js';
+import { getErrorMsg } from '../model/utils/errors.js';
+import { type AIFunction, type Runner } from './types.js';
 
 /**
  * Creates a function to run a chat model in a loop

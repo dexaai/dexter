@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { z } from 'zod';
 
-import { zodToJsonSchema } from './zod-to-json.js';
+import { zodToJsonSchema } from './zod-to-json-schema.js';
 
 describe('zodToJsonSchema', () => {
   it('handles basic objects', () => {
