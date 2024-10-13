@@ -16,6 +16,21 @@ const fullName = createAIFunction(
   }
 );
 
+const partialName = createAIFunction(
+  {
+    name: 'partialName',
+    description: 'Returns the name of a person.',
+    argsSchema: z.object({
+      first: z.string(),
+      last: z.string().optional(),
+    }),
+    strict: true,
+  },
+  async ({ first, last }) => {
+    return [first, last].filter(Boolean).join(' ');
+  }
+);
+
 describe('createAIFunction()', () => {
   it('exposes OpenAI function calling spec', () => {
     expect(fullName.spec.name).toEqual('fullName');
@@ -36,5 +51,22 @@ describe('createAIFunction()', () => {
     expect(await fullName('{"first": "John", "last": "Doe"}')).toEqual(
       'John Doe'
     );
+  });
+
+  it("handles strict mode for OpenAI's structured output generation", async () => {
+    expect(partialName.spec.name).toEqual('partialName');
+    expect(partialName.spec.description).toEqual(
+      'Returns the name of a person.'
+    );
+    expect(partialName.spec.parameters).toEqual({
+      properties: {
+        first: { type: 'string' },
+        last: { type: 'string' },
+      },
+      required: ['first', 'last'],
+      type: 'object',
+      additionalProperties: false,
+    });
+    expect(await partialName('{"first": "John"}')).toEqual('John');
   });
 });
