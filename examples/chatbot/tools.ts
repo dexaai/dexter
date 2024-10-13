@@ -4,8 +4,9 @@ import {
   EmbeddingModel,
   SparseVectorModel,
 } from '@dexaai/dexter/model';
+import { type JsonObject } from 'type-fest';
 
-export interface Chunk {
+export interface Chunk extends JsonObject {
   chunkId: string;
   chunkTitle: string;
   episodeTitle: string;
