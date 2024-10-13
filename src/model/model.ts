@@ -1,4 +1,14 @@
-import type { PartialDeep } from 'type-fest';
+import { type PartialDeep } from 'type-fest';
+
+import { DefaultTelemetry } from '../telemetry/default-telemetry.js';
+import { type Telemetry } from '../telemetry/types.js';
+import {
+  type CacheKey,
+  type CacheStorage,
+  defaultCacheKey,
+} from '../utils/cache.js';
+import { deepMerge, type Prettify } from '../utils/helpers.js';
+import { type Model } from './types.js';
 import {
   extractAttrsFromContext,
   extractAttrsFromParams,
@@ -6,15 +16,6 @@ import {
   getSpanName,
 } from './utils/telemetry.js';
 import { createTokenizer } from './utils/tokenizer.js';
-import type { Model } from './types.js';
-import { deepMerge, type Prettify } from '../utils/helpers.js';
-import {
-  type CacheKey,
-  type CacheStorage,
-  defaultCacheKey,
-} from '../utils/cache.js';
-import type { Telemetry } from '../telemetry/types.js';
-import { DefaultTelemetry } from '../telemetry/default-telemetry.js';
 
 export interface ModelArgs<
   MClient extends Model.Base.Client,
@@ -72,7 +73,7 @@ export abstract class AbstractModel<
   MConfig extends Model.Base.Config,
   MRun extends Model.Base.Run,
   MResponse extends Model.Base.Response,
-  AResponse extends any = any,
+  AResponse = any,
   CustomCtx extends Model.Ctx = Model.Ctx,
 > {
   /** This is used to implement specific model calls */

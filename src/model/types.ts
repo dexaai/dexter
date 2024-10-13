@@ -1,20 +1,22 @@
-import type {
-  ChatMessage,
-  ChatParams,
-  ChatResponse,
-  ChatStreamResponse,
-  CompletionParams,
-  CompletionResponse,
-  EmbeddingParams,
-  EmbeddingResponse,
-  OpenAIClient,
-} from 'openai-fetch';
+/* eslint-disable no-use-before-define */
 import { type Options as KYOptions } from 'ky';
-import type { AbstractModel } from './model.js';
-import type { ChatModel } from './chat.js';
-import type { CompletionModel } from './completion.js';
-import type { EmbeddingModel } from './embedding.js';
-import type { SparseVectorModel } from './sparse-vector.js';
+import {
+  type ChatMessage,
+  type ChatParams,
+  type ChatResponse,
+  type ChatStreamResponse,
+  type CompletionParams,
+  type CompletionResponse,
+  type EmbeddingParams,
+  type EmbeddingResponse,
+  type OpenAIClient,
+} from 'openai-fetch';
+
+import { type ChatModel } from './chat.js';
+import { type CompletionModel } from './completion.js';
+import { type EmbeddingModel } from './embedding.js';
+import { type AbstractModel } from './model.js';
+import { type SparseVectorModel } from './sparse-vector.js';
 
 type InnerType<T> = T extends ReadableStream<infer U> ? U : never;
 
@@ -95,12 +97,7 @@ export namespace Model {
       createCompletions: OpenAIClient['createCompletions'];
     };
     export interface Run extends Base.Run {
-      prompt:
-        | string
-        | Array<string>
-        | Array<number>
-        | Array<Array<number>>
-        | null;
+      prompt: string | string[] | number[] | number[][] | null;
     }
     export interface Config
       extends Base.Config,
@@ -158,7 +155,7 @@ export namespace Model {
     MParams extends Base.Params,
     MResponse extends Base.Response,
     MCtx extends Model.Ctx,
-    AResponse extends any = any,
+    AResponse = any,
   > {
     onStart?: ((event: {
       timestamp: string;

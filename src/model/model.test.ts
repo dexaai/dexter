@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
+
 import { AbstractModel } from './model.js';
-import type { Model } from './types.js';
+import { type Model } from './types.js';
 
 /** Simple class for testing */
 class Test extends AbstractModel<
@@ -81,7 +82,7 @@ describe('AbstractModel', () => {
     });
     try {
       await test.run({ input: 'throw error' });
-    } catch (e) {}
+    } catch (e) {} // eslint-disable-line @typescript-eslint/no-unused-vars
     expect(errorEvent).toHaveBeenCalledOnce();
   });
 

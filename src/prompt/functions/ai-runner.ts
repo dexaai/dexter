@@ -1,7 +1,8 @@
 import pMap from 'p-map';
-import { Msg, getErrorMsg } from '../index.js';
-import type { Prompt } from '../types.js';
-import type { Model } from '../../index.js';
+
+import { type Model } from '../../index.js';
+import { getErrorMsg, Msg } from '../index.js';
+import { type Prompt } from '../types.js';
 
 /**
  * Creates a function to run a chat model in a loop
@@ -9,7 +10,7 @@ import type { Model } from '../../index.js';
  * - Handles errors by adding a message with the error and rerunning the model
  * - Optionally validates the content of the last message
  */
-export function createAIRunner<Content extends any = string>(args: {
+export function createAIRunner<Content = string>(args: {
   /** The ChatModel used to make API calls. */
   chatModel: Model.Chat.Model;
   /** The functions the model can call. */

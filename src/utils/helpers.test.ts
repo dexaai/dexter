@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+
 import { deepMerge, mergeEvents } from './helpers.js';
 
 describe('utils.helpers', () => {

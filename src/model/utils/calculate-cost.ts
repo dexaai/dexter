@@ -98,7 +98,7 @@ export function calculateCost(args: {
 
 /** Find the cost for the given model. */
 function getCost(model: string): Cost | null {
-  let cost: Cost | undefined = COSTS[model];
+  const cost: Cost | undefined = COSTS[model];
   if (cost) return cost;
 
   // Handle model names with versions that have the same price.

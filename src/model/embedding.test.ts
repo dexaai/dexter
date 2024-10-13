@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import type { Model } from './types.js';
+
 import { EmbeddingModel } from './embedding.js';
+import { type Model } from './types.js';
 
 const FAKE_RESPONSE: Model.Embedding.Response = {
   data: [

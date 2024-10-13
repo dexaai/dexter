@@ -1,6 +1,9 @@
-import type { Model } from '../model/index.js';
-import type { AbstractDatastore } from './datastore.js';
+/* eslint-disable no-use-before-define */
+import { type JsonObject } from 'type-fest';
+
+import { type Model } from '../model/index.js';
 import { type CacheKey, type CacheStorage } from '../utils/cache.js';
+import { type AbstractDatastore } from './datastore.js';
 
 /** Improve preview of union types in autocomplete. */
 export type Prettify<T> = { [K in keyof T]: T[K] } & {};
@@ -10,7 +13,7 @@ export type Prettify<T> = { [K in keyof T]: T[K] } & {};
  */
 export namespace Datastore {
   /** Base document metadata to be extended */
-  export type BaseMeta = {};
+  export type BaseMeta = JsonObject;
 
   /** Generic metadata object. */
   export type Ctx = { [key: string]: any };
@@ -130,7 +133,7 @@ export namespace Datastore {
     hybridAlpha?: number;
   }
 
-  // @ts-ignore
+  // @ts-expect-error: legacy ignore
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   export type BaseFilter<Meta extends BaseMeta> = any;
 

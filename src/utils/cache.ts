@@ -1,6 +1,6 @@
 import hashObject from 'hash-object';
 
-export type CacheStorage<KeyType, ValueType extends any> = {
+export type CacheStorage<KeyType, ValueType> = {
   get: (key: KeyType) => Promise<ValueType | undefined> | ValueType | undefined;
   set: (key: KeyType, value: ValueType) => Promise<unknown> | unknown;
 };

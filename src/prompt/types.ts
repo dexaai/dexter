@@ -1,12 +1,14 @@
-import type { z } from 'zod';
-import type { SetOptional } from 'type-fest';
-import type { Model } from '../index.js';
+/* eslint-disable no-use-before-define */
+import { type SetOptional } from 'type-fest';
+import { type z } from 'zod';
+
+import { type Model } from '../index.js';
 
 export namespace Prompt {
   /**
    * A runner that iteratively calls the model and handles function calls.
    */
-  export type Runner<Content extends any = string> = (
+  export type Runner<Content = string> = (
     params: string | Runner.Params,
     context?: Model.Ctx
   ) => Promise<Runner.Response<Content>>;
@@ -26,7 +28,7 @@ export namespace Prompt {
     >;
 
     /** Response from executing a runner */
-    export type Response<Content extends any = string> =
+    export type Response<Content = string> =
       | {
           status: 'success';
           messages: Prompt.Msg[];
@@ -61,7 +63,7 @@ export namespace Prompt {
    */
   export interface AIFunction<
     Schema extends z.ZodObject<any> = z.ZodObject<any>,
-    Return extends any = any,
+    Return = any,
   > {
     /** The implementation of the function, with arg parsing and validation. */
     (input: string | Msg): Promise<Return>;

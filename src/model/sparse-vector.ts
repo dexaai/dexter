@@ -1,12 +1,12 @@
-import type { PartialDeep } from 'type-fest';
-import pThrottle from 'p-throttle';
-import pMap from 'p-map';
 import { type Options as KYOptions } from 'ky';
-import type { ModelArgs } from './model.js';
-import { AbstractModel } from './model.js';
-import type { Model } from './types.js';
-import { createSpladeClient } from './clients/splade.js';
+import pMap from 'p-map';
+import pThrottle from 'p-throttle';
+import { type PartialDeep } from 'type-fest';
+
 import { deepMerge, mergeEvents, type Prettify } from '../utils/helpers.js';
+import { createSpladeClient } from './clients/splade.js';
+import { AbstractModel, type ModelArgs } from './model.js';
+import { type Model } from './types.js';
 
 export type SparseVectorModelArgs<CustomCtx extends Model.Ctx> = Prettify<
   Omit<
@@ -47,7 +47,7 @@ export class SparseVectorModel<
     const { serviceUrl, ...rest } = args;
     super({ client: createSpladeClient(), ...rest });
     const safeProcess = globalThis.process || { env: {} };
-    const tempServiceUrl = serviceUrl || safeProcess.env['SPLADE_SERVICE_URL'];
+    const tempServiceUrl = serviceUrl || safeProcess.env.SPLADE_SERVICE_URL;
     if (!tempServiceUrl) {
       throw new Error('Missing process.env.SPLADE_SERVICE_URL');
     }
@@ -56,7 +56,7 @@ export class SparseVectorModel<
 
   protected async runModel(
     {
-      requestOpts,
+      requestOpts: _,
       ...params
     }: Model.SparseVector.Run & Model.SparseVector.Config,
     context: CustomCtx

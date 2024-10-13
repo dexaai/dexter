@@ -1,5 +1,6 @@
-import type { z } from 'zod';
+import { type z } from 'zod';
 import { zodToJsonSchema as zodToJsonSchemaImpl } from 'zod-to-json-schema';
+
 import { omit } from '../../utils/helpers.js';
 
 /** Generate a JSON Schema from a Zod schema. */

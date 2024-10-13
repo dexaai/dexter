@@ -1,5 +1,6 @@
 import './instrument.js';
 import 'dotenv/config';
+
 import { ChatModel } from '@dexaai/dexter';
 import * as Sentry from '@sentry/node';
 

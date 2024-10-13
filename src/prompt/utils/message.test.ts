@@ -1,7 +1,8 @@
 import type * as OpenAI from 'openai-fetch';
 import { describe, expect, it } from 'vitest';
+
+import { type Prompt } from '../types.js';
 import { Msg } from './message.js';
-import type { Prompt } from '../types.js';
 
 describe('Msg', () => {
   it('creates a message and fixes indentation', () => {

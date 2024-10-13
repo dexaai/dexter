@@ -1,4 +1,5 @@
 import { describe, expect, test } from 'vitest';
+
 import { calculateCost } from './calculate-cost.js';
 
 describe('Calculates cost for', () => {
