@@ -1,6 +1,7 @@
 import 'dotenv/config';
 
-import { ChatModel, Msg, type Prompt } from '@dexaai/dexter';
+import { ChatModel } from '@dexaai/dexter/model';
+import { Msg, type Prompt } from '@dexaai/dexter/prompt';
 
 /**
  * npx tsx examples/abort-chat-completion.ts

@@ -2,7 +2,7 @@
 import { type SetOptional } from 'type-fest';
 import { type z } from 'zod';
 
-import { type Model } from '../index.js';
+import { type Model } from '../model/types.js';
 
 export namespace Prompt {
   /**

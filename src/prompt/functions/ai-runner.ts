@@ -1,6 +1,6 @@
 import pMap from 'p-map';
 
-import { type Model } from '../../index.js';
+import { type Model } from '../../model/types.js';
 import { getErrorMsg, Msg } from '../index.js';
 import { type Prompt } from '../types.js';
 
