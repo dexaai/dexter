@@ -1,7 +1,7 @@
 import { type z } from 'zod';
 
-import { type Model } from '../../model/index.js';
-import { Msg, type Prompt } from '../index.js';
+import { type Model, MsgUtil } from '../../model/index.js';
+import { type ExtractFunction } from '../types.js';
 import { createAIFunction } from './ai-function.js';
 import { createAIRunner } from './ai-runner.js';
 
@@ -41,7 +41,7 @@ export function createAIExtractFunction<Schema extends z.ZodObject<any>>(
   customExtractImplementation?: (
     params: z.infer<Schema>
   ) => z.infer<Schema> | Promise<z.infer<Schema>>
-): Prompt.ExtractFunction<Schema> {
+): ExtractFunction<Schema> {
   // The AIFunction that will be used to extract the data
   const extractFunction = createAIFunction(
     {
@@ -68,7 +68,7 @@ export function createAIExtractFunction<Schema extends z.ZodObject<any>>(
     mode: 'functions',
     maxIterations: maxRetries + 1,
     functionCallConcurrency,
-    shouldBreakLoop: (message) => Msg.isFuncResult(message),
+    shouldBreakLoop: (message) => MsgUtil.isFuncResult(message),
     validateContent: (content) => {
       return extractFunction.parseArgs(content || '');
     },

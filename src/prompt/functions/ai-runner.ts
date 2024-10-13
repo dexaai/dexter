@@ -1,9 +1,9 @@
 import pMap from 'p-map';
 
-import { type Model } from '../../model/types.js';
+import { MsgUtil } from '../../model/index.js';
+import { type Model, type Msg } from '../../model/types.js';
 import { getErrorMsg } from '../../model/utils/errors.js';
-import { Msg } from '../index.js';
-import { type Prompt } from '../types.js';
+import { type AIFunction, type Runner } from '../types.js';
 
 /**
  * Creates a function to run a chat model in a loop
@@ -15,9 +15,9 @@ export function createAIRunner<Content = string>(args: {
   /** The ChatModel used to make API calls. */
   chatModel: Model.Chat.Model;
   /** The functions the model can call. */
-  functions?: Prompt.AIFunction[];
+  functions?: AIFunction[];
   /** Use this to control when the runner should stop. */
-  shouldBreakLoop?: (msg: Prompt.Msg) => boolean;
+  shouldBreakLoop?: (msg: Msg) => boolean;
   /** The maximum number of iterations before the runner throws an error. An iteration is a single call to the model/API. */
   maxIterations?: number;
   /** The number of function calls to make concurrently. */
@@ -25,19 +25,19 @@ export function createAIRunner<Content = string>(args: {
   /** Parse and validate the content of the last message. */
   validateContent?: (content: string | null) => Content | Promise<Content>;
   /** Controls whether functions or tool_calls are used. */
-  mode?: Prompt.Runner.Mode;
+  mode?: Runner.Mode;
   /** Add a system message to the beginning of the messages array. */
   systemMessage?: string;
   /** Called when a retriable error occurs. */
   onRetriableError?: (error: Error) => void;
-}): Prompt.Runner<Content> {
+}): Runner<Content> {
   /** Return the content string or an empty string if null. */
   function defaultValidateContent(content: string | null): Content {
     return (content ?? '') as Content;
   }
 
   /** Break when an assistant message with content is received. */
-  function defaultShouldBreakLoop(msg: Prompt.Msg): boolean {
+  function defaultShouldBreakLoop(msg: Msg): boolean {
     return msg.role === 'assistant' && msg.content !== null;
   }
 
@@ -61,11 +61,11 @@ export function createAIRunner<Content = string>(args: {
     const { messages, ...modelParams }: Model.Chat.Run =
       typeof params === 'string'
         ? {
-            messages: [Msg.user(params)],
+            messages: [MsgUtil.user(params)],
           }
         : params;
     if (systemMessage) {
-      messages.unshift(Msg.system(systemMessage));
+      messages.unshift(MsgUtil.system(systemMessage));
     }
 
     let iterations = 0;
@@ -74,7 +74,7 @@ export function createAIRunner<Content = string>(args: {
     let lastError: unknown | undefined;
 
     // Store the last response message from the model
-    let lastResponseMessage: Prompt.Msg | undefined;
+    let lastResponseMessage: Msg | undefined;
 
     // Iterate until the shouldBreakLoop function returns true or the maxIterations
     // is reached
@@ -104,7 +104,7 @@ export function createAIRunner<Content = string>(args: {
         const lastMessage = messages[messages.length - 1];
         if (shouldBreakLoop(lastMessage)) {
           const content = await Promise.resolve(
-            validateContent(lastMessage.content)
+            validateContent(lastMessage.content || null)
           );
           return { status: 'success', messages, content };
         }
@@ -124,10 +124,10 @@ export function createAIRunner<Content = string>(args: {
         // with special handling for tool_calls errors that must be followed
         // by a tools message.
         const errMessage = getErrorMsg(error);
-        if (lastResponseMessage && Msg.isToolCall(lastResponseMessage)) {
+        if (lastResponseMessage && MsgUtil.isToolCall(lastResponseMessage)) {
           lastResponseMessage.tool_calls.forEach((toolCall) => {
             messages.push(
-              Msg.toolResult(
+              MsgUtil.toolResult(
                 {
                   message: `There was an error validating the tool arguments. Please check the error message and try again with new arguments.`,
                   errorMessage: errMessage,
@@ -138,7 +138,7 @@ export function createAIRunner<Content = string>(args: {
           });
         } else {
           messages.push(
-            Msg.user(
+            MsgUtil.user(
               `There was an error validating the response. Please check the error message and try again.\nError:\n${errMessage}`
             )
           );
@@ -160,8 +160,8 @@ export function createAIRunner<Content = string>(args: {
 
 /** Get the chat model params for the tools or functions. */
 function getParams(args: {
-  functions?: Prompt.AIFunction[];
-  mode: Prompt.Runner.Mode;
+  functions?: AIFunction[];
+  mode: Runner.Mode;
 }): Pick<Model.Chat.Config, 'functions' | 'tools'> {
   const { functions } = args;
   // Return an empty object if there are no functions
@@ -189,12 +189,12 @@ function getParams(args: {
  * Note: Does not include args.message in the returned array
  */
 export async function handleFunctionCallMessage(args: {
-  message: Prompt.Msg;
-  functions?: Prompt.AIFunction[];
+  message: Msg;
+  functions?: AIFunction[];
   functionCallConcurrency?: number;
-}): Promise<Prompt.Msg[]> {
+}): Promise<Msg[]> {
   const { message, functions = [], functionCallConcurrency = 8 } = args;
-  const messages: Prompt.Msg[] = [message];
+  const messages: Msg[] = [message];
   const funcMap = getFuncMap(functions);
 
   /** Call a function and return the result. */
@@ -220,18 +220,18 @@ export async function handleFunctionCallMessage(args: {
   }
 
   // Run the function with the given name and arguments and add the result messages.
-  if (Msg.isFuncCall(message)) {
+  if (MsgUtil.isFuncCall(message)) {
     const result = await callFunction(message.function_call);
-    messages.push(Msg.funcResult(result, message.function_call.name));
+    messages.push(MsgUtil.funcResult(result, message.function_call.name));
   }
 
   // Run all the tool_calls functions and add the result messages.
-  if (Msg.isToolCall(message)) {
+  if (MsgUtil.isToolCall(message)) {
     await pMap(
       message.tool_calls,
       async (toolCall) => {
         const result = await callFunction(toolCall.function);
-        messages.push(Msg.toolResult(result, toolCall.id));
+        messages.push(MsgUtil.toolResult(result, toolCall.id));
       },
       { concurrency: functionCallConcurrency }
     );
@@ -241,9 +241,9 @@ export async function handleFunctionCallMessage(args: {
 }
 
 /** Create a map of function names to functions for easy lookup. */
-function getFuncMap(functions: Prompt.AIFunction[]) {
+function getFuncMap(functions: AIFunction[]) {
   return functions.reduce((map, func) => {
     map.set(func.spec.name, func);
     return map;
-  }, new Map<string, Prompt.AIFunction>());
+  }, new Map<string, AIFunction>());
 }

@@ -1,7 +1,8 @@
 import { type z } from 'zod';
 
-import { type Prompt } from '../types.js';
-import { cleanString } from '../utils/message.js';
+import { type Msg, MsgUtil } from '../../model/index.js';
+import { cleanString } from '../../model/utils/message-util.js';
+import { type AIFunction } from '../types.js';
 import { extractZodObject } from './extract-zod-object.js';
 import { zodToJsonSchema } from './zod-to-json.js';
 
@@ -25,22 +26,21 @@ export function createAIFunction<Schema extends z.ZodObject<any>, Return>(
   },
   /** Implementation of the function to call with the parsed arguments. */
   implementation: (params: z.infer<Schema>) => Promise<Return>
-): Prompt.AIFunction<Schema, Return> {
+): AIFunction<Schema, Return> {
   /** Parse the arguments string, optionally reading from a message. */
-  const parseArgs = (input: string | Prompt.Msg) => {
+  const parseArgs = (input: string | Msg) => {
     if (typeof input === 'string') {
       return extractZodObject({ schema: spec.argsSchema, json: input });
-    } else {
-      const args = input.function_call?.arguments;
-      if (!args) {
-        throw new Error(`Missing required function_call.arguments property`);
-      }
+    } else if (MsgUtil.isFuncCall(input)) {
+      const args = input.function_call.arguments;
       return extractZodObject({ schema: spec.argsSchema, json: args });
+    } else {
+      throw new Error(`Missing required function_call.arguments property`);
     }
   };
 
   // Call the implementation function with the parsed arguments.
-  const aiFunction = (input: string | Prompt.Msg) => {
+  const aiFunction = (input: string | Msg) => {
     const parsedArgs = parseArgs(input);
     return implementation(parsedArgs);
   };

@@ -1,7 +1,7 @@
 import 'dotenv/config';
 
-import { ChatModel } from '@dexaai/dexter/model';
-import { createAIFunction, createAIRunner, Msg } from '@dexaai/dexter/prompt';
+import { ChatModel, MsgUtil } from '@dexaai/dexter/model';
+import { createAIFunction, createAIRunner } from '@dexaai/dexter/prompt';
 import { z } from 'zod';
 
 /** Get the weather for a given location. */
@@ -78,7 +78,7 @@ async function main() {
   // Run with a message input
   const rMessage = await weatherCapitalRunner({
     messages: [
-      Msg.user(
+      MsgUtil.user(
         `Whats the capital of California and NY and the weather for both`
       ),
     ],

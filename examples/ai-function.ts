@@ -1,7 +1,7 @@
 import 'dotenv/config';
 
-import { ChatModel } from '@dexaai/dexter/model';
-import { createAIFunction, Msg, type Prompt } from '@dexaai/dexter/prompt';
+import { ChatModel, type Msg, MsgUtil } from '@dexaai/dexter/model';
+import { createAIFunction } from '@dexaai/dexter/prompt';
 import { z } from 'zod';
 
 /**
@@ -51,8 +51,8 @@ async function main() {
     },
   });
 
-  const messages: Prompt.Msg[] = [
-    Msg.user('What is the weather in San Francisco?'),
+  const messages: Msg[] = [
+    MsgUtil.user('What is the weather in San Francisco?'),
   ];
 
   {
@@ -67,7 +67,7 @@ async function main() {
       },
     });
 
-    if (!Msg.isToolCall(message)) {
+    if (!MsgUtil.isToolCall(message)) {
       throw new Error('Expected tool call');
     }
     messages.push(message);
@@ -78,7 +78,7 @@ async function main() {
       }
 
       const result = await getWeather(toolCall.function.arguments);
-      const toolResult = Msg.toolResult(result, toolCall.id);
+      const toolResult = MsgUtil.toolResult(result, toolCall.id);
       messages.push(toolResult);
     }
   }
@@ -89,7 +89,7 @@ async function main() {
       messages,
       tool_choice: 'none',
     });
-    if (!Msg.isAssistant(message)) {
+    if (!MsgUtil.isAssistant(message)) {
       throw new Error('Expected assistant message');
     }
 

@@ -1,12 +1,12 @@
 import { type ChatResponse } from 'openai-fetch';
 import { type PartialDeep, type SetOptional } from 'type-fest';
 
-import { Msg } from '../prompt/index.js';
 import { createOpenAIClient } from './clients/openai.js';
 import { AbstractModel, type ModelArgs } from './model.js';
 import { type Model } from './types.js';
 import { calculateCost } from './utils/calculate-cost.js';
 import { deepMerge, mergeEvents, type Prettify } from './utils/helpers.js';
+import { MsgUtil } from './utils/message-util.js';
 
 export type ChatModelArgs<CustomCtx extends Model.Ctx> = SetOptional<
   ModelArgs<
@@ -99,7 +99,7 @@ export class ChatModel<
         ) ?? []
       );
 
-      const message = Msg.fromChatMessage(response.choices[0].message);
+      const message = MsgUtil.fromChatMessage(response.choices[0].message);
 
       const modelResponse: Model.Chat.Response = {
         ...response,
@@ -237,7 +237,7 @@ export class ChatModel<
         ) ?? []
       );
 
-      const message = Msg.fromChatMessage(response.choices[0].message);
+      const message = MsgUtil.fromChatMessage(response.choices[0].message);
 
       const modelResponse: Model.Chat.Response = {
         ...response,
@@ -317,13 +317,13 @@ function logResponse(args: {
 function logMessage(message: Model.Message, index: number) {
   console.debug(
     `[${index}] ${message.role.toUpperCase()}:${
-      message.name ? ` (${message.name}) ` : ''
+      'name' in message ? ` (${message.name}) ` : ''
     }`
   );
   if (message.content) {
     console.debug(message.content);
   }
-  if (message.function_call) {
+  if (MsgUtil.isFuncCall(message)) {
     console.debug(`Function call: ${message.function_call.name}`);
     if (message.function_call.arguments) {
       try {
@@ -337,7 +337,7 @@ function logMessage(message: Model.Message, index: number) {
         console.error(`Failed to parse function call arguments`, err);
       }
     }
-  } else if (message.tool_calls) {
+  } else if (MsgUtil.isToolCall(message)) {
     for (const toolCall of message.tool_calls) {
       const toolCallFunction = toolCall.function;
       console.debug(

@@ -8,5 +8,4 @@ export { extractJsonObject } from './functions/extract-json.js';
 export { extractZodObject } from './functions/extract-zod-object.js';
 export { stringifyForModel } from './functions/stringify-for-model.js';
 export { zodToJsonSchema } from './functions/zod-to-json.js';
-export type { Prompt } from './types.js';
-export { Msg } from './utils/message.js';
+export { type AIFunction, type ExtractFunction, type Runner } from './types.js';
