@@ -4,7 +4,7 @@ import { deepmerge as deepmergeInit } from '@fastify/deepmerge';
 export type Prettify<T> = { [K in keyof T]: T[K] } & {};
 
 type DeepMerge = ReturnType<typeof deepmergeInit>;
-export const deepMergeImpl: DeepMerge = deepmergeInit();
+const deepMergeImpl: DeepMerge = deepmergeInit();
 
 const deepMergeEventsImpl: DeepMerge = deepmergeInit({
   // Note: this is not using a recursive deep merge since it isn't used for events.
@@ -60,20 +60,4 @@ export const omit = <T extends Record<any, unknown>, K extends keyof T>(
 ): Omit<T, K> =>
   Object.fromEntries(
     Object.entries(obj).filter(([k]) => !keys.includes(k as any))
-  ) as any;
-
-/**
- * From `obj`, create a new object that only includes `keys`.
- *
- * @example
- * ```
- * pick({ a: 1, b: 2, c: 3 }, 'a', 'c') // { a: 1, c: 3 }
- * ```
- */
-export const pick = <T extends Record<any, unknown>, K extends keyof T>(
-  obj: T,
-  ...keys: K[]
-): Pick<T, K> =>
-  Object.fromEntries(
-    Object.entries(obj).filter(([k]) => keys.includes(k as any))
   ) as any;

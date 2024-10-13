@@ -330,7 +330,7 @@ export function cleanString(text: string): string {
  *
  * This is intended to be used with `function` and `tool` arguments and responses.
  */
-export function stringifyForModel(jsonObject: Jsonifiable | void): string {
+function stringifyForModel(jsonObject: Jsonifiable | void): string {
   if (jsonObject === undefined) {
     return '';
   }
