@@ -1,0 +1,7 @@
+{
+  "workspaces": {
+    "examples": {
+      "entry": "**/*.ts"
+    }
+  }
+}
