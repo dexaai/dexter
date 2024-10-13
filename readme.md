@@ -15,6 +15,8 @@ Dexter is a powerful TypeScript library for working with Large Language Models (
 
 - **Advanced AI Function Utilities**: Tools for creating and managing AI functions, including `createAIFunction`, `createAIExtractFunction`, and `createAIRunner`, with Zod integration for schema validation.
 
+- **Structured Data Extraction**: Dexter supports OpenAI's structured output feature through the `createExtractFunction`, which uses the `response_format` parameter with a JSON schema derived from a Zod schema.
+
 - **Flexible Caching and Tokenization**: Built-in caching system with custom cache support, and advanced tokenization based on `tiktoken` for accurate token management.
 
 - **Robust Observability and Control**: Customizable telemetry system, comprehensive event hooks, and specialized error handling for enhanced monitoring and control.
@@ -103,10 +105,41 @@ async function main() {
 main().catch(console.error);
 ```
 
+### Extracting Structured Data
+
+```typescript
+import { ChatModel } from '@dexaai/dexter';
+import { createExtractFunction } from '@dexaai/dexter/extract';
+import { z } from 'zod';
+
+const extractPeopleNames = createExtractFunction({
+  chatModel: new ChatModel({ params: { model: 'gpt-4o-mini' } }),
+  systemMessage: `You extract the names of people from unstructured text.`,
+  name: 'people_names',
+  schema: z.object({
+    names: z.array(
+      z.string().describe(
+        `The name of a person from the message. Normalize the name by removing suffixes, prefixes, and fixing capitalization`
+      )
+    ),
+  }),
+});
+
+async function main() {
+  const peopleNames = await extractPeopleNames(
+    `Dr. Andrew Huberman interviewed Tony Hawk, an idol of Andrew Hubermans.`
+  );
+  console.log('peopleNames', peopleNames);
+}
+
+main().catch(console.error);
+```
+
 ### Using AI Functions
 
 ```typescript
-import { ChatModel, createAIFunction, MsgUtil } from '@dexaai/dexter';
+import { ChatModel, MsgUtil } from '@dexaai/dexter';
+import { createAIFunction } from '@dexaai/dexter/ai-function';
 import { z } from 'zod';
 
 const getWeather = createAIFunction(
@@ -271,6 +304,22 @@ new SparseVectorModel(args: SparseVectorModelArgs<CustomCtx>)
 - `extend(args?: PartialSparseVectorModelArgs<CustomCtx>): SparseVectorModel<CustomCtx>`
   - Creates a new instance of the model with modified configuration
 
+### Extract Functions
+
+#### createExtractFunction
+
+Creates a function to extract structured data from text using OpenAI's structured output feature.
+This is a better way to extract structured data than using the legacy `createAIExtractFunction` function.
+
+```typescript
+createExtractFunction<Schema extends z.ZodObject<any>>(args: {
+  chatModel: Model.Chat.Model;
+  name: string;
+  schema: Schema;
+  systemMessage: string;
+}): (input: string | Msg) => Promise<z.infer<Schema>>
+```
+
 ### AI Functions
 
 #### createAIFunction
@@ -374,6 +423,8 @@ Dexter uses the `openai-fetch` library to interact with the OpenAI API. This cli
 3. **Client Caching**: Dexter implements caching for `OpenAIClient` instances to improve performance when creating multiple models with the same configuration.
 
 4. **Streaming Support**: The `openai-fetch` client supports streaming responses, which Dexter utilizes for real-time output in chat models.
+
+5. **Structured Output**: Dexter supports OpenAI's structured output feature through the `createExtractFunction`, which uses the `response_format` parameter with a JSON schema derived from a Zod schema.
 
 ### Message Types and MsgUtil
 

@@ -26,6 +26,9 @@ importers:
       openai-fetch:
         specifier: 3.3.1
         version: 3.3.1
+      openai-zod-to-json-schema:
+        specifier: ^1.0.2
+        version: 1.0.2(zod@3.23.8)
       p-map:
         specifier: ^7.0.2
         version: 7.0.2
@@ -2316,6 +2319,12 @@ packages:
   openai-fetch@3.3.1:
     resolution: {integrity: sha512-/b7rPeKLgS+3C2dxQHPiWDj4wOcbL/SF5L2dxktmJyfFza/VK6Mr3+rIldgGxRNpqsa3oonEowafPNx5Tdq9dA==}
     engines: {node: '>=18'}
+
+  openai-zod-to-json-schema@1.0.2:
+    resolution: {integrity: sha512-ow+YY1aLbGx5kmgIi5FD3Aw/shL/jHAkFBIWbmW8+mzB4u/FtemBqnNbt17vr++eNopbihhJxw8/ubfeaqe6ug==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      zod: ^3.23.8
 
   optionator@0.9.4:
     resolution: {integrity: sha512-6IpQ7mKUxRcZNLIObR0hz7lxsapSSIYNZJwXPGeF0mTVqGKFIXj1DQcMoT22S3ROcLyY/rz0PWaWZ9ayWmad9g==}
@@ -5709,6 +5718,10 @@ snapshots:
   openai-fetch@3.3.1:
     dependencies:
       ky: 1.7.2
+
+  openai-zod-to-json-schema@1.0.2(zod@3.23.8):
+    dependencies:
+      zod: 3.23.8
 
   optionator@0.9.4:
     dependencies:

@@ -1,15 +1,14 @@
 import 'dotenv/config';
 
 import { ChatModel } from '@dexaai/dexter';
-import { createAIExtractFunction } from '@dexaai/dexter/ai-function';
+import { createExtractFunction } from '@dexaai/dexter/extract';
 import { z } from 'zod';
 
 /** A function to extract people names from text. */
-const extractPeopleNamesRunner = createAIExtractFunction({
-  chatModel: new ChatModel({ params: { model: 'gpt-4-1106-preview' } }),
-  systemMessage: `You use functions to extract people names from a message.`,
-  name: 'log_people_names',
-  description: `Use this to log the full names of people from a message. Don't include duplicate names.`,
+const extractPeopleNamesRunner = createExtractFunction({
+  chatModel: new ChatModel({ params: { model: 'gpt-4o-mini' } }),
+  systemMessage: `You extract the names of people from unstructured text.`,
+  name: 'people_names',
   schema: z.object({
     names: z.array(
       z

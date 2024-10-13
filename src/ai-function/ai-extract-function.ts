@@ -7,6 +7,7 @@ import { type ExtractFunction } from './types.js';
 
 /**
  * Use OpenAI function calling to extract data from a message.
+ * @deprecated Use `createExtractFunction()` from `@dexaai/dexter/extract` instead.
  */
 export function createAIExtractFunction<Schema extends z.ZodObject<any>>(
   {
