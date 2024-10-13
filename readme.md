@@ -14,7 +14,6 @@ _If you're a TypeScript AI engineer, check it out!_ 😊
 - [Features](#features)
 - [Install](#install)
 - [Usage](#usage)
-- [Docs](#docs)
 - [Examples](#examples)
   - [Basic](#basic)
   - [Caching](#caching)
@@ -33,7 +32,6 @@ _If you're a TypeScript AI engineer, check it out!_ 😊
 - minimal TS package w/ full typing
 - uses `fetch` everywhere
 - supports Node.js 18+, Deno, Cloudflare Workers, Vercel edge functions, etc
-- [full docs](https://dexter.dexa.ai)
 
 ## Install
 
@@ -79,10 +77,6 @@ async function example() {
   console.log(result);
 }
 ```
-
-## Docs
-
-See the [docs](https://dexter.dexa.ai) for a full usage guide and API reference.
 
 ## Examples
 
