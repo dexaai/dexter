@@ -1,10 +1,59 @@
 import { deepmerge as deepmergeInit } from '@fastify/deepmerge';
+import type { ChatParams } from 'openai-fetch';
 
 /** Improve preview of union types in autocomplete. */
 export type Prettify<T> = { [K in keyof T]: T[K] } & {};
 
+type DeepMergeArrayHandler = NonNullable<
+  NonNullable<Parameters<typeof deepmergeInit>[0]>['mergeArray']
+>;
+
+function isToolsArray(
+  value: unknown[]
+): value is NonNullable<ChatParams['tools']> {
+  return value.every((item) => {
+    if (typeof item !== 'object' || item === null) return false;
+    if (
+      'type' in item &&
+      typeof item.type === 'string' &&
+      item.type === 'function' &&
+      'function' in item &&
+      typeof item.function === 'object' &&
+      item.function !== null
+    ) {
+      return true;
+    }
+    return false;
+  });
+}
+
+const deepmergeArray: DeepMergeArrayHandler = (options) => {
+  const deepmerge = options.deepmerge;
+  const clone = options.clone;
+  return function (target, source) {
+    if (isToolsArray(target) && isToolsArray(source)) {
+      let i = 0;
+      const sl = source.length;
+      const il = Math.max(target.length, source.length);
+      const result = new Array(il);
+      for (i = 0; i < il; ++i) {
+        if (i < sl) {
+          result[i] = deepmerge(target[i], source[i]);
+        } else {
+          result[i] = clone(target[i]);
+        }
+      }
+      return result;
+    } else {
+      return [...target, ...source];
+    }
+  };
+};
+
 type DeepMerge = ReturnType<typeof deepmergeInit>;
-export const deepMergeImpl: DeepMerge = deepmergeInit();
+export const deepMergeImpl: DeepMerge = deepmergeInit({
+  mergeArray: deepmergeArray,
+});
 
 const deepMergeEventsImpl: DeepMerge = deepmergeInit({
   // Note: this is not using a recursive deep merge since it isn't used for events.
