@@ -9,7 +9,4 @@ export { extractZodObject } from './functions/extract-zod-object.js';
 export { stringifyForModel } from './functions/stringify-for-model.js';
 export { zodToJsonSchema } from './functions/zod-to-json.js';
 export type { Prompt } from './types.js';
-export * from './utils/errors.js';
-export { AbortError, RefusalError } from './utils/errors.js';
-export { getErrorMsg } from './utils/get-error-message.js';
 export { Msg } from './utils/message.js';

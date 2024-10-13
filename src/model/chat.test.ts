@@ -1,8 +1,8 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import { RefusalError } from '../prompt/index.js';
 import { ChatModel } from './chat.js';
 import { type Model } from './types.js';
+import { RefusalError } from './utils/errors.js';
 
 const FAKE_RESPONSE: Model.Chat.Response = {
   message: {

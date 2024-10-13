@@ -12,4 +12,5 @@ export { SparseVectorModel } from './sparse-vector.js';
 export type { Model } from './types.js';
 export { type CacheKey, type CacheStorage } from './utils/cache.js';
 export { calculateCost } from './utils/calculate-cost.js';
+export { AbortError, RefusalError } from './utils/errors.js';
 export { createTokenizer, type Tokenizer } from './utils/tokenizer.js';

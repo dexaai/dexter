@@ -2,9 +2,9 @@ import dedent from 'dedent';
 import { type ChatMessage, type ChatResponse } from 'openai-fetch';
 import { type Jsonifiable } from 'type-fest';
 
+import { RefusalError } from '../../model/utils/errors.js';
 import { stringifyForModel } from '../functions/stringify-for-model.js';
 import { type Prompt } from '../types.js';
-import { RefusalError } from './errors.js';
 
 type ChatResponseMessage = ChatResponse['choices'][0]['message'];
 
