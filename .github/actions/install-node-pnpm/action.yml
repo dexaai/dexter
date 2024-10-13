@@ -4,26 +4,21 @@ description: 'Install Node and pnpm with caching for fast install'
 inputs:
   node-version:
     description: 'The version of Node to install'
-    default: '18'
-    required: false
-  pnpm-version:
-    description: 'The version of pnpm to install'
-    default: '9'
+    default: '20'
     required: false
 
 runs:
   using: "composite"
   steps:
     - name: Install Node
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
         node-version: ${{ inputs.node-version }}
 
     - name: Install pnpm
-      uses: pnpm/action-setup@v2
+      uses: pnpm/action-setup@v4
       id: pnpm-install
       with:
-        version: ${{ inputs.pnpm-version }}
         run_install: false
 
     - name: Get pnpm store directory
@@ -33,7 +28,7 @@ runs:
         echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
 
     - name: Setup pnpm cache
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
         key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
