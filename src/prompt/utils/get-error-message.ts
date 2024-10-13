@@ -11,7 +11,7 @@ function isErrorWithMsg(error: unknown): error is ErrorWithMessage {
   );
 }
 
-export function toErrorWithMsg(maybeError: unknown): ErrorWithMessage {
+function toErrorWithMsg(maybeError: unknown): ErrorWithMessage {
   if (isErrorWithMsg(maybeError)) return maybeError;
 
   try {
