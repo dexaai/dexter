@@ -1,6 +1,8 @@
 import 'dotenv/config';
+
 import { readFile } from 'node:fs/promises';
-import { chunkDatastore, type Chunk } from './tools.js';
+
+import { type Chunk, chunkDatastore } from './tools.js';
 
 async function main() {
   const chunks = await loadChunks();

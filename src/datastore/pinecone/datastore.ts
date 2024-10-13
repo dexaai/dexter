@@ -1,9 +1,8 @@
 import { deepMerge, mergeEvents } from '../../utils/helpers.js';
 import { AbstractDatastore } from '../datastore.js';
-import type { Datastore, Prettify } from '../types.js';
-import type { PineconeClient } from './client.js';
-import { createPineconeClient } from './client.js';
-import type { Pinecone } from './types.js';
+import { type Datastore, type Prettify } from '../types.js';
+import { createPineconeClient, type PineconeClient } from './client.js';
+import { type Pinecone } from './types.js';
 
 export type PineconeDatastoreArgs<DocMeta extends Datastore.BaseMeta> =
   Prettify<
@@ -51,7 +50,7 @@ export class PineconeDatastore<
     }
 
     // Query Pinecone
-    // @ts-ignore
+    // @ts-expect-error: legacy ignore
     const response = await this.pinecone.query({
       topK: query.topK ?? 10,
       ...(typeof query.minScore === 'number'
@@ -68,7 +67,7 @@ export class PineconeDatastore<
 
     const queryResult: Datastore.QueryResult<DocMeta> = {
       query: query.query,
-      // @ts-ignore
+      // @ts-expect-error: legacy ignore
       docs: response.matches,
     };
 

@@ -1,6 +1,7 @@
 import 'dotenv/config';
-import { EmbeddingModel } from '@dexaai/dexter/model';
+
 import { PineconeDatastore } from '@dexaai/dexter/datastore/pinecone';
+import { EmbeddingModel } from '@dexaai/dexter/model';
 import QuickLRU from 'quick-lru';
 
 /**
@@ -21,7 +22,6 @@ async function main() {
   // Pinecone datastore with cache
   const store = new PineconeDatastore<{ content: string }>({
     contentKey: 'content',
-    // @ts-ignore
     embeddingModel,
     events: { onQueryComplete: [console.log] },
     cache: new Map(),

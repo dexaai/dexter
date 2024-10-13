@@ -1,11 +1,10 @@
-import type { PartialDeep } from 'type-fest';
-import type { SetOptional } from 'type-fest';
-import type { ModelArgs } from './model.js';
-import type { Model } from './types.js';
-import { calculateCost } from './utils/calculate-cost.js';
-import { createOpenAIClient } from './clients/openai.js';
-import { AbstractModel } from './model.js';
+import { type PartialDeep, type SetOptional } from 'type-fest';
+
 import { deepMerge, mergeEvents, type Prettify } from '../utils/helpers.js';
+import { createOpenAIClient } from './clients/openai.js';
+import { AbstractModel, type ModelArgs } from './model.js';
+import { type Model } from './types.js';
+import { calculateCost } from './utils/calculate-cost.js';
 
 export type ChatModelArgs<CustomCtx extends Model.Ctx> = SetOptional<
   ModelArgs<
@@ -330,7 +329,7 @@ function logMessage(message: Model.Message, index: number) {
         );
         console.debug(formatted);
       } catch (err) {
-        console.debug(message.function_call.arguments);
+        console.error(`Failed to parse function call arguments`, err);
       }
     }
   } else if (message.tool_calls) {
@@ -351,7 +350,7 @@ function logMessage(message: Model.Message, index: number) {
           );
           console.debug(formatted);
         } catch (err) {
-          console.debug(toolCallFunction.arguments);
+          console.error(`Failed to parse tool call arguments`, err);
         }
       }
     }

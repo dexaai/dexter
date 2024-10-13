@@ -1,4 +1,5 @@
 import 'dotenv/config';
+
 import { ChatModel, Msg, type Prompt } from '@dexaai/dexter';
 
 /**

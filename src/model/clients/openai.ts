@@ -1,5 +1,4 @@
-import type { ChatMessage } from 'openai-fetch';
-import { OpenAIClient } from 'openai-fetch';
+import { type ChatMessage, OpenAIClient } from 'openai-fetch';
 
 /** Cached OpenAI clients. */
 const cachedClients = new Map<string, OpenAIClient>();

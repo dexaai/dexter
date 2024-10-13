@@ -1,5 +1,6 @@
-import type { z } from 'zod';
-import type { Model } from '../../model/index.js';
+import { type z } from 'zod';
+
+import { type Model } from '../../model/index.js';
 import { Msg, type Prompt } from '../index.js';
 import { createAIFunction } from './ai-function.js';
 import { createAIRunner } from './ai-runner.js';

@@ -1,8 +1,9 @@
-import type { z } from 'zod';
-import { zodToJsonSchema } from './zod-to-json.js';
-import { extractZodObject } from './extract-zod-object.js';
-import type { Prompt } from '../types.js';
+import { type z } from 'zod';
+
+import { type Prompt } from '../types.js';
 import { cleanString } from '../utils/message.js';
+import { extractZodObject } from './extract-zod-object.js';
+import { zodToJsonSchema } from './zod-to-json.js';
 
 /**
  * Create a function meant to be used with OpenAI tool or function calling.
@@ -13,10 +14,7 @@ import { cleanString } from '../utils/message.js';
  * The `spec` property of the returned function is the spec for adding the
  * function to the OpenAI API `functions` property.
  */
-export function createAIFunction<
-  Schema extends z.ZodObject<any>,
-  Return extends any,
->(
+export function createAIFunction<Schema extends z.ZodObject<any>, Return>(
   spec: {
     /** Name of the function. */
     name: string;

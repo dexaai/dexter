@@ -1,13 +1,12 @@
-import type { PartialDeep } from 'type-fest';
-import pThrottle from 'p-throttle';
 import pMap from 'p-map';
-import type { SetOptional } from 'type-fest';
-import type { ModelArgs } from './model.js';
-import type { Model } from './types.js';
-import { calculateCost } from './utils/calculate-cost.js';
-import { createOpenAIClient } from './clients/openai.js';
-import { AbstractModel } from './model.js';
+import pThrottle from 'p-throttle';
+import { type PartialDeep, type SetOptional } from 'type-fest';
+
 import { deepMerge, mergeEvents, type Prettify } from '../utils/helpers.js';
+import { createOpenAIClient } from './clients/openai.js';
+import { AbstractModel, type ModelArgs } from './model.js';
+import { type Model } from './types.js';
+import { calculateCost } from './utils/calculate-cost.js';
 
 export type EmbeddingModelArgs<CustomCtx extends Model.Ctx> = SetOptional<
   ModelArgs<
@@ -210,7 +209,7 @@ function batchInputs(args: {
   let currentBatch: InputBatch = [];
   let currentBatchTokens = 0;
 
-  for (let input of inputs) {
+  for (const input of inputs) {
     const tokenCount = tokenizer.countTokens(input);
 
     // Ensure that the input does not exceed the max tokens per batch

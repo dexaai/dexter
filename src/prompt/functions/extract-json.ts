@@ -1,6 +1,6 @@
 import { jsonrepair } from 'jsonrepair';
 import parseJson from 'parse-json';
-import type { JsonObject } from 'type-fest';
+import { type JsonObject } from 'type-fest';
 
 /** Extract a JSON object from a string. */
 export function extractJsonObject(str: string): JsonObject {
@@ -14,6 +14,7 @@ export function extractJsonObject(str: string): JsonObject {
     repairedObjectString = jsonrepair(objectString);
     const json: JsonObject = JSON.parse(repairedObjectString);
     return json;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
     // Parse again with parse-json for better error messages.
     const json: JsonObject = parseJson(repairedObjectString);

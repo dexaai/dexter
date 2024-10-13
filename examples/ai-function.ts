@@ -1,6 +1,7 @@
 import 'dotenv/config';
-import { z } from 'zod';
+
 import { ChatModel, createAIFunction, Msg, type Prompt } from '@dexaai/dexter';
+import { z } from 'zod';
 
 /**
  * npx tsx examples/ai-function.ts

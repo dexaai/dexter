@@ -1,10 +1,10 @@
-import type { Datastore } from './types.js';
 import {
   type CacheKey,
   type CacheStorage,
   defaultCacheKey,
 } from '../utils/cache.js';
 import { mergeEvents } from '../utils/helpers.js';
+import { type Datastore } from './types.js';
 
 export abstract class AbstractDatastore<
   DocMeta extends Datastore.BaseMeta,

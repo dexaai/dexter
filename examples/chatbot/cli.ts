@@ -1,6 +1,9 @@
 import 'dotenv/config';
+
 import readline from 'node:readline';
-import type { Prompt } from '@dexaai/dexter/prompt';
+
+import { type Prompt } from '@dexaai/dexter/prompt';
+
 import { generateAnswer } from './answer.js';
 
 const history: Prompt.Msg[] = [];

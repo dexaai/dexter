@@ -1,4 +1,4 @@
-import type { Telemetry } from './types.js';
+import { type Telemetry } from './types.js';
 
 export const DefaultTelemetry: Telemetry.Provider = {
   startSpan<T>(

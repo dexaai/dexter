@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { Model } from './types.js';
+
 import { ChatModel } from './chat.js';
+import { type Model } from './types.js';
 
 const FAKE_RESPONSE: Model.Chat.Response = {
   message: {

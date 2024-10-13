@@ -1,5 +1,6 @@
 import ky, { type Options as KYOptions } from 'ky';
-import type { Model } from '../types.js';
+
+import { type Model } from '../types.js';
 
 export const createSpladeClient = () => ({
   async createSparseVector(
@@ -22,7 +23,6 @@ export const createSpladeClient = () => ({
         .json<Model.SparseVector.Vector>();
       return sparseValues;
     } catch (e) {
-      // @ts-ignore: TODO: add custom Error class that handles this
       throw new Error('Failed to create splade vector', { cause: e });
     }
   },

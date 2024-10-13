@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+
 import { stringifyForModel } from './stringify-for-model.js';
 
 describe('stringifyForModel', () => {

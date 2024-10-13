@@ -1,4 +1,5 @@
 import 'dotenv/config';
+
 import { EmbeddingModel } from '@dexaai/dexter/model';
 import KeyvRedis from '@keyv/redis';
 import Keyv from 'keyv';

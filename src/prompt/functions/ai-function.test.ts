@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { z } from 'zod';
+
 import { createAIFunction } from './ai-function.js';
 
 const fullName = createAIFunction(

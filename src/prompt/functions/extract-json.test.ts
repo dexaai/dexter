@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+
 import { extractJsonObject } from './extract-json.js';
 
 describe('extractJsonObject()', () => {

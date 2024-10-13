@@ -1,4 +1,4 @@
-import type { Jsonifiable } from 'type-fest';
+import { type Jsonifiable } from 'type-fest';
 
 /**
  * Stringifies a JSON value in a way that's optimized for use with LLM prompts.

@@ -1,5 +1,6 @@
-import type { ChatMessage, ChatParams } from 'openai-fetch';
-import type { Telemetry } from '../../telemetry/types.js';
+import { type ChatMessage, type ChatParams } from 'openai-fetch';
+
+import { type Telemetry } from '../../telemetry/types.js';
 
 const SpanAttrs = {
   LLM_MODEL: 'llm.model',
@@ -99,7 +100,7 @@ export function extractAttrsFromResponse(resp: {
 }
 
 function extractAttrsFromFunctions(funcs?: ChatParams['functions']): AttrMap {
-  let attrs: AttrMap = {};
+  const attrs: AttrMap = {};
   if (!funcs) return attrs;
   funcs.forEach((func, index) => {
     const prefix = `${SpanAttrs.LLM_FUNCTION}.${index}`;
@@ -111,7 +112,7 @@ function extractAttrsFromFunctions(funcs?: ChatParams['functions']): AttrMap {
 }
 
 function extractAttrsFromTools(tools?: ChatParams['tools']): AttrMap {
-  let attrs: AttrMap = {};
+  const attrs: AttrMap = {};
   if (!tools) return attrs;
   tools.forEach((tool, index) => {
     const prefix = `${SpanAttrs.LLM_TOOL}.${index}`;
@@ -128,7 +129,7 @@ function extractAttrsFromStrings(
   type: 'prompt' | 'completion',
   prompt?: string | string[] | null
 ): AttrMap {
-  let attrs: Record<string, string> = {};
+  const attrs: Record<string, string> = {};
   if (!prompt) return attrs;
   const prompts = Array.isArray(prompt) ? prompt : [prompt];
   const prefix =
@@ -143,7 +144,7 @@ function extractAttrsFromMessages(
   type: 'prompt' | 'completion',
   messages?: ChatMessage[] | null
 ): AttrMap {
-  let attrs: Record<string, string> = {};
+  const attrs: Record<string, string> = {};
   if (!messages) return attrs;
   messages.forEach((message, index) => {
     const prefix = `${type === 'prompt' ? SpanAttrs.LLM_PROMPT : SpanAttrs.LLM_COMPLETION}.${index}`;

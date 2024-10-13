@@ -1,23 +1,11 @@
-import { encoding_for_model } from 'tiktoken';
-import type { Tiktoken, TiktokenModel } from 'tiktoken';
-import type { ChatMessage } from 'openai-fetch';
-import type { Model } from '../types.js';
+import { type ChatMessage } from 'openai-fetch';
+import {
+  encoding_for_model,
+  type Tiktoken,
+  type TiktokenModel,
+} from 'tiktoken';
 
-// Store instances of the tokenizer to avoid re-creating them for the same model
-const tokenizerCache = new Map<string, Tokenizer>();
-
-/** Create a tokenizer for a specific model */
-export const createTokenizer: (model: string) => Tokenizer = (
-  model: string
-) => {
-  if (tokenizerCache.has(model)) {
-    return tokenizerCache.get(model)!;
-  } else {
-    const tokenizer = new Tokenizer(model);
-    tokenizerCache.set(model, tokenizer);
-    return tokenizer;
-  }
-};
+import { type Model } from '../types.js';
 
 const GPT_4_MODELS = [
   'gpt-4',
@@ -48,6 +36,7 @@ class Tokenizer implements Model.ITokenizer {
     try {
       this.tiktoken = encoding_for_model(model as TiktokenModel);
     } catch (e) {
+      console.error(`Failed to create tokenizer for model ${model}`, e);
       this.tiktoken = encoding_for_model('gpt-3.5-turbo');
     }
   }
@@ -143,3 +132,19 @@ class Tokenizer implements Model.ITokenizer {
     return GPT_4_MODELS.includes(model as any);
   }
 }
+
+// Store instances of the tokenizer to avoid re-creating them for the same model
+const tokenizerCache = new Map<string, Tokenizer>();
+
+/** Create a tokenizer for a specific model */
+export const createTokenizer: (model: string) => Tokenizer = (
+  model: string
+) => {
+  if (tokenizerCache.has(model)) {
+    return tokenizerCache.get(model)!;
+  } else {
+    const tokenizer = new Tokenizer(model);
+    tokenizerCache.set(model, tokenizer);
+    return tokenizer;
+  }
+};

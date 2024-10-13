@@ -1,10 +1,9 @@
+import { type Model } from '../../model/index.js';
 import { deepMerge, mergeEvents } from '../../utils/helpers.js';
-import type { Model } from '../../model/index.js';
 import { AbstractHybridDatastore } from '../hybrid-datastore.js';
-import type { Datastore, Prettify } from '../types.js';
-import type { PineconeClient } from './client.js';
-import { createPineconeClient } from './client.js';
-import type { Pinecone } from './types.js';
+import { type Datastore, type Prettify } from '../types.js';
+import { createPineconeClient, type PineconeClient } from './client.js';
+import { type Pinecone } from './types.js';
 
 export type PineconeHybridDatastoreArgs<DocMeta extends Datastore.BaseMeta> =
   Prettify<
@@ -77,7 +76,7 @@ export class PineconeHybridDatastore<
       includeValues: query.includeValues ?? false,
       includeMetadata: true,
       vector: embedding,
-      sparseVector: sparseVector,
+      sparseVector,
     });
 
     const queryResult: Datastore.QueryResult<DocMeta> = {

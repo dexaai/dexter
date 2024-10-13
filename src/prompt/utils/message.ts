@@ -1,7 +1,8 @@
 import dedent from 'dedent';
-import type { Jsonifiable } from 'type-fest';
-import type { Prompt } from '../types.js';
+import { type Jsonifiable } from 'type-fest';
+
 import { stringifyForModel } from '../functions/stringify-for-model.js';
+import { type Prompt } from '../types.js';
 
 /**
  * Clean a string by removing extra newlines and indentation.

@@ -1,11 +1,10 @@
-import type { PartialDeep } from 'type-fest';
-import type { SetOptional } from 'type-fest';
-import type { ModelArgs } from './model.js';
-import type { Model } from './types.js';
-import { calculateCost } from './utils/calculate-cost.js';
-import { createOpenAIClient } from './clients/openai.js';
-import { AbstractModel } from './model.js';
+import { type PartialDeep, type SetOptional } from 'type-fest';
+
 import { deepMerge, mergeEvents, type Prettify } from '../index.js';
+import { createOpenAIClient } from './clients/openai.js';
+import { AbstractModel, type ModelArgs } from './model.js';
+import { type Model } from './types.js';
+import { calculateCost } from './utils/calculate-cost.js';
 
 export type CompletionModelArgs<CustomCtx extends Model.Ctx> = SetOptional<
   ModelArgs<
@@ -37,7 +36,8 @@ export class CompletionModel<
   modelProvider = 'openai' as const;
 
   constructor(args?: CompletionModelArgs<CustomCtx>) {
-    let { client, params, ...rest } = args ?? {};
+    let { client, params } = args ?? {};
+    const { client: _, params: __, ...rest } = args ?? {};
     // Add a default client if none is provided
     client = client ?? createOpenAIClient();
     // Set default model if no params are provided

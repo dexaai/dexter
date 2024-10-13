@@ -1,3 +1,4 @@
+/* eslint-disable no-use-before-define */
 export namespace Telemetry {
   export interface Provider {
     startSpan<T>(options: SpanOptions, callback: (span: Span) => T): T;
@@ -42,9 +43,9 @@ export namespace Telemetry {
     | string
     | number
     | boolean
-    | Array<null | undefined | string>
-    | Array<null | undefined | number>
-    | Array<null | undefined | boolean>;
+    | (null | undefined | string)[]
+    | (null | undefined | number)[]
+    | (null | undefined | boolean)[];
 
   export type SpanAttributes = Record<string, SpanAttributeValue | undefined>;
 }
