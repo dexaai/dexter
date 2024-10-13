@@ -146,6 +146,13 @@ export namespace Prompt {
       content: string;
     };
 
+    /** Message with a refusal reason and no content. */
+    export type Refusal = {
+      role: 'assistant';
+      refusal: string;
+      content?: null;
+    };
+
     /** Message with arguments to call a function. */
     export type FuncCall = {
       role: 'assistant';

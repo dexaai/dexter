@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 
+import { RefusalError } from '../prompt/index.js';
 import { ChatModel } from './chat.js';
 import { type Model } from './types.js';
 
@@ -27,6 +28,38 @@ const FAKE_RESPONSE: Model.Chat.Response = {
       message: {
         content: 'Hi from fake AI',
         role: 'assistant',
+        refusal: null,
+      },
+      logprobs: null,
+    },
+  ],
+};
+
+const FAKE_REFUSAL_RESPONSE: Model.Chat.Response = {
+  message: {
+    content: null,
+    role: 'assistant',
+  },
+  cached: false,
+  latency: 0,
+  cost: 0,
+  created: 0,
+  id: 'fake-id',
+  model: 'gpt-fake',
+  object: 'chat.completion',
+  usage: {
+    completion_tokens: 1,
+    prompt_tokens: 1,
+    total_tokens: 2,
+  },
+  choices: [
+    {
+      finish_reason: 'stop',
+      index: 0,
+      message: {
+        content: null,
+        role: 'assistant',
+        refusal: 'I refuse to answer',
       },
       logprobs: null,
     },
@@ -54,7 +87,10 @@ describe('ChatModel', () => {
     const response = await chatModel.run({
       messages: [{ role: 'user', content: 'content' }],
     });
-    expect(response).toEqual(FAKE_RESPONSE);
+    expect(response).toEqual({
+      ...FAKE_RESPONSE,
+      message: FAKE_RESPONSE.message,
+    });
   });
 
   it('triggers events', async () => {
@@ -245,5 +281,19 @@ describe('ChatModel', () => {
     expect(onComplete).toHaveBeenCalledOnce();
     expect(chatModel.context.userId).toBe('123');
     expect(chatModel.params.model).toBe('gpt-fake');
+  });
+
+  it('throws a refusal error when a refusal is returned', async () => {
+    vi.setSystemTime(new Date());
+    Client = vi.fn() as unknown as Model.Chat.Client;
+    Client.createChatCompletion = vi
+      .fn()
+      .mockImplementation(() => Promise.resolve(FAKE_REFUSAL_RESPONSE));
+    const chatModel = new ChatModel({ client: Client });
+    await expect(() =>
+      chatModel.run({
+        messages: [{ role: 'user', content: 'content' }],
+      })
+    ).rejects.toThrowError(RefusalError);
   });
 });

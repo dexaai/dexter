@@ -43,8 +43,12 @@ describe('Msg', () => {
     expect(Msg.isToolResult(msg)).toBe(true);
   });
 
+  // Same as OpenAI.ChatMessage, except we throw a RefusalError if the message is a refusal
+  // so `refusal` isn't on the object and content can't be optional.
   it('prompt message types should interop with openai-fetch message types', () => {
-    expectTypeOf({} as OpenAI.ChatMessage).toMatchTypeOf<Prompt.Msg>();
+    expectTypeOf(
+      {} as Omit<OpenAI.ChatMessage, 'refusal'> & { content: string | null }
+    ).toMatchTypeOf<Prompt.Msg>();
     expectTypeOf({} as Prompt.Msg).toMatchTypeOf<OpenAI.ChatMessage>();
     expectTypeOf({} as Prompt.Msg.System).toMatchTypeOf<OpenAI.ChatMessage>();
     expectTypeOf({} as Prompt.Msg.User).toMatchTypeOf<OpenAI.ChatMessage>();

@@ -1,8 +1,12 @@
 import dedent from 'dedent';
+import { type ChatMessage, type ChatResponse } from 'openai-fetch';
 import { type Jsonifiable } from 'type-fest';
 
 import { stringifyForModel } from '../functions/stringify-for-model.js';
 import { type Prompt } from '../types.js';
+import { RefusalError } from './errors.js';
+
+type ChatResponseMessage = ChatResponse['choices'][0]['message'];
 
 /**
  * Clean a string by removing extra newlines and indentation.
@@ -145,7 +149,7 @@ export class Msg {
       return Msg.toolCall(msg.tool_calls);
     } else if (msg.content === null && msg.function_call != null) {
       return Msg.funcCall(msg.function_call);
-    } else if (msg.content !== null) {
+    } else if (msg.content != null) {
       return Msg.assistant(msg.content);
     } else {
       // @TODO: probably don't want to error here
@@ -155,44 +159,60 @@ export class Msg {
   }
 
   /** Check if a message is a system message. */
-  static isSystem(message: Prompt.Msg): message is Prompt.Msg.System {
+  static isSystem(
+    message: ChatMessage | ChatResponseMessage
+  ): message is Prompt.Msg.System {
     return message.role === 'system';
   }
   /** Check if a message is a user message. */
-  static isUser(message: Prompt.Msg): message is Prompt.Msg.User {
+  static isUser(
+    message: ChatMessage | ChatResponseMessage
+  ): message is Prompt.Msg.User {
     return message.role === 'user';
   }
   /** Check if a message is an assistant message. */
-  static isAssistant(message: Prompt.Msg): message is Prompt.Msg.Assistant {
-    return message.role === 'assistant' && message.content !== null;
+  static isAssistant(
+    message: ChatMessage | ChatResponseMessage
+  ): message is Prompt.Msg.Assistant {
+    return message.role === 'assistant' && message.content != null;
+  }
+  /** Check if a message is a refusal message. */
+  static isRefusal(
+    message: ChatMessage | ChatResponseMessage
+  ): message is Prompt.Msg.Refusal {
+    return message.role === 'assistant' && message.refusal != null;
   }
   /** Check if a message is a function call message with arguments. */
-  static isFuncCall(message: Prompt.Msg): message is Prompt.Msg.FuncCall {
+  static isFuncCall(
+    message: ChatMessage | ChatResponseMessage
+  ): message is Prompt.Msg.FuncCall {
     return message.role === 'assistant' && message.function_call != null;
   }
   /** Check if a message is a function result message. */
-  static isFuncResult(message: Prompt.Msg): message is Prompt.Msg.FuncResult {
+  static isFuncResult(
+    message: ChatMessage | ChatResponseMessage
+  ): message is Prompt.Msg.FuncResult {
     return message.role === 'function' && message.name != null;
   }
   /** Check if a message is a tool calls message. */
-  static isToolCall(message: Prompt.Msg): message is Prompt.Msg.ToolCall {
+  static isToolCall(
+    message: ChatMessage | ChatResponseMessage
+  ): message is Prompt.Msg.ToolCall {
     return message.role === 'assistant' && message.tool_calls != null;
   }
   /** Check if a message is a tool call result message. */
-  static isToolResult(message: Prompt.Msg): message is Prompt.Msg.ToolResult {
+  static isToolResult(
+    message: ChatMessage | ChatResponseMessage
+  ): message is Prompt.Msg.ToolResult {
     return message.role === 'tool' && !!message.tool_call_id;
   }
 
-  /** Narrow a ChatModel.Message to a specific type. */
-  static narrow(message: Prompt.Msg.System): Prompt.Msg.System;
-  static narrow(message: Prompt.Msg.User): Prompt.Msg.User;
-  static narrow(message: Prompt.Msg.Assistant): Prompt.Msg.Assistant;
-  static narrow(message: Prompt.Msg.FuncCall): Prompt.Msg.FuncCall;
-  static narrow(message: Prompt.Msg.FuncResult): Prompt.Msg.FuncResult;
-  static narrow(message: Prompt.Msg.ToolCall): Prompt.Msg.ToolCall;
-  static narrow(message: Prompt.Msg.ToolResult): Prompt.Msg.ToolResult;
-  static narrow(
-    message: Prompt.Msg
+  /**
+   * Narrow a ChatModel.Message to a specific type.
+   * Throws a RefusalError if the message is a refusal.
+   */
+  static fromChatMessage(
+    message: ChatMessage | ChatResponseMessage
   ):
     | Prompt.Msg.System
     | Prompt.Msg.User
@@ -201,6 +221,10 @@ export class Msg {
     | Prompt.Msg.FuncResult
     | Prompt.Msg.ToolCall
     | Prompt.Msg.ToolResult {
+    if (this.isRefusal(message)) {
+      throw new RefusalError(message.refusal);
+    }
+    delete message.refusal;
     if (this.isSystem(message)) {
       return message;
     }

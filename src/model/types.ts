@@ -1,7 +1,6 @@
 /* eslint-disable no-use-before-define */
 import { type Options as KYOptions } from 'ky';
 import {
-  type ChatMessage,
   type ChatParams,
   type ChatResponse,
   type ChatStreamResponse,
@@ -12,6 +11,7 @@ import {
   type OpenAIClient,
 } from 'openai-fetch';
 
+import { type Prompt } from '../prompt/types.js';
 import { type ChatModel } from './chat.js';
 import { type CompletionModel } from './completion.js';
 import { type EmbeddingModel } from './embedding.js';
@@ -79,7 +79,7 @@ export namespace Model {
       top_p?: ChatParams['top_p'];
     }
     export interface Response extends Base.Response, ChatResponse {
-      message: ChatMessage;
+      message: Prompt.Msg;
     }
     /** Streaming response from the OpenAI API. */
     type StreamResponse = ChatStreamResponse;
@@ -205,7 +205,7 @@ export namespace Model {
      * A single ChatMessage is counted as a completion and an array as a prompt.
      * Strings are counted as is.
      */
-    countTokens(input?: string | ChatMessage | ChatMessage[]): number;
+    countTokens(input?: string | Prompt.Msg | Prompt.Msg[]): number;
     /** Truncate a string to a maximum number of tokens */
     truncate(args: {
       /** Text to truncate */
@@ -218,7 +218,7 @@ export namespace Model {
   }
 
   /** Primary message type for chat models */
-  export type Message = ChatMessage;
+  export type Message = Prompt.Msg;
 
   /** The provider of the model (eg: OpenAI) */
   export type Provider = (string & {}) | 'openai' | 'custom';

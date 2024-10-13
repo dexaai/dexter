@@ -1,5 +1,7 @@
+import { type ChatResponse } from 'openai-fetch';
 import { type PartialDeep, type SetOptional } from 'type-fest';
 
+import { Msg } from '../prompt/index.js';
 import { deepMerge, mergeEvents, type Prettify } from '../utils/helpers.js';
 import { createOpenAIClient } from './clients/openai.js';
 import { AbstractModel, type ModelArgs } from './model.js';
@@ -97,9 +99,11 @@ export class ChatModel<
         ) ?? []
       );
 
+      const message = Msg.fromChatMessage(response.choices[0].message);
+
       const modelResponse: Model.Chat.Response = {
         ...response,
-        message: response.choices[0].message,
+        message,
         cached: false,
         latency: Date.now() - start,
         cost: calculateCost({ model: params.model, tokens: response.usage }),
@@ -200,7 +204,7 @@ export class ChatModel<
             finish_reason:
               choice.finish_reason as Model.Chat.Response['choices'][0]['finish_reason'],
             index: choice.index,
-            message: choice.delta as Model.Message & { role: 'assistant' },
+            message: choice.delta as ChatResponse['choices'][0]['message'],
             logprobs: choice.logprobs || null,
           },
         ],
@@ -209,9 +213,8 @@ export class ChatModel<
       // Calculate the token usage and add it to the response.
       // OpenAI doesn't provide token usage for streaming requests.
       const promptTokens = this.tokenizer.countTokens(params.messages);
-      const completionTokens = this.tokenizer.countTokens(
-        response.choices[0].message
-      );
+      const messageContent = response.choices[0].message.content ?? '';
+      const completionTokens = this.tokenizer.countTokens(messageContent);
       response.usage = {
         completion_tokens: completionTokens,
         prompt_tokens: promptTokens,
@@ -234,9 +237,11 @@ export class ChatModel<
         ) ?? []
       );
 
+      const message = Msg.fromChatMessage(response.choices[0].message);
+
       const modelResponse: Model.Chat.Response = {
         ...response,
-        message: response.choices[0].message,
+        message,
         cached: false,
         latency: Date.now() - start,
         cost: calculateCost({ model: params.model, tokens: response.usage }),
