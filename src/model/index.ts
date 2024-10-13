@@ -10,5 +10,6 @@ export { AbstractModel } from './model.js';
 export type { SparseVectorModelArgs } from './sparse-vector.js';
 export { SparseVectorModel } from './sparse-vector.js';
 export type { Model } from './types.js';
+export { type CacheKey, type CacheStorage } from './utils/cache.js';
 export { calculateCost } from './utils/calculate-cost.js';
-export { createTokenizer } from './utils/tokenizer.js';
+export { createTokenizer, type Tokenizer } from './utils/tokenizer.js';

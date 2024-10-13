@@ -148,3 +148,5 @@ export const createTokenizer: (model: string) => Tokenizer = (
     return tokenizer;
   }
 };
+
+export type { Tokenizer };

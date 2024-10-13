@@ -1,11 +1,5 @@
 import { type PartialDeep } from 'type-fest';
 
-import {
-  type CacheKey,
-  type CacheStorage,
-  defaultCacheKey,
-} from '../utils/cache.js';
-import { deepMerge, type Prettify } from '../utils/helpers.js';
 import { DefaultTelemetry } from './telemetry/default-telemetry.js';
 import {
   extractAttrsFromContext,
@@ -15,6 +9,12 @@ import {
 } from './telemetry/extractors.js';
 import { type Telemetry } from './telemetry/types.js';
 import { type Model } from './types.js';
+import {
+  type CacheKey,
+  type CacheStorage,
+  defaultCacheKey,
+} from './utils/cache.js';
+import { deepMerge, type Prettify } from './utils/helpers.js';
 import { createTokenizer } from './utils/tokenizer.js';
 
 export interface ModelArgs<

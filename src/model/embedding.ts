@@ -2,11 +2,11 @@ import pMap from 'p-map';
 import pThrottle from 'p-throttle';
 import { type PartialDeep, type SetOptional } from 'type-fest';
 
-import { deepMerge, mergeEvents, type Prettify } from '../utils/helpers.js';
 import { createOpenAIClient } from './clients/openai.js';
 import { AbstractModel, type ModelArgs } from './model.js';
 import { type Model } from './types.js';
 import { calculateCost } from './utils/calculate-cost.js';
+import { deepMerge, mergeEvents, type Prettify } from './utils/helpers.js';
 
 export type EmbeddingModelArgs<CustomCtx extends Model.Ctx> = SetOptional<
   ModelArgs<

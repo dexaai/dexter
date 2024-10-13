@@ -2,11 +2,11 @@ import { type ChatResponse } from 'openai-fetch';
 import { type PartialDeep, type SetOptional } from 'type-fest';
 
 import { Msg } from '../prompt/index.js';
-import { deepMerge, mergeEvents, type Prettify } from '../utils/helpers.js';
 import { createOpenAIClient } from './clients/openai.js';
 import { AbstractModel, type ModelArgs } from './model.js';
 import { type Model } from './types.js';
 import { calculateCost } from './utils/calculate-cost.js';
+import { deepMerge, mergeEvents, type Prettify } from './utils/helpers.js';
 
 export type ChatModelArgs<CustomCtx extends Model.Ctx> = SetOptional<
   ModelArgs<

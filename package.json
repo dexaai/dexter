@@ -15,10 +15,6 @@
   },
   "exports": {
     "./package.json": "./package.json",
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
-    },
     "./prompt": {
       "types": "./dist/prompt/index.d.ts",
       "import": "./dist/prompt/index.js"
@@ -26,10 +22,6 @@
     "./model": {
       "types": "./dist/model/index.d.ts",
       "import": "./dist/model/index.js"
-    },
-    "./utils": {
-      "types": "./dist/utils/index.d.ts",
-      "import": "./dist/utils/index.js"
     }
   },
   "sideEffects": false,
