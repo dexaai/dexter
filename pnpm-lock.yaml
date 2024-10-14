@@ -63,6 +63,9 @@ importers:
       '@types/node':
         specifier: ^20.14.11
         version: 20.14.11
+      chalk:
+        specifier: ^5.3.0
+        version: 5.3.0
       dotenv-cli:
         specifier: ^7.4.2
         version: 7.4.2
