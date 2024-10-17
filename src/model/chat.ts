@@ -1,10 +1,12 @@
+import { type ChatResponse } from 'openai-fetch';
 import { type PartialDeep, type SetOptional } from 'type-fest';
 
-import { deepMerge, mergeEvents, type Prettify } from '../utils/helpers.js';
 import { createOpenAIClient } from './clients/openai.js';
 import { AbstractModel, type ModelArgs } from './model.js';
-import { type Model } from './types.js';
+import { type Model, type Msg } from './types.js';
 import { calculateCost } from './utils/calculate-cost.js';
+import { deepMerge, mergeEvents, type Prettify } from './utils/helpers.js';
+import { MsgUtil } from './utils/message-util.js';
 
 export type ChatModelArgs<CustomCtx extends Model.Ctx> = SetOptional<
   ModelArgs<
@@ -97,9 +99,11 @@ export class ChatModel<
         ) ?? []
       );
 
+      const message = MsgUtil.fromChatMessage(response.choices[0].message);
+
       const modelResponse: Model.Chat.Response = {
         ...response,
-        message: response.choices[0].message,
+        message,
         cached: false,
         latency: Date.now() - start,
         cost: calculateCost({ model: params.model, tokens: response.usage }),
@@ -200,7 +204,7 @@ export class ChatModel<
             finish_reason:
               choice.finish_reason as Model.Chat.Response['choices'][0]['finish_reason'],
             index: choice.index,
-            message: choice.delta as Model.Message & { role: 'assistant' },
+            message: choice.delta as ChatResponse['choices'][0]['message'],
             logprobs: choice.logprobs || null,
           },
         ],
@@ -209,9 +213,8 @@ export class ChatModel<
       // Calculate the token usage and add it to the response.
       // OpenAI doesn't provide token usage for streaming requests.
       const promptTokens = this.tokenizer.countTokens(params.messages);
-      const completionTokens = this.tokenizer.countTokens(
-        response.choices[0].message
-      );
+      const messageContent = response.choices[0].message.content ?? '';
+      const completionTokens = this.tokenizer.countTokens(messageContent);
       response.usage = {
         completion_tokens: completionTokens,
         prompt_tokens: promptTokens,
@@ -234,9 +237,11 @@ export class ChatModel<
         ) ?? []
       );
 
+      const message = MsgUtil.fromChatMessage(response.choices[0].message);
+
       const modelResponse: Model.Chat.Response = {
         ...response,
-        message: response.choices[0].message,
+        message,
         cached: false,
         latency: Date.now() - start,
         cost: calculateCost({ model: params.model, tokens: response.usage }),
@@ -271,7 +276,7 @@ export class ChatModel<
 /**
  * Verbose logging for debugging prompts
  */
-function logInput(args: { params: { messages: Model.Message[] } }) {
+function logInput(args: { params: { messages: Msg[] } }) {
   console.debug(`-----> [Request] ----->`);
   console.debug();
   args.params.messages.forEach(logMessage);
@@ -285,10 +290,10 @@ function logResponse(args: {
     };
     cached: boolean;
     latency?: number;
-    choices: { message: Model.Message }[];
+    choices: { message: Msg }[];
     cost?: number;
   };
-  params: { messages: Model.Message[] };
+  params: { messages: Msg[] };
 }) {
   const { usage, cost, latency, choices } = args.response;
   const tokens = {
@@ -309,16 +314,16 @@ function logResponse(args: {
   logMessage(message, args.params.messages.length + 1);
 }
 
-function logMessage(message: Model.Message, index: number) {
+function logMessage(message: Msg, index: number) {
   console.debug(
     `[${index}] ${message.role.toUpperCase()}:${
-      message.name ? ` (${message.name}) ` : ''
+      'name' in message ? ` (${message.name}) ` : ''
     }`
   );
   if (message.content) {
     console.debug(message.content);
   }
-  if (message.function_call) {
+  if (MsgUtil.isFuncCall(message)) {
     console.debug(`Function call: ${message.function_call.name}`);
     if (message.function_call.arguments) {
       try {
@@ -332,7 +337,7 @@ function logMessage(message: Model.Message, index: number) {
         console.error(`Failed to parse function call arguments`, err);
       }
     }
-  } else if (message.tool_calls) {
+  } else if (MsgUtil.isToolCall(message)) {
     for (const toolCall of message.tool_calls) {
       const toolCallFunction = toolCall.function;
       console.debug(
