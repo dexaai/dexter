@@ -6,12 +6,12 @@ import { type Model, type Msg } from '../model/types.js';
 /**
  * A runner that iteratively calls the model and handles function calls.
  */
-export type Runner<Content = string> = (
-  params: string | Runner.Params,
+export type AIRunner<Content = string> = (
+  params: string | AIRunner.Params,
   context?: Model.Ctx
-) => Promise<Runner.Response<Content>>;
+) => Promise<AIRunner.Response<Content>>;
 
-export namespace Runner {
+export namespace AIRunner {
   /** Parameters to execute a runner */
   export type Params = SetOptional<Model.Chat.Run & Model.Chat.Config, 'model'>;
 
@@ -40,7 +40,7 @@ export namespace Runner {
  * A function used to extract data using OpenAI function calling.
  */
 export type ExtractFunction<Schema extends z.ZodObject<any>> = (
-  params: string | Runner.Params,
+  params: string | AIRunner.Params,
   context?: Model.Ctx
 ) => Promise<z.infer<Schema>>;
 

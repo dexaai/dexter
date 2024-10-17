@@ -3,7 +3,7 @@ import pMap from 'p-map';
 import { MsgUtil } from '../model/index.js';
 import { type Model, type Msg } from '../model/types.js';
 import { getErrorMsg } from '../model/utils/errors.js';
-import { type AIFunction, type Runner } from './types.js';
+import { type AIFunction, type AIRunner } from './types.js';
 
 /**
  * Creates a function to run a chat model in a loop
@@ -25,12 +25,12 @@ export function createAIRunner<Content = string>(args: {
   /** Parse and validate the content of the last message. */
   validateContent?: (content: string | null) => Content | Promise<Content>;
   /** Controls whether functions or tool_calls are used. */
-  mode?: Runner.Mode;
+  mode?: AIRunner.Mode;
   /** Add a system message to the beginning of the messages array. */
   systemMessage?: string;
   /** Called when a retriable error occurs. */
   onRetriableError?: (error: Error) => void;
-}): Runner<Content> {
+}): AIRunner<Content> {
   /** Return the content string or an empty string if null. */
   function defaultValidateContent(content: string | null): Content {
     return (content ?? '') as Content;
@@ -161,7 +161,7 @@ export function createAIRunner<Content = string>(args: {
 /** Get the chat model params for the tools or functions. */
 function getParams(args: {
   functions?: AIFunction[];
-  mode: Runner.Mode;
+  mode: AIRunner.Mode;
 }): Pick<Model.Chat.Config, 'functions' | 'tools'> {
   const { functions } = args;
   // Return an empty object if there are no functions
