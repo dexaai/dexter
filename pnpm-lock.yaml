@@ -27,8 +27,8 @@ importers:
         specifier: 3.3.1
         version: 3.3.1
       openai-zod-to-json-schema:
-        specifier: ^1.0.2
-        version: 1.0.2(zod@3.23.8)
+        specifier: ^1.0.3
+        version: 1.0.3(zod@3.23.8)
       p-map:
         specifier: ^7.0.2
         version: 7.0.2
@@ -2323,8 +2323,8 @@ packages:
     resolution: {integrity: sha512-/b7rPeKLgS+3C2dxQHPiWDj4wOcbL/SF5L2dxktmJyfFza/VK6Mr3+rIldgGxRNpqsa3oonEowafPNx5Tdq9dA==}
     engines: {node: '>=18'}
 
-  openai-zod-to-json-schema@1.0.2:
-    resolution: {integrity: sha512-ow+YY1aLbGx5kmgIi5FD3Aw/shL/jHAkFBIWbmW8+mzB4u/FtemBqnNbt17vr++eNopbihhJxw8/ubfeaqe6ug==}
+  openai-zod-to-json-schema@1.0.3:
+    resolution: {integrity: sha512-CFU+KtOmX1dk2nPCZcGYgbrI3YLJJgMSehx1mLbH1A2fsRmZevHzMau6vFIhtkCpHWkGQ3ossA4a0OzVHlGrkw==}
     engines: {node: '>=18'}
     peerDependencies:
       zod: ^3.23.8
@@ -5722,7 +5722,7 @@ snapshots:
     dependencies:
       ky: 1.7.2
 
-  openai-zod-to-json-schema@1.0.2(zod@3.23.8):
+  openai-zod-to-json-schema@1.0.3(zod@3.23.8):
     dependencies:
       zod: 3.23.8
 

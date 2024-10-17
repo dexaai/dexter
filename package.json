@@ -58,7 +58,7 @@
     "jsonrepair": "^3.8.1",
     "ky": "^1.7.2",
     "openai-fetch": "3.3.1",
-    "openai-zod-to-json-schema": "^1.0.2",
+    "openai-zod-to-json-schema": "^1.0.3",
     "p-map": "^7.0.2",
     "p-throttle": "^6.2.0",
     "parse-json": "^8.1.0",
