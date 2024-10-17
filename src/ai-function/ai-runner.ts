@@ -1,6 +1,6 @@
 import pMap from 'p-map';
 
-import { MsgUtil } from '../model/index.js';
+import { MsgUtil } from '../index.js';
 import { type Model, type Msg } from '../model/types.js';
 import { getErrorMsg } from '../model/utils/errors.js';
 import { type AIFunction, type AIRunner } from './types.js';

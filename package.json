@@ -16,16 +16,8 @@
   "exports": {
     "./package.json": "./package.json",
     ".": {
-      "types": "./dist/model/index.d.ts",
-      "import": "./dist/model/index.js"
-    },
-    "./ai-function": {
-      "types": "./dist/ai-function/index.d.ts",
-      "import": "./dist/ai-function/index.js"
-    },
-    "./extract": {
-      "types": "./dist/extract/index.d.ts",
-      "import": "./dist/extract/index.js"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
     },
     "./swarm": {
       "types": "./dist/swarm/index.d.ts",

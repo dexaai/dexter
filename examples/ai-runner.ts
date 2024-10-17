@@ -1,7 +1,11 @@
 import 'dotenv/config';
 
-import { ChatModel, MsgUtil } from '@dexaai/dexter';
-import { createAIFunction, createAIRunner } from '@dexaai/dexter/ai-function';
+import {
+  ChatModel,
+  createAIFunction,
+  createAIRunner,
+  MsgUtil,
+} from '@dexaai/dexter';
 import { z } from 'zod';
 
 /** Get the weather for a given location. */

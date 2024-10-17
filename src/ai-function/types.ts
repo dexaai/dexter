@@ -1,7 +1,7 @@
 import { type SetOptional } from 'type-fest';
 import { type z } from 'zod';
 
-import { type Model, type Msg } from '../model/types.js';
+import { type Model, type Msg } from '../index.js';
 
 /**
  * A runner that iteratively calls the model and handles function calls.

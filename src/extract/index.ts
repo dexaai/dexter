@@ -1,7 +1,7 @@
 import { zodToJsonSchema } from 'openai-zod-to-json-schema';
 import { type z } from 'zod';
 
-import { type Model, type Msg, MsgUtil } from '../model/index.js';
+import { type Model, type Msg, MsgUtil } from '../index.js';
 
 /**
  * Extract data using OpenAI structured outputs.

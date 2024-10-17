@@ -1,6 +1,6 @@
 import { type z } from 'zod';
 
-import { type Msg } from '../model/types.js';
+import { type Msg } from '../index.js';
 
 export type CtxVal = Record<string, unknown>;
 

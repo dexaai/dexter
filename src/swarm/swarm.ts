@@ -1,8 +1,6 @@
 import pMap from 'p-map';
 
-import { ChatModel } from '../model/chat.js';
-import { MsgUtil } from '../model/index.js';
-import { type Msg } from '../model/types.js';
+import { ChatModel, type Msg, MsgUtil } from '../index.js';
 import { getErrorMsg } from '../model/utils/errors.js';
 import {
   type Agent,

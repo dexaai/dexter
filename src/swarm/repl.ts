@@ -2,7 +2,7 @@ import * as readline from 'node:readline';
 
 import chalk from 'chalk';
 
-import { type Msg, MsgUtil } from '../model/index.js';
+import { type Msg, MsgUtil } from '../index.js';
 import { Swarm } from './swarm.js';
 import { type Agent } from './types.js';
 

@@ -101,8 +101,7 @@ console.log('\n\nFull response:', response.message.content);
 ### Extracting Structured Data
 
 ```typescript
-import { ChatModel } from '@dexaai/dexter';
-import { createExtractFunction } from '@dexaai/dexter/extract';
+import { ChatModel, createExtractFunction } from '@dexaai/dexter';
 import { z } from 'zod';
 
 const extractPeopleNames = createExtractFunction({
@@ -129,8 +128,7 @@ console.log('peopleNames', peopleNames);
 ### Using AI Functions
 
 ```typescript
-import { ChatModel, MsgUtil } from '@dexaai/dexter';
-import { createAIFunction } from '@dexaai/dexter/ai-function';
+import { ChatModel, MsgUtil, createAIFunction } from '@dexaai/dexter';
 import { z } from 'zod';
 
 const getWeather = createAIFunction(

@@ -5,7 +5,7 @@ import {
   type Msg,
   MsgUtil,
   zodToJsonSchema,
-} from '../model/index.js';
+} from '../index.js';
 import { cleanString } from '../model/utils/message-util.js';
 import { type AIFunction } from './types.js';
 
