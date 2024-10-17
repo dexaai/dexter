@@ -1,11 +1,10 @@
-import { type ChatMessage } from 'openai-fetch';
 import {
   encoding_for_model,
   type Tiktoken,
   type TiktokenModel,
 } from 'tiktoken';
 
-import { type Model } from '../types.js';
+import { type Model, type Msg } from '../types.js';
 
 const GPT_4_MODELS = [
   'gpt-4',
@@ -56,7 +55,7 @@ class Tokenizer implements Model.ITokenizer {
    * Count the number of tokens in a string or ChatMessage(s)
    * A single message is counted as a completion and an array as a prompt
    **/
-  countTokens(input?: string | ChatMessage | ChatMessage[]): number {
+  countTokens(input?: string | Msg | Msg[]): number {
     if (!input) return 0;
     if (typeof input === 'string') {
       return this.tiktoken.encode(input).length;
@@ -79,13 +78,15 @@ class Tokenizer implements Model.ITokenizer {
           // For 4, the name and role are included
           // Details here: https://github.com/openai/openai-python/blob/main/chatml.md
           numTokens += 1; // role
-          if (message.name) {
+          if ('name' in message) {
             // No idea why this, but tested with many examples and it works...
             numTokens += this.countTokens(`${message.name}`) + 1;
           }
         } else {
           // For 3.5, the name replaces the role if it's present
-          numTokens += this.countTokens(message.name || message.role);
+          numTokens += this.countTokens(
+            'name' in message ? message.name : message.role
+          );
         }
       }
 

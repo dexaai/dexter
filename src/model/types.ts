@@ -148,7 +148,7 @@ export namespace Model {
       streamChatCompletion: OpenAIClient['streamChatCompletion'];
     };
     export interface Run extends Base.Run {
-      messages: Model.Message[];
+      messages: Msg[];
     }
     export interface Config extends Base.Config {
       /** Handle new chunk from streaming requests. */
@@ -291,8 +291,8 @@ export namespace Model {
     /** Decode an array of integer tokens into a string */
     decode(tokens: number[] | Uint32Array): string;
     /**
-     * Count the number of tokens in a string or ChatMessage(s).
-     * A single ChatMessage is counted as a completion and an array as a prompt.
+     * Count the number of tokens in a string or message(s).
+     * A single Msg is counted as a completion and an array as a prompt.
      * Strings are counted as is.
      */
     countTokens(input?: string | Msg | Msg[]): number;
@@ -306,10 +306,6 @@ export namespace Model {
       from?: 'start' | 'end';
     }): string;
   }
-
-  // TODO: replace iwth just Msg
-  /** Primary message type for chat models */
-  export type Message = Msg;
 
   /** The provider of the model (eg: OpenAI) */
   export type Provider = (string & {}) | 'openai' | 'custom';

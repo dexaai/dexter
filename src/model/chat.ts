@@ -3,7 +3,7 @@ import { type PartialDeep, type SetOptional } from 'type-fest';
 
 import { createOpenAIClient } from './clients/openai.js';
 import { AbstractModel, type ModelArgs } from './model.js';
-import { type Model } from './types.js';
+import { type Model, type Msg } from './types.js';
 import { calculateCost } from './utils/calculate-cost.js';
 import { deepMerge, mergeEvents, type Prettify } from './utils/helpers.js';
 import { MsgUtil } from './utils/message-util.js';
@@ -276,7 +276,7 @@ export class ChatModel<
 /**
  * Verbose logging for debugging prompts
  */
-function logInput(args: { params: { messages: Model.Message[] } }) {
+function logInput(args: { params: { messages: Msg[] } }) {
   console.debug(`-----> [Request] ----->`);
   console.debug();
   args.params.messages.forEach(logMessage);
@@ -290,10 +290,10 @@ function logResponse(args: {
     };
     cached: boolean;
     latency?: number;
-    choices: { message: Model.Message }[];
+    choices: { message: Msg }[];
     cost?: number;
   };
-  params: { messages: Model.Message[] };
+  params: { messages: Msg[] };
 }) {
   const { usage, cost, latency, choices } = args.response;
   const tokens = {
@@ -314,7 +314,7 @@ function logResponse(args: {
   logMessage(message, args.params.messages.length + 1);
 }
 
-function logMessage(message: Model.Message, index: number) {
+function logMessage(message: Msg, index: number) {
   console.debug(
     `[${index}] ${message.role.toUpperCase()}:${
       'name' in message ? ` (${message.name}) ` : ''
