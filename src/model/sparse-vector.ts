@@ -3,10 +3,10 @@ import pMap from 'p-map';
 import pThrottle from 'p-throttle';
 import { type PartialDeep } from 'type-fest';
 
-import { deepMerge, mergeEvents, type Prettify } from '../utils/helpers.js';
 import { createSpladeClient } from './clients/splade.js';
 import { AbstractModel, type ModelArgs } from './model.js';
 import { type Model } from './types.js';
+import { deepMerge, mergeEvents, type Prettify } from './utils/helpers.js';
 
 export type SparseVectorModelArgs<CustomCtx extends Model.Ctx> = Prettify<
   Omit<

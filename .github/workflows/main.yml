@@ -13,7 +13,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - uses: ./.github/actions/install-node-pnpm
-    - run: pnpm run typecheck
+    - run: pnpm run build && pnpm run typecheck
 
   lint:
     name: Lint
