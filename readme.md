@@ -11,7 +11,7 @@ Dexter is a powerful TypeScript library for working with Large Language Models (
 
 ## Features
 
-- **Comprehensive Model Support**: Implementations for Chat, Completion, Embedding, and Sparse Vector models, with efficient OpenAI API integration via `openai-fetch`.
+- **Comprehensive Model Support**: Implementations for Chat, Completion, Embedding, and Sparse Vector models, with efficient OpenAI API integration via [`openai-fetch`](https://github.com/dexaai/openai-fetch).
 
 - **Advanced AI Function Utilities**: Tools for creating and managing AI functions, including `createAIFunction`, `createAIExtractFunction`, and `createAIRunner`, with Zod integration for schema validation.
 
@@ -71,14 +71,11 @@ const chatModel = new ChatModel({
   params: { model: 'gpt-3.5-turbo' },
 });
 
-async function main() {
-  const response = await chatModel.run({
-    messages: [{ role: 'user', content: 'Tell me a short joke' }],
-  });
-  console.log(response.message.content);
+const response = await chatModel.run({
+  messages: [{ role: 'user', content: 'Tell me a short joke' }],
+});
+console.log(response.message.content);
 }
-
-main().catch(console.error);
 ```
 
 ## Examples
@@ -92,17 +89,13 @@ const chatModel = new ChatModel({
   params: { model: 'gpt-4' },
 });
 
-async function main() {
-  const response = await chatModel.run({
-    messages: [MsgUtil.user('Write a short story about a robot learning to love')],
-    handleUpdate: (chunk) => {
-      process.stdout.write(chunk);
-    },
-  });
-  console.log('\n\nFull response:', response.message.content);
-}
-
-main().catch(console.error);
+const response = await chatModel.run({
+  messages: [MsgUtil.user('Write a short story about a robot learning to love')],
+  handleUpdate: (chunk) => {
+    process.stdout.write(chunk);
+  },
+});
+console.log('\n\nFull response:', response.message.content);
 ```
 
 ### Extracting Structured Data
@@ -125,14 +118,12 @@ const extractPeopleNames = createExtractFunction({
   }),
 });
 
-async function main() {
-  const peopleNames = await extractPeopleNames(
-    `Dr. Andrew Huberman interviewed Tony Hawk, an idol of Andrew Hubermans.`
-  );
-  console.log('peopleNames', peopleNames);
-}
+const peopleNames = await extractPeopleNames(
+  `Dr. Andrew Huberman interviewed Tony Hawk, an idol of Andrew Hubermans.`
+);
 
-main().catch(console.error);
+console.log('peopleNames', peopleNames);
+// => ['Andrew Huberman', 'Tony Hawk']
 ```
 
 ### Using AI Functions
@@ -170,14 +161,10 @@ const chatModel = new ChatModel({
   },
 });
 
-async function main() {
-  const response = await chatModel.run({
-    messages: [MsgUtil.user('What\'s the weather like in New York?')],
-  });
-  console.log(response.message);
-}
-
-main().catch(console.error);
+const response = await chatModel.run({
+  messages: [MsgUtil.user('What\'s the weather like in New York?')],
+});
+console.log(response.message);
 ```
 
 ### Embedding Generation
@@ -189,14 +176,10 @@ const embeddingModel = new EmbeddingModel({
   params: { model: 'text-embedding-ada-002' },
 });
 
-async function main() {
-  const response = await embeddingModel.run({
-    input: ['Hello, world!', 'How are you?'],
-  });
-  console.log(response.embeddings);
-}
-
-main().catch(console.error);
+const response = await embeddingModel.run({
+  input: ['Hello, world!', 'How are you?'],
+});
+console.log(response.embeddings);
 ```
 
 ## Repository Structure
@@ -404,11 +387,11 @@ Utilities for caching model responses.
 
 ## Advanced Topics
 
-### OpenAI Client (openai-fetch)
+### OpenAI Client ([openai-fetch](https://github.com/dexaai/openai-fetch))
 
-Dexter uses the `openai-fetch` library to interact with the OpenAI API. This client is lightweight, well-typed, and provides a simple interface for making API calls. Here's how it's used in Dexter:
+Dexter uses the [`openai-fetch`](https://github.com/dexaai/openai-fetch) library to interact with the OpenAI API. This client is lightweight, well-typed, and provides a simple interface for making API calls. Here's how it's used in Dexter:
 
-1. **Default Client**: By default, Dexter creates an instance of `OpenAIClient` from `openai-fetch` when initializing models.
+1. **Default Client**: By default, Dexter creates an instance of `OpenAIClient` from [`openai-fetch`](https://github.com/dexaai/openai-fetch) when initializing models.
 
 2. **Custom Client**: You can provide your own instance of `OpenAIClient` when creating a model:
 
@@ -422,7 +405,7 @@ Dexter uses the `openai-fetch` library to interact with the OpenAI API. This cli
 
 3. **Client Caching**: Dexter implements caching for `OpenAIClient` instances to improve performance when creating multiple models with the same configuration.
 
-4. **Streaming Support**: The `openai-fetch` client supports streaming responses, which Dexter utilizes for real-time output in chat models.
+4. **Streaming Support**: The [`openai-fetch`](https://github.com/dexaai/openai-fetch) client supports streaming responses, which Dexter utilizes for real-time output in chat models.
 
 5. **Structured Output**: Dexter supports OpenAI's structured output feature through the `createExtractFunction`, which uses the `response_format` parameter with a JSON schema derived from a Zod schema.
 
@@ -441,7 +424,7 @@ Dexter defines a set of message types (`Msg`) that closely align with the OpenAI
 - `Msg.ToolCall`: Tool call messages
 - `Msg.ToolResult`: Tool result messages
 
-These types are designed to be compatible with the `ChatMessage` type from `openai-fetch`, with some differences:
+These types are designed to be compatible with the `ChatMessage` type from [`openai-fetch`](https://github.com/dexaai/openai-fetch), with some differences:
 
 - Dexter throws a `RefusalError` for refusal messages instead of including them in the `Msg` union.
 - The `content` property is always defined (string or null) in Dexter's types.
@@ -458,7 +441,7 @@ These types are designed to be compatible with the `ChatMessage` type from `open
    - `assertSystem`, `assertUser`, `assertAssistant`, `assertRefusal`, `assertFuncCall`, `assertFuncResult`, `assertToolCall`, `assertToolResult`
 
 4. Conversion Method:
-   - `fromChatMessage`: Converts an `openai-fetch` `ChatMessage` to a Dexter `Msg` type
+   - `fromChatMessage`: Converts an [`openai-fetch`](https://github.com/dexaai/openai-fetch) `ChatMessage` to a Dexter `Msg` type
 
 ### Telemetry
 
@@ -553,6 +536,12 @@ Dexter provides a system of event hooks that allow you to add custom logic at va
 5. **Async Handlers**: Event handlers can be asynchronous functions. Dexter uses `Promise.allSettled` to handle multiple async handlers.
 
 6. **Extending Models**: When using the `extend` method to create a new model instance, event handlers are merged, allowing you to add new handlers without removing existing ones.
+
+   ```typescript
+   const boringModel = new ChatModel({ params: { model: 'gpt-4o', temperature: 0 } });
+   const funModel = boringModel.extend({ params: { temperature: 2 } });
+   const cheapAndFunModel = funModel.extend({ params: { model: 'gpt-4o-mini' } });
+   ```
 
 ## License
 
