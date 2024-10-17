@@ -17,8 +17,10 @@ export function createExtractFunction<Schema extends z.ZodObject<any>>(args: {
   schema: Schema;
   /** Add a system message to the beginning of the messages array. */
   systemMessage: string;
+  /** Apply strict validation to the extracted data (default: true) */
+  strict?: boolean;
 }): (input: string | Msg) => Promise<z.infer<Schema>> {
-  const { chatModel, schema, systemMessage } = args;
+  const { chatModel, schema, systemMessage, strict = true } = args;
 
   async function runExtract(input: string | Msg): Promise<z.infer<Schema>> {
     const inputVal = typeof input === 'string' ? input : (input.content ?? '');
@@ -33,7 +35,7 @@ export function createExtractFunction<Schema extends z.ZodObject<any>>(args: {
         type: 'json_schema',
         json_schema: {
           name: args.name,
-          strict: true,
+          strict,
           schema: zodToJsonSchema(schema, {
             $refStrategy: 'none',
             openaiStrictMode: true,
