@@ -1,6 +1,6 @@
 import 'dotenv/config';
 
-import { ChatModel, Msg, type Prompt } from '@dexaai/dexter';
+import { ChatModel, type Msg, MsgUtil } from '@dexaai/dexter';
 
 /**
  * npx tsx examples/abort-chat-completion.ts
@@ -15,7 +15,7 @@ async function main() {
     },
   });
 
-  const messages: Prompt.Msg[] = [Msg.user(`Write a short story`)];
+  const messages: Msg[] = [MsgUtil.user(`Write a short story`)];
 
   {
     const abortController = new AbortController();

@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { ChatModel } from './chat.js';
 import { type Model } from './types.js';
+import { MsgUtil } from './utils/message-util.js';
 
 const FAKE_RESPONSE: Model.Chat.Response = {
   message: {
@@ -27,6 +28,39 @@ const FAKE_RESPONSE: Model.Chat.Response = {
       message: {
         content: 'Hi from fake AI',
         role: 'assistant',
+        refusal: null,
+      },
+      logprobs: null,
+    },
+  ],
+};
+
+const FAKE_REFUSAL_RESPONSE: Model.Chat.Response = {
+  message: {
+    role: 'assistant',
+    refusal: 'I refuse to answer',
+    content: null,
+  },
+  cached: false,
+  latency: 0,
+  cost: 0,
+  created: 0,
+  id: 'fake-id',
+  model: 'gpt-fake',
+  object: 'chat.completion',
+  usage: {
+    completion_tokens: 1,
+    prompt_tokens: 1,
+    total_tokens: 2,
+  },
+  choices: [
+    {
+      finish_reason: 'stop',
+      index: 0,
+      message: {
+        role: 'assistant',
+        refusal: 'I refuse to answer',
+        content: null,
       },
       logprobs: null,
     },
@@ -54,7 +88,13 @@ describe('ChatModel', () => {
     const response = await chatModel.run({
       messages: [{ role: 'user', content: 'content' }],
     });
-    expect(response).toEqual(FAKE_RESPONSE);
+    expect(response).toEqual({
+      ...FAKE_RESPONSE,
+      message: {
+        ...FAKE_RESPONSE.message,
+        refusal: null,
+      },
+    });
   });
 
   it('triggers events', async () => {
@@ -245,5 +285,33 @@ describe('ChatModel', () => {
     expect(onComplete).toHaveBeenCalledOnce();
     expect(chatModel.context.userId).toBe('123');
     expect(chatModel.params.model).toBe('gpt-fake');
+  });
+
+  it('handles refusal messages', async () => {
+    vi.setSystemTime(new Date());
+    Client = vi.fn() as unknown as Model.Chat.Client;
+    Client.createChatCompletion = vi
+      .fn()
+      .mockImplementation(() => Promise.resolve(FAKE_REFUSAL_RESPONSE));
+    const chatModel = new ChatModel({ client: Client });
+    const response = await chatModel.run({
+      messages: [{ role: 'user', content: 'content' }],
+    });
+    expect(response).toEqual(FAKE_REFUSAL_RESPONSE);
+  });
+
+  it('can assert to throw on refusal messages', async () => {
+    vi.setSystemTime(new Date());
+    Client = vi.fn() as unknown as Model.Chat.Client;
+    Client.createChatCompletion = vi
+      .fn()
+      .mockImplementation(() => Promise.resolve(FAKE_REFUSAL_RESPONSE));
+    const chatModel = new ChatModel({ client: Client });
+    const response = await chatModel.run({
+      messages: [{ role: 'user', content: 'content' }],
+    });
+    expect(() => MsgUtil.assertAssistant(response.message)).toThrowError(
+      'I refuse to answer'
+    );
   });
 });

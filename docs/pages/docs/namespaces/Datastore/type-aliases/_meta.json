@@ -1,8 +1,0 @@
-{
-  "BaseFilter": "BaseFilter",
-  "BaseMeta": "BaseMeta",
-  "Ctx": "Ctx",
-  "Datastore": "Datastore",
-  "Provider": "Provider",
-  "Type": "Type"
-}

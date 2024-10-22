@@ -4,7 +4,7 @@ import {
   ChatModel,
   createAIFunction,
   createAIRunner,
-  Msg,
+  MsgUtil,
 } from '@dexaai/dexter';
 import { z } from 'zod';
 
@@ -88,7 +88,7 @@ async function main() {
   // Run with a message input
   const rMessage = await weatherCapitalRunner({
     messages: [
-      Msg.user(
+      MsgUtil.user(
         `Whats the capital of California and NY and the weather for both`
       ),
     ],
