@@ -8,10 +8,14 @@ import { type Model } from './types.js';
 import { calculateCost } from './utils/calculate-cost.js';
 import { deepMerge, mergeEvents, type Prettify } from './utils/helpers.js';
 
-export type EmbeddingModelArgs<CustomCtx extends Model.Ctx> = SetOptional<
+export type EmbeddingModelArgs<
+  CustomCtx extends Model.Ctx,
+  CustomClient extends Model.Embedding.Client = Model.Embedding.Client,
+  CustomConfig extends Model.Embedding.Config<CustomClient> = Model.Embedding.Config<CustomClient>,
+> = SetOptional<
   ModelArgs<
-    Model.Embedding.Client,
-    Model.Embedding.Config,
+    CustomClient,
+    CustomConfig,
     Model.Embedding.Run,
     Model.Embedding.Response,
     CustomCtx
@@ -19,13 +23,21 @@ export type EmbeddingModelArgs<CustomCtx extends Model.Ctx> = SetOptional<
   'client' | 'params'
 >;
 
-export type PartialEmbeddingModelArgs<CustomCtx extends Model.Ctx> = Prettify<
-  PartialDeep<Pick<EmbeddingModelArgs<Partial<CustomCtx>>, 'params'>> &
-    Partial<Omit<EmbeddingModelArgs<Partial<CustomCtx>>, 'params'>>
+export type PartialEmbeddingModelArgs<
+  CustomCtx extends Model.Ctx,
+  CustomClient extends Model.Embedding.Client = Model.Embedding.Client,
+  CustomConfig extends Model.Embedding.Config<CustomClient> = Model.Embedding.Config<CustomClient>,
+> = Prettify<
+  PartialDeep<Pick<EmbeddingModelArgs<Partial<CustomCtx>, CustomClient, CustomConfig>, 'params'>> &
+    Partial<Omit<EmbeddingModelArgs<Partial<CustomCtx>, CustomClient, CustomConfig>, 'params'>>
 >;
 
-type BulkEmbedder<CustomCtx extends Model.Ctx> = (
-  params: Model.Embedding.Run & Model.Embedding.Config,
+type BulkEmbedder<
+  CustomCtx extends Model.Ctx,
+  CustomClient extends Model.Embedding.Client = Model.Embedding.Client,
+  CustomConfig extends Model.Embedding.Config<CustomClient> = Model.Embedding.Config<CustomClient>,
+> = (
+  params: Model.Embedding.Run & CustomConfig,
   context: CustomCtx
 ) => Promise<Model.Embedding.Response>;
 
@@ -41,9 +53,11 @@ const DEFAULTS = {
 
 export class EmbeddingModel<
   CustomCtx extends Model.Ctx = Model.Ctx,
+  CustomClient extends Model.Embedding.Client = Model.Embedding.Client,
+  CustomConfig extends Model.Embedding.Config<CustomClient> = Model.Embedding.Config<CustomClient>,
 > extends AbstractModel<
-  Model.Embedding.Client,
-  Model.Embedding.Config,
+  CustomClient,
+  CustomConfig,
   Model.Embedding.Run,
   Model.Embedding.Response,
   Model.Embedding.ApiResponse,
@@ -51,15 +65,15 @@ export class EmbeddingModel<
 > {
   modelType = 'embedding' as const;
   modelProvider = 'openai' as const;
-  throttledModel: BulkEmbedder<CustomCtx>;
+  throttledModel: BulkEmbedder<CustomCtx, CustomClient, CustomConfig>;
 
-  constructor(args: EmbeddingModelArgs<CustomCtx> = {}) {
+  constructor(args: EmbeddingModelArgs<CustomCtx, CustomClient, CustomConfig> = {}) {
     const {
       client = createOpenAIClient(),
       params = { model: DEFAULTS.model },
       ...rest
     } = args;
-    super({ client, params, ...rest });
+    super({ client: client as CustomClient, params: params as CustomConfig, ...rest });
 
     const interval = DEFAULTS.throttleInterval;
     const limit =
@@ -68,7 +82,7 @@ export class EmbeddingModel<
     // Create the throttled function
     this.throttledModel = pThrottle({ limit, interval })(
       async (
-        params: Model.Embedding.Run & Model.Embedding.Config,
+        params: Model.Embedding.Run & Model.Embedding.Config<CustomClient>,
         context: CustomCtx
       ) => {
         const start = Date.now();
@@ -86,7 +100,7 @@ export class EmbeddingModel<
                 timestamp: new Date().toISOString(),
                 modelType: this.modelType,
                 modelProvider: this.modelProvider,
-                params,
+                params: params as Model.Embedding.Run & CustomConfig,
                 response,
                 latency: Date.now() - start,
                 context,
@@ -110,17 +124,24 @@ export class EmbeddingModel<
 
         return modelResponse;
       }
-    );
+    ) as BulkEmbedder<CustomCtx, CustomClient, Model.Embedding.Config<CustomClient>>;
   }
 
   protected async runModel(
-    { requestOpts, ...params }: Model.Embedding.Run & Model.Embedding.Config,
+    { requestOpts, ...params }: Model.Embedding.Run & Partial<Model.Embedding.Config<CustomClient>>,
     context: CustomCtx
   ): Promise<Model.Embedding.Response> {
     const start = Date.now();
+
+    const allParams = {
+      ...this.params,
+      ...params,
+      input: params.input ?? this.params.input ?? [],
+    };
+
     // Batch the inputs for the requests
     const batches = batchInputs({
-      input: params.input,
+      input: allParams.input,
       tokenizer: this.tokenizer,
       options: this.params.batch,
     });
@@ -136,7 +157,7 @@ export class EmbeddingModel<
             input: batch,
             model: this.params.model,
             requestOpts,
-          },
+          } as Model.Embedding.Run & CustomConfig,
           mergedContext
         );
         return response;
@@ -164,7 +185,7 @@ export class EmbeddingModel<
       data: embeddingsObjs,
       embeddings: embeddingBatches.map((batch) => batch.embeddings).flat(),
       cached: false,
-      cost: calculateCost({ model: params.model, tokens: usage }),
+      cost: calculateCost({ model: allParams.model, tokens: usage }),
       latency: Date.now() - start,
     };
 
@@ -172,8 +193,8 @@ export class EmbeddingModel<
   }
 
   /** Clone the model and merge/override the given properties. */
-  extend(args?: PartialEmbeddingModelArgs<CustomCtx>): this {
-    return new EmbeddingModel<CustomCtx>({
+  extend(args?: PartialEmbeddingModelArgs<CustomCtx, CustomClient, CustomConfig>): this {
+    return new EmbeddingModel<CustomCtx, CustomClient, CustomConfig>({
       cacheKey: this.cacheKey,
       cache: this.cache,
       client: this.client,

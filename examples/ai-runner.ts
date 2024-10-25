@@ -1,12 +1,13 @@
 import 'dotenv/config';
 
+import { z } from 'zod';
+
 import {
   ChatModel,
   createAIFunction,
   createAIRunner,
   MsgUtil,
-} from '@dexaai/dexter';
-import { z } from 'zod';
+} from '../src/index.js';
 
 /** Get the weather for a given location. */
 const getWeather = createAIFunction(

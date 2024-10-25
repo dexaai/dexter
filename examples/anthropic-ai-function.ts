@@ -2,7 +2,7 @@ import 'dotenv/config';
 
 import { z } from 'zod';
 
-import { ChatModel, createAIFunction, type Msg, MsgUtil } from '../src/index.js';
+import { ChatModel, createAIFunction, createAnthropicClient, type Msg, MsgUtil } from '../src/index.js';
 
 /**
  * npx tsx examples/ai-function.ts
@@ -38,8 +38,9 @@ async function main() {
 
   const chatModel = new ChatModel({
     debug: true,
+    client: createAnthropicClient(),
     params: {
-      model: 'gpt-4-1106-preview',
+      model: 'claude-2.0',
       temperature: 0.5,
       max_tokens: 500,
       tools: [
@@ -59,6 +60,7 @@ async function main() {
     // Invoke the chat model and have it create the args for the `get_weather` function
     const { message } = await chatModel.run({
       messages,
+      model: 'claude-2.0',
       tool_choice: {
         type: 'function',
         function: {

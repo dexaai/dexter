@@ -1,8 +1,9 @@
 import 'dotenv/config';
 
-import { EmbeddingModel } from '@dexaai/dexter';
 import KeyvRedis from '@keyv/redis';
 import Keyv from 'keyv';
+
+import { EmbeddingModel } from '../src/index.js';
 
 /**
  * npx tsx examples/caching-redis.ts

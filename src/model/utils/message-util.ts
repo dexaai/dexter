@@ -1,5 +1,5 @@
+import { type ChatMessage, type ChatResponse } from 'ai-fetch';
 import dedent from 'dedent';
-import { type ChatMessage, type ChatResponse } from 'openai-fetch';
 import { type Jsonifiable } from 'type-fest';
 
 import { type Msg } from '../types.js';

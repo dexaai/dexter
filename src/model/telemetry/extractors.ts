@@ -43,8 +43,8 @@ export function extractAttrsFromParams(params: {
   modelProvider?: string;
   max_tokens?: number;
   temperature?: number;
-  functions?: ChatParams['functions'];
-  tools?: ChatParams['tools'];
+  functions?: ChatParams<string>['functions'];
+  tools?: ChatParams<string>['tools'];
   messages?: ChatMessage[];
   prompt?: string | string[];
   input?: string[];
@@ -99,7 +99,7 @@ export function extractAttrsFromResponse(resp: {
   }
 }
 
-function extractAttrsFromFunctions(funcs?: ChatParams['functions']): AttrMap {
+function extractAttrsFromFunctions(funcs?: ChatParams<string>['functions']): AttrMap {
   const attrs: AttrMap = {};
   if (!funcs) return attrs;
   funcs.forEach((func, index) => {
@@ -111,7 +111,7 @@ function extractAttrsFromFunctions(funcs?: ChatParams['functions']): AttrMap {
   return attrs;
 }
 
-function extractAttrsFromTools(tools?: ChatParams['tools']): AttrMap {
+function extractAttrsFromTools(tools?: ChatParams<string>['tools']): AttrMap {
   const attrs: AttrMap = {};
   if (!tools) return attrs;
   tools.forEach((tool, index) => {

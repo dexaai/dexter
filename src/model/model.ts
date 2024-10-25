@@ -19,7 +19,7 @@ import { createTokenizer } from './utils/tokenizer.js';
 
 export interface ModelArgs<
   MClient extends Model.Base.Client,
-  MConfig extends Model.Base.Config,
+  MConfig extends Model.Base.Config<MClient>,
   MRun extends Model.Base.Run,
   MResponse extends Model.Base.Response,
   Ctx extends Model.Ctx,
@@ -41,7 +41,7 @@ export interface ModelArgs<
   client: MClient;
   context?: Ctx;
   params: MConfig & Partial<MRun>;
-  events?: Model.Events<MRun & MConfig, MResponse, Ctx>;
+  events?: Model.Events<MClient, MRun & MConfig, MResponse, Ctx>;
   telemetry?: Telemetry.Provider;
   /** Whether or not to add default `console.log` event handlers */
   debug?: boolean;
@@ -49,7 +49,7 @@ export interface ModelArgs<
 
 export type PartialModelArgs<
   MClient extends Model.Base.Client,
-  MConfig extends Model.Base.Config,
+  MConfig extends Model.Base.Config<MClient>,
   MRun extends Model.Base.Run,
   MResponse extends Model.Base.Response,
   CustomCtx extends Model.Ctx,
@@ -70,15 +70,15 @@ export type PartialModelArgs<
 
 export abstract class AbstractModel<
   MClient extends Model.Base.Client,
-  MConfig extends Model.Base.Config,
+  MConfig extends Model.Base.Config<MClient>,
   MRun extends Model.Base.Run,
   MResponse extends Model.Base.Response,
   AResponse = any,
   CustomCtx extends Model.Ctx = Model.Ctx,
 > {
   /** This is used to implement specific model calls */
-  protected abstract runModel(
-    params: Prettify<MRun & MConfig>,
+  protected abstract runModel<Cfg extends Model.Base.Config<MClient>>(
+    params: Prettify<MRun & Cfg>,
     context: CustomCtx
   ): Promise<MResponse>;
 
@@ -97,6 +97,7 @@ export abstract class AbstractModel<
   public readonly debug: boolean;
   public readonly params: MConfig & Partial<MRun>;
   public readonly events: Model.Events<
+    MClient,
     MRun & MConfig,
     MResponse,
     CustomCtx,
@@ -117,8 +118,8 @@ export abstract class AbstractModel<
     this.telemetry = args.telemetry ?? DefaultTelemetry;
   }
 
-  async run(
-    params: Prettify<MRun & Partial<MConfig>>,
+  async run<Cfg extends Model.Base.Config<MClient>>(
+    params: Prettify<MRun & Partial<Cfg>>,
     context?: CustomCtx
   ): Promise<MResponse> {
     const mergedContext = deepMerge(this.context, context);
