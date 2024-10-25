@@ -2,7 +2,12 @@ import 'dotenv/config';
 
 import { z } from 'zod';
 
-import { ChatModel, createAIFunction, type Msg, MsgUtil } from '../src/index.js';
+import {
+  ChatModel,
+  createAIFunction,
+  type Msg,
+  MsgUtil,
+} from '../src/index.js';
 
 /**
  * npx tsx examples/ai-function.ts

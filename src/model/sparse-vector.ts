@@ -11,7 +11,8 @@ import { deepMerge, mergeEvents, type Prettify } from './utils/helpers.js';
 export type SparseVectorModelArgs<
   CustomCtx extends Model.Ctx,
   CustomClient extends Model.SparseVector.Client = Model.SparseVector.Client,
-  CustomConfig extends Model.SparseVector.Config<CustomClient> = Model.SparseVector.Config<CustomClient>
+  CustomConfig extends
+    Model.SparseVector.Config<CustomClient> = Model.SparseVector.Config<CustomClient>,
 > = Prettify<
   Omit<
     ModelArgs<
@@ -30,16 +31,28 @@ export type SparseVectorModelArgs<
 export type PartialSparseVectorModelArgs<
   CustomCtx extends Model.Ctx,
   CustomClient extends Model.SparseVector.Client = Model.SparseVector.Client,
-  CustomConfig extends Model.SparseVector.Config<CustomClient> = Model.SparseVector.Config<CustomClient>
+  CustomConfig extends
+    Model.SparseVector.Config<CustomClient> = Model.SparseVector.Config<CustomClient>,
 > = Prettify<
-  PartialDeep<Pick<SparseVectorModelArgs<Partial<CustomCtx>, CustomClient, CustomConfig>, 'params'>> &
-      Partial<Omit<SparseVectorModelArgs<Partial<CustomCtx>, CustomClient, CustomConfig>, 'params'>>
-  >;
+  PartialDeep<
+    Pick<
+      SparseVectorModelArgs<Partial<CustomCtx>, CustomClient, CustomConfig>,
+      'params'
+    >
+  > &
+    Partial<
+      Omit<
+        SparseVectorModelArgs<Partial<CustomCtx>, CustomClient, CustomConfig>,
+        'params'
+      >
+    >
+>;
 
 export class SparseVectorModel<
   CustomCtx extends Model.Ctx = Model.Ctx,
   CustomClient extends Model.SparseVector.Client = Model.SparseVector.Client,
-  CustomConfig extends Model.SparseVector.Config<CustomClient> = Model.SparseVector.Config<CustomClient>
+  CustomConfig extends
+    Model.SparseVector.Config<CustomClient> = Model.SparseVector.Config<CustomClient>,
 > extends AbstractModel<
   CustomClient,
   CustomConfig,
@@ -52,7 +65,9 @@ export class SparseVectorModel<
   modelProvider = 'custom' as const;
   serviceUrl: string;
 
-  constructor(args: SparseVectorModelArgs<CustomCtx, CustomClient, CustomConfig>) {
+  constructor(
+    args: SparseVectorModelArgs<CustomCtx, CustomClient, CustomConfig>
+  ) {
     const { serviceUrl, ...rest } = args;
     super({ client: createSpladeClient() as CustomClient, ...rest });
     const safeProcess = globalThis.process || { env: {} };
@@ -67,7 +82,8 @@ export class SparseVectorModel<
     {
       requestOpts: _,
       ...params
-    }: Model.SparseVector.Run & Partial<Model.SparseVector.Config<CustomClient>>,
+    }: Model.SparseVector.Run &
+      Partial<Model.SparseVector.Config<CustomClient>>,
     context: CustomCtx
   ): Promise<Model.SparseVector.Response> {
     const start = Date.now();
@@ -144,7 +160,9 @@ export class SparseVectorModel<
   }
 
   /** Clone the model and merge/override the given properties. */
-  extend(args?: PartialSparseVectorModelArgs<CustomCtx, CustomClient, CustomConfig>): this {
+  extend(
+    args?: PartialSparseVectorModelArgs<CustomCtx, CustomClient, CustomConfig>
+  ): this {
     return new SparseVectorModel({
       cacheKey: this.cacheKey,
       cache: this.cache,

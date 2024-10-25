@@ -12,21 +12,27 @@ import {
 } from './types.js';
 
 export class Swarm {
-  chatModel: ChatModel<Model.Ctx, Model.Chat.Client, Model.Chat.Config<Model.Chat.Client>>;
+  chatModel: ChatModel<
+    Model.Ctx,
+    Model.Chat.Client,
+    Model.Chat.Config<Model.Chat.Client>
+  >;
   defaultModel: Model.Base.AvailableModels<Model.Chat.Client>;
 
-  constructor(
-    args?: {
-      chatModel?: ChatModel<Model.Ctx, Model.Chat.Client, Model.Chat.Config<Model.Chat.Client>>;
-    }
-  ) {
+  constructor(args?: {
+    chatModel?: ChatModel<
+      Model.Ctx,
+      Model.Chat.Client,
+      Model.Chat.Config<Model.Chat.Client>
+    >;
+  }) {
     this.chatModel =
       args?.chatModel ||
       new ChatModel({
         client: createOpenAIClient(),
         params: { model: 'gpt-4o' },
       });
-    this.defaultModel = this.chatModel.params.model
+    this.defaultModel = this.chatModel.params.model;
   }
 
   async run(args: {

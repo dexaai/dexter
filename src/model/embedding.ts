@@ -11,7 +11,8 @@ import { deepMerge, mergeEvents, type Prettify } from './utils/helpers.js';
 export type EmbeddingModelArgs<
   CustomCtx extends Model.Ctx,
   CustomClient extends Model.Embedding.Client = Model.Embedding.Client,
-  CustomConfig extends Model.Embedding.Config<CustomClient> = Model.Embedding.Config<CustomClient>,
+  CustomConfig extends
+    Model.Embedding.Config<CustomClient> = Model.Embedding.Config<CustomClient>,
 > = SetOptional<
   ModelArgs<
     CustomClient,
@@ -26,16 +27,28 @@ export type EmbeddingModelArgs<
 export type PartialEmbeddingModelArgs<
   CustomCtx extends Model.Ctx,
   CustomClient extends Model.Embedding.Client = Model.Embedding.Client,
-  CustomConfig extends Model.Embedding.Config<CustomClient> = Model.Embedding.Config<CustomClient>,
+  CustomConfig extends
+    Model.Embedding.Config<CustomClient> = Model.Embedding.Config<CustomClient>,
 > = Prettify<
-  PartialDeep<Pick<EmbeddingModelArgs<Partial<CustomCtx>, CustomClient, CustomConfig>, 'params'>> &
-    Partial<Omit<EmbeddingModelArgs<Partial<CustomCtx>, CustomClient, CustomConfig>, 'params'>>
+  PartialDeep<
+    Pick<
+      EmbeddingModelArgs<Partial<CustomCtx>, CustomClient, CustomConfig>,
+      'params'
+    >
+  > &
+    Partial<
+      Omit<
+        EmbeddingModelArgs<Partial<CustomCtx>, CustomClient, CustomConfig>,
+        'params'
+      >
+    >
 >;
 
 type BulkEmbedder<
   CustomCtx extends Model.Ctx,
   CustomClient extends Model.Embedding.Client = Model.Embedding.Client,
-  CustomConfig extends Model.Embedding.Config<CustomClient> = Model.Embedding.Config<CustomClient>,
+  CustomConfig extends
+    Model.Embedding.Config<CustomClient> = Model.Embedding.Config<CustomClient>,
 > = (
   params: Model.Embedding.Run & CustomConfig,
   context: CustomCtx
@@ -54,7 +67,8 @@ const DEFAULTS = {
 export class EmbeddingModel<
   CustomCtx extends Model.Ctx = Model.Ctx,
   CustomClient extends Model.Embedding.Client = Model.Embedding.Client,
-  CustomConfig extends Model.Embedding.Config<CustomClient> = Model.Embedding.Config<CustomClient>,
+  CustomConfig extends
+    Model.Embedding.Config<CustomClient> = Model.Embedding.Config<CustomClient>,
 > extends AbstractModel<
   CustomClient,
   CustomConfig,
@@ -67,13 +81,19 @@ export class EmbeddingModel<
   modelProvider = 'openai' as const;
   throttledModel: BulkEmbedder<CustomCtx, CustomClient, CustomConfig>;
 
-  constructor(args: EmbeddingModelArgs<CustomCtx, CustomClient, CustomConfig> = {}) {
+  constructor(
+    args: EmbeddingModelArgs<CustomCtx, CustomClient, CustomConfig> = {}
+  ) {
     const {
       client = createOpenAIClient(),
       params = { model: DEFAULTS.model },
       ...rest
     } = args;
-    super({ client: client as CustomClient, params: params as CustomConfig, ...rest });
+    super({
+      client: client as CustomClient,
+      params: params as CustomConfig,
+      ...rest,
+    });
 
     const interval = DEFAULTS.throttleInterval;
     const limit =
@@ -124,11 +144,18 @@ export class EmbeddingModel<
 
         return modelResponse;
       }
-    ) as BulkEmbedder<CustomCtx, CustomClient, Model.Embedding.Config<CustomClient>>;
+    ) as BulkEmbedder<
+      CustomCtx,
+      CustomClient,
+      Model.Embedding.Config<CustomClient>
+    >;
   }
 
   protected async runModel(
-    { requestOpts, ...params }: Model.Embedding.Run & Partial<Model.Embedding.Config<CustomClient>>,
+    {
+      requestOpts,
+      ...params
+    }: Model.Embedding.Run & Partial<Model.Embedding.Config<CustomClient>>,
     context: CustomCtx
   ): Promise<Model.Embedding.Response> {
     const start = Date.now();
@@ -193,7 +220,9 @@ export class EmbeddingModel<
   }
 
   /** Clone the model and merge/override the given properties. */
-  extend(args?: PartialEmbeddingModelArgs<CustomCtx, CustomClient, CustomConfig>): this {
+  extend(
+    args?: PartialEmbeddingModelArgs<CustomCtx, CustomClient, CustomConfig>
+  ): this {
     return new EmbeddingModel<CustomCtx, CustomClient, CustomConfig>({
       cacheKey: this.cacheKey,
       cache: this.cache,

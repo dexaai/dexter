@@ -28,8 +28,18 @@ export type PartialChatModelArgs<
   CustomClient extends Model.Chat.Client,
   CustomConfig extends Model.Chat.Config<CustomClient>,
 > = Prettify<
-  PartialDeep<Pick<ChatModelArgs<Partial<CustomCtx>, CustomClient, CustomConfig>, 'params'>> &
-    Partial<Omit<ChatModelArgs<Partial<CustomCtx>, CustomClient, CustomConfig>, 'params'>>
+  PartialDeep<
+    Pick<
+      ChatModelArgs<Partial<CustomCtx>, CustomClient, CustomConfig>,
+      'params'
+    >
+  > &
+    Partial<
+      Omit<
+        ChatModelArgs<Partial<CustomCtx>, CustomClient, CustomConfig>,
+        'params'
+      >
+    >
 >;
 
 export class ChatModel<
@@ -76,11 +86,7 @@ export class ChatModel<
   }
 
   protected async runModel<Cfg extends Model.Chat.Config<CustomClient>>(
-    {
-      handleUpdate,
-      requestOpts,
-      ...params
-    }: Partial<Cfg> & Model.Chat.Run,
+    { handleUpdate, requestOpts, ...params }: Partial<Cfg> & Model.Chat.Run,
     context: CustomCtx
   ): Promise<Model.Chat.Response> {
     const start = Date.now();
@@ -268,7 +274,9 @@ export class ChatModel<
   }
 
   /** Clone the model and merge/override the given properties. */
-  extend(args?: PartialChatModelArgs<CustomCtx, CustomClient, CustomConfig>): this {
+  extend(
+    args?: PartialChatModelArgs<CustomCtx, CustomClient, CustomConfig>
+  ): this {
     return new ChatModel({
       cacheKey: this.cacheKey,
       cache: this.cache,

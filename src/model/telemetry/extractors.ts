@@ -99,7 +99,9 @@ export function extractAttrsFromResponse(resp: {
   }
 }
 
-function extractAttrsFromFunctions(funcs?: ChatParams<string>['functions']): AttrMap {
+function extractAttrsFromFunctions(
+  funcs?: ChatParams<string>['functions']
+): AttrMap {
   const attrs: AttrMap = {};
   if (!funcs) return attrs;
   funcs.forEach((func, index) => {

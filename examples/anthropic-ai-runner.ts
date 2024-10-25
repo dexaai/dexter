@@ -68,7 +68,7 @@ const getCapitalCity = createAIFunction(
 const weatherCapitalRunner = createAIRunner({
   chatModel: new ChatModel({
     client: createAnthropicClient(),
-    params: { model: 'claude-2.0'},
+    params: { model: 'claude-2.0' },
   }),
   functions: [getWeather, getCapitalCity],
   systemMessage: `You use functions to answer questions about the weather and capital cities.`,

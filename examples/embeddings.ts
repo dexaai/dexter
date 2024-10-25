@@ -1,6 +1,6 @@
 import 'dotenv/config';
 
-import { createOpenAIClient, EmbeddingModel} from '../src/index.js';
+import { createOpenAIClient, EmbeddingModel } from '../src/index.js';
 
 /**
  * npx tsx examples/ai-function.ts
@@ -11,7 +11,6 @@ async function main() {
     params: { model: 'text-embedding-3-small' },
   });
 
-
   {
     // Invoke the chat model and have it create the args for the `get_weather` function
     const response = await embeddingModel.run({
@@ -20,9 +19,7 @@ async function main() {
     });
 
     console.log(response);
-
   }
 }
-
 
 main();
