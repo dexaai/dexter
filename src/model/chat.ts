@@ -8,10 +8,14 @@ import { calculateCost } from './utils/calculate-cost.js';
 import { deepMerge, mergeEvents, type Prettify } from './utils/helpers.js';
 import { MsgUtil } from './utils/message-util.js';
 
-export type ChatModelArgs<CustomCtx extends Model.Ctx> = SetOptional<
+export type ChatModelArgs<
+  CustomCtx extends Model.Ctx,
+  CustomClient extends Model.Chat.Client,
+  CustomConfig extends Model.Chat.Config<CustomClient>,
+> = SetOptional<
   ModelArgs<
-    Model.Chat.Client,
-    Model.Chat.Config,
+    CustomClient,
+    CustomConfig,
     Model.Chat.Run,
     Model.Chat.Response,
     CustomCtx
@@ -19,25 +23,41 @@ export type ChatModelArgs<CustomCtx extends Model.Ctx> = SetOptional<
   'client' | 'params'
 >;
 
-export type PartialChatModelArgs<CustomCtx extends Model.Ctx> = Prettify<
-  PartialDeep<Pick<ChatModelArgs<Partial<CustomCtx>>, 'params'>> &
-    Partial<Omit<ChatModelArgs<Partial<CustomCtx>>, 'params'>>
+export type PartialChatModelArgs<
+  CustomCtx extends Model.Ctx,
+  CustomClient extends Model.Chat.Client,
+  CustomConfig extends Model.Chat.Config<CustomClient>,
+> = Prettify<
+  PartialDeep<
+    Pick<
+      ChatModelArgs<Partial<CustomCtx>, CustomClient, CustomConfig>,
+      'params'
+    >
+  > &
+    Partial<
+      Omit<
+        ChatModelArgs<Partial<CustomCtx>, CustomClient, CustomConfig>,
+        'params'
+      >
+    >
 >;
 
 export class ChatModel<
-  CustomCtx extends Model.Ctx = Model.Ctx,
+  CustomCtx extends Model.Ctx,
+  CustomClient extends Model.Chat.Client,
+  CustomConfig extends Model.Chat.Config<CustomClient>,
 > extends AbstractModel<
-  Model.Chat.Client,
-  Model.Chat.Config,
+  CustomClient,
+  CustomConfig,
   Model.Chat.Run,
   Model.Chat.Response,
   Model.Chat.ApiResponse,
   CustomCtx
 > {
   modelType = 'chat' as const;
-  modelProvider = 'openai' as const;
+  modelProvider = 'openai';
 
-  constructor(args: ChatModelArgs<CustomCtx> = {}) {
+  constructor(args: ChatModelArgs<CustomCtx, CustomClient, CustomConfig> = {}) {
     const {
       // Add a default client if none is provided
       client = createOpenAIClient(),
@@ -49,8 +69,8 @@ export class ChatModel<
     } = args;
 
     super({
-      client,
-      params,
+      client: client as CustomClient,
+      params: params as CustomConfig & Partial<Model.Chat.Run>,
       debug,
       events: mergeEvents(
         events,
@@ -63,23 +83,27 @@ export class ChatModel<
       ),
       ...rest,
     });
+
+    this.modelProvider = this.client.name;
   }
 
-  protected async runModel(
-    {
-      handleUpdate,
-      requestOpts,
-      ...params
-    }: Model.Chat.Run & Model.Chat.Config,
+  protected async runModel<Cfg extends Model.Chat.Config<CustomClient>>(
+    { handleUpdate, requestOpts, ...params }: Partial<Cfg> & Model.Chat.Run,
     context: CustomCtx
   ): Promise<Model.Chat.Response> {
     const start = Date.now();
+
+    const allParams = {
+      ...this.params,
+      ...params,
+      messages: params.messages ?? this.params.messages ?? [],
+    };
 
     // Use non-streaming API if no handler is provided
     if (!handleUpdate) {
       // Make the OpenAI API request
       const response = await this.client.createChatCompletion(
-        params,
+        allParams,
         requestOpts
       );
 
@@ -90,7 +114,7 @@ export class ChatModel<
               timestamp: new Date().toISOString(),
               modelType: this.modelType,
               modelProvider: this.modelProvider,
-              params,
+              params: allParams,
               response,
               latency: Date.now() - start,
               context,
@@ -106,14 +130,14 @@ export class ChatModel<
         message,
         cached: false,
         latency: Date.now() - start,
-        cost: calculateCost({ model: params.model, tokens: response.usage }),
+        cost: calculateCost({ model: allParams.model, tokens: response.usage }),
       };
 
       return modelResponse;
     } else {
       // Use the streaming API if a handler is provided
       const stream = await this.client.streamChatCompletion(
-        params,
+        allParams,
         requestOpts
       );
 
@@ -228,7 +252,7 @@ export class ChatModel<
               timestamp: new Date().toISOString(),
               modelType: this.modelType,
               modelProvider: this.modelProvider,
-              params,
+              params: allParams,
               response,
               latency: Date.now() - start,
               context,
@@ -244,7 +268,7 @@ export class ChatModel<
         message,
         cached: false,
         latency: Date.now() - start,
-        cost: calculateCost({ model: params.model, tokens: response.usage }),
+        cost: calculateCost({ model: allParams.model, tokens: response.usage }),
       };
 
       return modelResponse;
@@ -252,15 +276,16 @@ export class ChatModel<
   }
 
   /** Clone the model and merge/override the given properties. */
-  extend(args?: PartialChatModelArgs<CustomCtx>): this {
+  extend(args?: PartialChatModelArgs<CustomCtx, CustomClient, Model.Chat.Config<CustomClient>>): this {
+    const { client, params, ...rest } = args ?? {};
     return new ChatModel({
       cacheKey: this.cacheKey,
       cache: this.cache,
-      client: this.client,
+      client: client ?? this.client,
       debug: this.debug,
       telemetry: this.telemetry,
-      ...args,
-      params: deepMerge(this.params, args?.params),
+      ...rest,
+      params: deepMerge(this.params, params),
       context:
         args?.context && Object.keys(args.context).length === 0
           ? undefined

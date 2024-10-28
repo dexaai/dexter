@@ -1,6 +1,7 @@
 import pMap from 'p-map';
 
-import { ChatModel, type Msg, MsgUtil } from '../index.js';
+import { ChatModel, createOpenAIClient, type Msg, MsgUtil } from '../index.js';
+import { type Model } from '../model/types.js';
 import { getErrorMsg } from '../model/utils/errors.js';
 import {
   type Agent,
@@ -11,14 +12,27 @@ import {
 } from './types.js';
 
 export class Swarm {
-  chatModel: ChatModel;
-  defaultModel: string;
+  chatModel: ChatModel<
+    Model.Ctx,
+    Model.Chat.Client,
+    Model.Chat.Config<Model.Chat.Client>
+  >;
+  defaultModel: Model.Base.AvailableModels<Model.Chat.Client>;
 
-  constructor(args?: { chatModel?: ChatModel }) {
-    this.defaultModel = 'gpt-4o';
+  constructor(args?: {
+    chatModel?: ChatModel<
+      Model.Ctx,
+      Model.Chat.Client,
+      Model.Chat.Config<Model.Chat.Client>
+    >;
+  }) {
     this.chatModel =
       args?.chatModel ||
-      new ChatModel({ params: { model: this.defaultModel } });
+      new ChatModel({
+        client: createOpenAIClient(),
+        params: { model: 'gpt-4o' },
+      });
+    this.defaultModel = this.chatModel.params.model;
   }
 
   async run(args: {

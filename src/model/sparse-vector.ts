@@ -8,11 +8,16 @@ import { AbstractModel, type ModelArgs } from './model.js';
 import { type Model } from './types.js';
 import { deepMerge, mergeEvents, type Prettify } from './utils/helpers.js';
 
-export type SparseVectorModelArgs<CustomCtx extends Model.Ctx> = Prettify<
+export type SparseVectorModelArgs<
+  CustomCtx extends Model.Ctx,
+  CustomClient extends Model.SparseVector.Client = Model.SparseVector.Client,
+  CustomConfig extends
+    Model.SparseVector.Config<CustomClient> = Model.SparseVector.Config<CustomClient>,
+> = Prettify<
   Omit<
     ModelArgs<
-      Model.SparseVector.Client,
-      Model.SparseVector.Config,
+      CustomClient,
+      CustomConfig,
       Model.SparseVector.Run,
       Model.SparseVector.Response,
       CustomCtx
@@ -23,17 +28,34 @@ export type SparseVectorModelArgs<CustomCtx extends Model.Ctx> = Prettify<
   }
 >;
 
-export type PartialSparseVectorModelArgs<CustomCtx extends Model.Ctx> =
-  Prettify<
-    PartialDeep<Pick<SparseVectorModelArgs<Partial<CustomCtx>>, 'params'>> &
-      Partial<Omit<SparseVectorModelArgs<Partial<CustomCtx>>, 'params'>>
-  >;
+export type PartialSparseVectorModelArgs<
+  CustomCtx extends Model.Ctx,
+  CustomClient extends Model.SparseVector.Client = Model.SparseVector.Client,
+  CustomConfig extends
+    Model.SparseVector.Config<CustomClient> = Model.SparseVector.Config<CustomClient>,
+> = Prettify<
+  PartialDeep<
+    Pick<
+      SparseVectorModelArgs<Partial<CustomCtx>, CustomClient, CustomConfig>,
+      'params'
+    >
+  > &
+    Partial<
+      Omit<
+        SparseVectorModelArgs<Partial<CustomCtx>, CustomClient, CustomConfig>,
+        'params'
+      >
+    >
+>;
 
 export class SparseVectorModel<
   CustomCtx extends Model.Ctx = Model.Ctx,
+  CustomClient extends Model.SparseVector.Client = Model.SparseVector.Client,
+  CustomConfig extends
+    Model.SparseVector.Config<CustomClient> = Model.SparseVector.Config<CustomClient>,
 > extends AbstractModel<
-  Model.SparseVector.Client,
-  Model.SparseVector.Config,
+  CustomClient,
+  CustomConfig,
   Model.SparseVector.Run,
   Model.SparseVector.Response,
   Model.SparseVector.ApiResponse,
@@ -43,9 +65,11 @@ export class SparseVectorModel<
   modelProvider = 'custom' as const;
   serviceUrl: string;
 
-  constructor(args: SparseVectorModelArgs<CustomCtx>) {
+  constructor(
+    args: SparseVectorModelArgs<CustomCtx, CustomClient, CustomConfig>
+  ) {
     const { serviceUrl, ...rest } = args;
-    super({ client: createSpladeClient(), ...rest });
+    super({ client: createSpladeClient() as CustomClient, ...rest });
     const safeProcess = globalThis.process || { env: {} };
     const tempServiceUrl = serviceUrl || safeProcess.env.SPLADE_SERVICE_URL;
     if (!tempServiceUrl) {
@@ -58,7 +82,8 @@ export class SparseVectorModel<
     {
       requestOpts: _,
       ...params
-    }: Model.SparseVector.Run & Model.SparseVector.Config,
+    }: Model.SparseVector.Run &
+      Partial<Model.SparseVector.Config<CustomClient>>,
     context: CustomCtx
   ): Promise<Model.SparseVector.Response> {
     const start = Date.now();
@@ -66,16 +91,19 @@ export class SparseVectorModel<
     const limit = params.throttleLimit ?? 600;
     const concurrency = params.concurrency ?? 10;
 
+    const model = params.model ?? this.params.model;
+    const input = params.input ?? this.params.input ?? [];
+
     // Create a throttled version of the function for a single request
     const throttled = pThrottle({ limit, interval })(
-      async (params: { input: string; model: string }) =>
+      async (params: { input: string; model: CustomConfig['model'] }) =>
         this.runSingle(params, context)
     );
 
     // Run the requests in parallel, respecting the maxConcurrentRequests value
-    const inputs = params.input.map((input) => ({
+    const inputs = input.map((input) => ({
       input,
-      model: params.model,
+      model,
     }));
     const responses = await pMap(inputs, throttled, { concurrency });
 
@@ -89,7 +117,7 @@ export class SparseVectorModel<
   protected async runSingle(
     params: {
       input: string;
-      model: string;
+      model: CustomConfig['model'];
       requestOpts?: {
         headers?: KYOptions['headers'];
       };
@@ -111,6 +139,7 @@ export class SparseVectorModel<
     // Don't need tokens for this model
     const tokens = { prompt: 0, completion: 0, total: 0 } as const;
     const { input, model } = params;
+
     await Promise.allSettled(
       this.events?.onApiResponse?.map((event) =>
         Promise.resolve(
@@ -131,7 +160,9 @@ export class SparseVectorModel<
   }
 
   /** Clone the model and merge/override the given properties. */
-  extend(args?: PartialSparseVectorModelArgs<CustomCtx>): this {
+  extend(
+    args?: PartialSparseVectorModelArgs<CustomCtx, CustomClient, CustomConfig>
+  ): this {
     return new SparseVectorModel({
       cacheKey: this.cacheKey,
       cache: this.cache,

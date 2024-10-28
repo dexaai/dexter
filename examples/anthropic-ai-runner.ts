@@ -6,13 +6,9 @@ import {
   ChatModel,
   createAIFunction,
   createAIRunner,
+  createAnthropicClient,
   MsgUtil,
-<<<<<<< HEAD
 } from '../src/index.js';
-=======
-} from '@dexaai/dexter';
-import { z } from 'zod';
->>>>>>> origin/master
 
 /** Get the weather for a given location. */
 const getWeather = createAIFunction(
@@ -31,10 +27,6 @@ const getWeather = createAIFunction(
     }),
   },
   async ({ location, unit }) => {
-    // Ranomly assign to true 1/2 the time to simulate mistakes
-    // from OpenAI.
-    const shouldThrow = Math.random() > 0.5;
-    if (shouldThrow) throw new Error('Invalid arguments');
     await new Promise((resolve) => setTimeout(resolve, 500));
     const temperature = (30 + Math.random() * 70) | 0;
     return { location, unit, temperature };
@@ -74,11 +66,12 @@ const getCapitalCity = createAIFunction(
 
 /** A runner that uses the weather and capital city functions. */
 const weatherCapitalRunner = createAIRunner({
-  chatModel: new ChatModel({ params: { model: 'gpt-4-1106-preview' } }),
+  chatModel: new ChatModel({
+    client: createAnthropicClient(),
+    params: { model: 'claude-2.0' },
+  }),
   functions: [getWeather, getCapitalCity],
   systemMessage: `You use functions to answer questions about the weather and capital cities.`,
-  onRetriableError: console.error,
-  maxIterations: 4,
 });
 
 /**

@@ -1,6 +1,11 @@
 /* eslint-disable no-use-before-define */
-import { type Options as KYOptions } from 'ky';
 import {
+<<<<<<< HEAD
+  type AIChatClient,
+  type AICompletionClient,
+  type AIEmbeddingClient,
+=======
+>>>>>>> origin/master
   type ChatParams,
   type ChatResponse,
   type ChatStreamResponse,
@@ -8,8 +13,8 @@ import {
   type CompletionResponse,
   type EmbeddingParams,
   type EmbeddingResponse,
-  type OpenAIClient,
-} from 'openai-fetch';
+} from 'ai-fetch';
+import { type Options as KYOptions } from 'ky';
 
 import { type ChatModel } from './chat.js';
 import { type CompletionModel } from './completion.js';
@@ -120,8 +125,19 @@ export namespace Model {
   export namespace Base {
     /** Client for making API calls. Extended by specific model clients. */
     export type Client = any;
-    export interface Config {
-      model: string;
+
+    export type AvailableModels<C> = C extends Client
+      ? {
+          [K in keyof C]: C[K] extends (params: infer P) => any
+            ? P extends { model: infer M }
+              ? M
+              : never
+            : never;
+        }[keyof C]
+      : never;
+
+    export interface Config<C extends Client> {
+      model: AvailableModels<C>;
     }
     export interface Run {
       [key: string]: any;
@@ -130,43 +146,58 @@ export namespace Model {
         headers?: KYOptions['headers'];
       };
     }
-    export interface Params extends Config, Run {}
+    export interface Params<C extends Client> extends Config<C>, Run {}
     export interface Response {
       cached: boolean;
       latency?: number;
       cost?: number;
     }
-    export type Model = AbstractModel<Client, Config, Run, Response, any>;
+    export type Model = AbstractModel<
+      Client,
+      Config<Client>,
+      Run,
+      Response,
+      any
+    >;
   }
 
   /**
    * Chat Model
    */
   export namespace Chat {
-    export type Client = {
-      createChatCompletion: OpenAIClient['createChatCompletion'];
-      streamChatCompletion: OpenAIClient['streamChatCompletion'];
-    };
+    export type Client = AIChatClient;
+
+    type AvailableModels<C> = C extends Client
+      ? C extends { createChatCompletion: (params: infer P) => any }
+        ? P extends { model: infer M }
+          ? M
+          : never
+        : never
+      : never;
+
+    type Params<C extends Client> = ChatParams<AvailableModels<C>>;
+
     export interface Run extends Base.Run {
       messages: Msg[];
+      handleUpdate?: (chunk: string) => void;
     }
-    export interface Config extends Base.Config {
+    export interface Config<C extends Client> extends Base.Config<C> {
       /** Handle new chunk from streaming requests. */
       handleUpdate?: (chunk: string) => void;
-      frequency_penalty?: ChatParams['frequency_penalty'];
-      function_call?: ChatParams['function_call'];
-      functions?: ChatParams['functions'];
-      logit_bias?: ChatParams['logit_bias'];
-      max_tokens?: ChatParams['max_tokens'];
-      model: ChatParams['model'];
-      presence_penalty?: ChatParams['presence_penalty'];
-      response_format?: ChatParams['response_format'];
-      seed?: ChatParams['seed'];
-      stop?: ChatParams['stop'];
-      temperature?: ChatParams['temperature'];
-      tools?: ChatParams['tools'];
-      tool_choice?: ChatParams['tool_choice'];
-      top_p?: ChatParams['top_p'];
+      frequency_penalty?: Params<C>['frequency_penalty'];
+      function_call?: Params<C>['function_call'];
+      functions?: Params<C>['functions'];
+      logit_bias?: Params<C>['logit_bias'];
+      max_tokens?: Params<C>['max_tokens'];
+      model: Params<C>['model'];
+      presence_penalty?: Params<C>['presence_penalty'];
+      response_format?: Params<C>['response_format'];
+      seed?: Params<C>['seed'];
+      stop?: Params<C>['stop'];
+      temperature?: Params<C>['temperature'];
+      tools?: Params<C>['tools'];
+      tool_choice?: Params<C>['tool_choice'];
+      top_p?: Params<C>['top_p'];
     }
     export interface Response extends Base.Response, ChatResponse {
       message: Msg;
@@ -176,23 +207,32 @@ export namespace Model {
     /** A chunk recieved from a streaming response */
     export type CompletionChunk = InnerType<StreamResponse>;
     export type ApiResponse = ChatResponse;
-    export type Model = ChatModel;
+    export type Model = ChatModel<Ctx, Client, Config<Client>>;
   }
 
   /**
    * Completion model
    */
   export namespace Completion {
-    export type Client = {
-      createCompletions: OpenAIClient['createCompletions'];
-    };
+    export type Client = AICompletionClient;
+
+    type AvailableModels<C> = C extends Client
+      ? C extends { createCompletion: (params: infer P) => any }
+        ? P extends { model: infer M }
+          ? M
+          : never
+        : never
+      : never;
+
+    type Params<C> = CompletionParams<AvailableModels<C>>;
+
     export interface Run extends Base.Run {
       prompt: string | string[] | number[] | number[][] | null;
     }
-    export interface Config
-      extends Base.Config,
-        Omit<CompletionParams, 'prompt' | 'user'> {
-      model: CompletionParams['model'];
+    export interface Config<C extends Client>
+      extends Base.Config<C>,
+        Omit<Params<C>, 'prompt' | 'user'> {
+      model: Params<C>['model'];
     }
     export interface Response extends Base.Response, CompletionResponse {
       completion: string;
@@ -208,9 +248,18 @@ export namespace Model {
    * Embedding Model
    */
   export namespace Embedding {
-    export type Client = {
-      createEmbeddings: OpenAIClient['createEmbeddings'];
-    };
+    export type Client = AIEmbeddingClient;
+
+    type AvailableModels<C> = C extends Client
+      ? C extends { createEmbeddings: (params: infer P) => any }
+        ? P extends { model: infer M }
+          ? M
+          : never
+        : never
+      : never;
+
+    type Params<C> = EmbeddingParams<AvailableModels<C>>;
+
     export interface Run extends Base.Run {
       input: string[];
     }
@@ -224,10 +273,10 @@ export namespace Model {
       maxRequestsPerMin: number;
       maxConcurrentRequests: number;
     }
-    export interface Config
-      extends Base.Config,
-        Omit<EmbeddingParams, 'input' | 'user'> {
-      model: EmbeddingParams['model'];
+    export interface Config<C extends Client>
+      extends Base.Config<C>,
+        Omit<Params<C>, 'input' | 'user'> {
+      model: Params<C>['model'];
       batch?: Partial<BatchOptions>;
       throttle?: Partial<ThrottleOptions>;
     }
@@ -242,8 +291,9 @@ export namespace Model {
    * Event handlers for logging and debugging
    */
   export interface Events<
-    MParams extends Base.Params,
-    MResponse extends Base.Response,
+    C extends Model.Base.Client,
+    MParams extends Model.Base.Params<C>,
+    MResponse extends Model.Base.Response,
     MCtx extends Model.Ctx,
     AResponse = any,
   > {
@@ -251,14 +301,14 @@ export namespace Model {
       timestamp: string;
       modelType: Type;
       modelProvider: Provider;
-      params: Readonly<MParams>;
+      params: Readonly<Model.Base.Run & Partial<Model.Base.Config<C>>>;
       context: Readonly<MCtx>;
     }) => void | Promise<void>)[];
-    onApiResponse?: ((event: {
+    onApiResponse?: (<P extends Model.Base.Params<C>>(event: {
       timestamp: string;
       modelType: Type;
       modelProvider: Provider;
-      params: Readonly<MParams>;
+      params: Readonly<P>;
       response: Readonly<AResponse>;
       latency: number;
       context: Readonly<MCtx>;
@@ -334,7 +384,7 @@ export namespace Model {
     export interface Run extends Model.Base.Run {
       input: string[];
     }
-    export interface Config extends Model.Base.Config {
+    export interface Config<C extends Client> extends Model.Base.Config<C> {
       concurrency?: number;
       throttleLimit?: number;
       throttleInterval?: number;

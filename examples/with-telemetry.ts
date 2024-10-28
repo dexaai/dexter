@@ -1,8 +1,9 @@
 import './instrument.js';
 import 'dotenv/config';
 
-import { ChatModel } from '@dexaai/dexter';
 import * as Sentry from '@sentry/node';
+
+import { ChatModel } from '../src/index.js';
 
 const chatModel = new ChatModel({
   // Send tracing data to Sentry
