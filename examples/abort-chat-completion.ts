@@ -1,10 +1,6 @@
 import 'dotenv/config';
 
-<<<<<<< HEAD
 import { ChatModel, type Msg, MsgUtil } from '../src/index.js';
-=======
-import { ChatModel, type Msg, MsgUtil } from '@dexaai/dexter';
->>>>>>> origin/master
 
 /**
  * npx tsx examples/abort-chat-completion.ts

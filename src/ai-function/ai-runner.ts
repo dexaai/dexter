@@ -162,11 +162,7 @@ export function createAIRunner<Content = string>(args: {
 function getParams(args: {
   functions?: AIFunction[];
   mode: AIRunner.Mode;
-<<<<<<< HEAD
 }): Pick<Model.Chat.Config<Model.Chat.Client>, 'functions' | 'tools'> {
-=======
-}): Pick<Model.Chat.Config, 'functions' | 'tools'> {
->>>>>>> origin/master
   const { functions } = args;
   // Return an empty object if there are no functions
   if (!functions?.length) {

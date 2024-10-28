@@ -12,10 +12,7 @@ export {
 export { createExtractFunction } from './extract/index.js';
 export type { ChatModelArgs } from './model/chat.js';
 export { ChatModel } from './model/chat.js';
-<<<<<<< HEAD
 export { createAnthropicClient } from './model/clients/anthropic.js';
-=======
->>>>>>> origin/master
 export { createOpenAIClient } from './model/clients/openai.js';
 export type { CompletionModelArgs } from './model/completion.js';
 export { CompletionModel } from './model/completion.js';
