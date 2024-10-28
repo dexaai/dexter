@@ -1,5 +1,9 @@
 import 'dotenv/config';
 
+<<<<<<< HEAD
+=======
+import { EmbeddingModel } from '@dexaai/dexter';
+>>>>>>> origin/master
 import KeyvRedis from '@keyv/redis';
 import Keyv from 'keyv';
 

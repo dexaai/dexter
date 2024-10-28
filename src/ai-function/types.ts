@@ -12,6 +12,7 @@ export type AIRunner<Content = string> = (
 ) => Promise<AIRunner.Response<Content>>;
 
 export namespace AIRunner {
+<<<<<<< HEAD
   export type Client = any;
 
   /** Parameters to execute a runner */
@@ -25,6 +26,13 @@ export namespace AIRunner {
       Model.Chat.Run & Model.Chat.Config<Client>,
       'messages' | 'functions' | 'tools'
     >
+=======
+  /** Parameters to execute a runner */
+  export type Params = SetOptional<Model.Chat.Run & Model.Chat.Config, 'model'>;
+
+  export type ModelParams = Partial<
+    Omit<Model.Chat.Run & Model.Chat.Config, 'messages' | 'functions' | 'tools'>
+>>>>>>> origin/master
   >;
 
   /** Response from executing a runner */

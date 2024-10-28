@@ -1,8 +1,11 @@
 /* eslint-disable no-use-before-define */
 import {
+<<<<<<< HEAD
   type AIChatClient,
   type AICompletionClient,
   type AIEmbeddingClient,
+=======
+>>>>>>> origin/master
   type ChatParams,
   type ChatResponse,
   type ChatStreamResponse,

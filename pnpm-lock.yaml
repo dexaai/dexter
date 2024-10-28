@@ -30,8 +30,13 @@ importers:
         specifier: ^1.7.2
         version: 1.7.2
       openai-fetch:
+<<<<<<< HEAD
         specifier: ../openai-fetch
         version: link:../openai-fetch
+=======
+        specifier: 3.3.1
+        version: 3.3.1
+>>>>>>> origin/master
       openai-zod-to-json-schema:
         specifier: ^1.0.3
         version: 1.0.3(zod@3.23.8)
@@ -2324,6 +2329,17 @@ packages:
   open@10.1.0:
     resolution: {integrity: sha512-mnkeQ1qP5Ue2wd+aivTD3NHd/lZ96Lu0jgf0pwktLPtx6cTZiH7tyeGRRHs0zX0rbrahXPnXlUnbeXyaBBuIaw==}
     engines: {node: '>=18'}
+
+<<<<<<< HEAD
+  openai-zod-to-json-schema@1.0.3:
+    resolution: {integrity: sha512-CFU+KtOmX1dk2nPCZcGYgbrI3YLJJgMSehx1mLbH1A2fsRmZevHzMau6vFIhtkCpHWkGQ3ossA4a0OzVHlGrkw==}
+=======
+  openai-fetch@3.3.1:
+    resolution: {integrity: sha512-/b7rPeKLgS+3C2dxQHPiWDj4wOcbL/SF5L2dxktmJyfFza/VK6Mr3+rIldgGxRNpqsa3oonEowafPNx5Tdq9dA==}
+>>>>>>> origin/master
+    engines: {node: '>=18'}
+    peerDependencies:
+      zod: ^3.23.8
 
   openai-zod-to-json-schema@1.0.3:
     resolution: {integrity: sha512-CFU+KtOmX1dk2nPCZcGYgbrI3YLJJgMSehx1mLbH1A2fsRmZevHzMau6vFIhtkCpHWkGQ3ossA4a0OzVHlGrkw==}
@@ -5719,6 +5735,14 @@ snapshots:
       define-lazy-prop: 3.0.0
       is-inside-container: 1.0.0
       is-wsl: 3.1.0
+
+<<<<<<< HEAD
+  openai-zod-to-json-schema@1.0.3(zod@3.23.8):
+=======
+  openai-fetch@3.3.1:
+>>>>>>> origin/master
+    dependencies:
+      zod: 3.23.8
 
   openai-zod-to-json-schema@1.0.3(zod@3.23.8):
     dependencies:
