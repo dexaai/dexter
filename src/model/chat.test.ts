@@ -120,7 +120,7 @@ describe('ChatModel', () => {
     expect(apiResponseEvent).toHaveBeenCalledWith({
       timestamp: new Date().toISOString(),
       modelType: 'chat',
-      modelProvider: 'openai',
+      modelProvider: 'spy', // because we mocked the client
       params: {
         model: 'gpt-fake',
         messages: [{ role: 'user', content: 'content' }],
@@ -133,7 +133,7 @@ describe('ChatModel', () => {
 
   it('implements extend', async () => {
     type ChatContext = { userId: string; cloned?: boolean };
-    const chatModel = new ChatModel<ChatContext>({
+    const chatModel = new ChatModel<ChatContext, Model.Chat.Client, Model.Chat.Config<Model.Chat.Client>>({
       client: Client,
       context: { userId: '123' },
       params: { model: 'gpt-fake' },
@@ -220,7 +220,7 @@ describe('ChatModel', () => {
 
     // Extend the model and make another request
     const secondChatModel = chatModel.extend({
-      params: { model: 'gpt-fake-extended' },
+      params: { model: 'gpt-fake-extended'},
       context: { level: 2 },
       events: { onComplete: [newOnComplete] },
     });

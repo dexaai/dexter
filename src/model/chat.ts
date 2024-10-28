@@ -55,7 +55,7 @@ export class ChatModel<
   CustomCtx
 > {
   modelType = 'chat' as const;
-  modelProvider = 'anthropic' as const;
+  modelProvider = 'openai';
 
   constructor(args: ChatModelArgs<CustomCtx, CustomClient, CustomConfig> = {}) {
     const {
@@ -83,6 +83,8 @@ export class ChatModel<
       ),
       ...rest,
     });
+
+    this.modelProvider = this.client.name;
   }
 
   protected async runModel<Cfg extends Model.Chat.Config<CustomClient>>(
@@ -274,17 +276,16 @@ export class ChatModel<
   }
 
   /** Clone the model and merge/override the given properties. */
-  extend(
-    args?: PartialChatModelArgs<CustomCtx, CustomClient, CustomConfig>
-  ): this {
+  extend(args?: PartialChatModelArgs<CustomCtx, CustomClient, Model.Chat.Config<CustomClient>>): this {
+    const { client, params, ...rest } = args ?? {};
     return new ChatModel({
       cacheKey: this.cacheKey,
       cache: this.cache,
-      client: this.client,
+      client: client ?? this.client,
       debug: this.debug,
       telemetry: this.telemetry,
-      ...args,
-      params: deepMerge(this.params, args?.params),
+      ...rest,
+      params: deepMerge(this.params, params),
       context:
         args?.context && Object.keys(args.context).length === 0
           ? undefined

@@ -83,23 +83,33 @@ export abstract class AbstractModel<
   ): Promise<MResponse>;
 
   /** Clones the model, optionally modifying its config */
-  abstract extend<
-    Args extends PartialModelArgs<MClient, MConfig, MRun, MResponse, CustomCtx>,
-  >(args?: Args): this;
+  abstract extend(
+    args?: PartialModelArgs<
+      MClient,
+      Model.Base.Config<MClient>,
+      MRun,
+      // Note: this response type maybe change over time as the user
+      // extends the model
+      // it should be inferred from some types rather than set to MResponse
+      MResponse,
+      CustomCtx
+    >
+  ): this;
 
   public abstract readonly modelType: Model.Type;
-  public abstract readonly modelProvider: Model.Provider;
+  public abstract modelProvider: Model.Provider;
 
-  protected readonly cacheKey: CacheKey<MRun & MConfig, string>;
+  // the cache key can be updated in a call to .extend so it doesn't necessarily conform to MRun & MConfig
+  protected readonly cacheKey: CacheKey<Model.Base.Run & Model.Base.Config<Model.Base.Client>, string>;
   protected readonly cache?: CacheStorage<string, MResponse>;
   public readonly client: MClient;
   public readonly context: CustomCtx;
   public readonly debug: boolean;
   public readonly params: MConfig & Partial<MRun>;
   public readonly events: Model.Events<
-    MClient,
-    MRun & MConfig,
-    MResponse,
+    Model.Base.Client,
+    Model.Base.Run & Model.Base.Config<Model.Base.Client>,
+    Model.Base.Response,
     CustomCtx,
     AResponse
   >;
@@ -107,13 +117,22 @@ export abstract class AbstractModel<
   public readonly telemetry: Telemetry.Provider;
 
   constructor(args: ModelArgs<MClient, MConfig, MRun, MResponse, CustomCtx>) {
-    this.cacheKey = args.cacheKey ?? defaultCacheKey;
+    this.cacheKey = (args.cacheKey ?? defaultCacheKey) as CacheKey<
+      Model.Base.Run & Model.Base.Config<Model.Base.Client>,
+      string
+    >;
     this.cache = args.cache;
     this.client = args.client;
     this.context = args.context ?? ({} as CustomCtx);
     this.debug = args.debug ?? false;
     this.params = args.params;
-    this.events = args.events || {};
+    this.events = (args.events || {}) as Model.Events<
+      Model.Base.Client,
+      Model.Base.Run & Model.Base.Config<Model.Base.Client>,
+      Model.Base.Response,
+      CustomCtx,
+      AResponse
+    >;
     this.tokenizer = createTokenizer(args.params.model);
     this.telemetry = args.telemetry ?? DefaultTelemetry;
   }
