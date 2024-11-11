@@ -97,12 +97,12 @@ describe('AbstractModel', () => {
     });
     await testModel.run({ input: 'foo' });
     expect(completeEvent).toHaveBeenCalledOnce();
-    expect(completeEvent.mock.lastCall[0].cached).toBe(false);
+    expect(completeEvent.mock.lastCall?.[0].cached).toBe(false);
     // Make the same request that should be cached
     await testModel.run({ input: 'foo' });
     // onComplete is called for cached responses
     expect(completeEvent).toHaveBeenCalledTimes(2);
-    expect(completeEvent.mock.lastCall[0].cached).toBe(true);
+    expect(completeEvent.mock.lastCall?.[0].cached).toBe(true);
   });
 
   it('can take in a signal', async () => {
