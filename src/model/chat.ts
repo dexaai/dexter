@@ -199,6 +199,7 @@ export class ChatModel<
       const response: Model.Chat.ApiResponse = {
         ...chunk,
         object: 'chat.completion',
+        usage: undefined,
         choices: [
           {
             finish_reason:
