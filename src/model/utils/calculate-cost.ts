@@ -2,6 +2,22 @@
 type Cost = { input: number; output: number };
 
 const COSTS: Record<string, Cost> = {
+  o1: {
+    input: 0.0015,
+    output: 0.006,
+  },
+  'o1-mini': {
+    input: 0.0003,
+    output: 0.0012,
+  },
+  'gpt-4o': {
+    input: 0.00025,
+    output: 0.001,
+  },
+  'gpt-4o-mini': {
+    input: 0.000015,
+    output: 0.00006,
+  },
   'gpt-4': {
     input: 0.003,
     output: 0.006,
@@ -9,14 +25,6 @@ const COSTS: Record<string, Cost> = {
   'gpt-4-turbo': {
     input: 0.001,
     output: 0.003,
-  },
-  'gpt-4o': {
-    input: 0.0005,
-    output: 0.0015,
-  },
-  'gpt-4o-mini': {
-    input: 0.000015,
-    output: 0.00006,
   },
   'gpt-4-32k': {
     input: 0.006,
@@ -110,6 +118,14 @@ function getCost(model: string): Cost | null {
 
   if (model === 'gpt-4o' || model.startsWith('gpt-4o-')) {
     return COSTS['gpt-4o'];
+  }
+
+  if (model === 'o1-mini' || model.startsWith('o1-mini-')) {
+    return COSTS['o1-mini'];
+  }
+
+  if (model === 'o1' || model.startsWith('o1-')) {
+    return COSTS.o1;
   }
 
   if (model.startsWith('gpt-4')) {

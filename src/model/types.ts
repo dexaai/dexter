@@ -22,6 +22,7 @@ type InnerType<T> = T extends ReadableStream<infer U> ? U : never;
 /** All possible message types except Refusal, which we throw errors for instead. */
 export type Msg =
   | Msg.System
+  | Msg.Developer
   | Msg.User
   | Msg.Assistant
   | Msg.Refusal
@@ -54,6 +55,16 @@ export namespace Msg {
   /** Message with text content for the system. */
   export type System = {
     role: 'system';
+    content: string;
+    name?: string;
+  };
+
+  /**
+   * Developer-provided instructions that the model should follow.
+   * Only supported by the `o1` and newer models.
+   */
+  export type Developer = {
+    role: 'developer';
     content: string;
     name?: string;
   };
