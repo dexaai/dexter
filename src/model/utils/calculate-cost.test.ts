@@ -4,6 +4,66 @@ import { calculateCost } from './calculate-cost.js';
 
 describe('Calculates cost for', () => {
   test.each([
+    {
+      model: 'o1',
+      prompt: 1_000_000,
+      completion: 0,
+      expected: 1_500,
+    },
+    {
+      model: 'o1',
+      prompt: 0,
+      completion: 1_000_000,
+      expected: 6_000,
+    },
+    {
+      model: 'o1-2024-12-17',
+      prompt: 0,
+      completion: 1_000_000,
+      expected: 6_000,
+    },
+    {
+      model: 'o1-mini',
+      prompt: 1_000_000,
+      completion: 0,
+      expected: 300,
+    },
+    {
+      model: 'o1-mini',
+      prompt: 0,
+      completion: 1_000_000,
+      expected: 1_200,
+    },
+    {
+      model: 'o1-mini-2024-07-18',
+      prompt: 0,
+      completion: 1_000_000,
+      expected: 1_200,
+    },
+    {
+      model: 'gpt-4o',
+      prompt: 1_000_000,
+      completion: 0,
+      expected: 250,
+    },
+    {
+      model: 'gpt-4o',
+      prompt: 0,
+      completion: 1_000_000,
+      expected: 1_000,
+    },
+    {
+      model: 'gpt-4o-mini',
+      prompt: 1_000_000,
+      completion: 0,
+      expected: 15,
+    },
+    {
+      model: 'gpt-4o-mini',
+      prompt: 0,
+      completion: 1_000_000,
+      expected: 60,
+    },
     { model: 'gpt-4', prompt: 1000, completion: 1000, expected: 9 },
     {
       model: 'gpt-4-1106-preview',
@@ -34,48 +94,6 @@ describe('Calculates cost for', () => {
       prompt: 1000,
       completion: 1000,
       expected: 4,
-    },
-    {
-      model: 'gpt-4o',
-      prompt: 1000,
-      completion: 1000,
-      expected: 2,
-    },
-    {
-      model: 'gpt-4o-2024-05-13',
-      prompt: 1000,
-      completion: 1000,
-      expected: 2,
-    },
-    {
-      model: 'gpt-4o-mini',
-      prompt: 1000,
-      completion: 1000,
-      expected: 0.075,
-    },
-    {
-      model: 'gpt-4o-mini-2024-07-18',
-      prompt: 1000,
-      completion: 1000,
-      expected: 0.075,
-    },
-    {
-      model: 'gpt-4o-mini',
-      prompt: 1000000,
-      completion: 1000000,
-      expected: 75,
-    },
-    {
-      model: 'gpt-4o-mini',
-      prompt: 1000,
-      completion: 0,
-      expected: 0.015,
-    },
-    {
-      model: 'gpt-4o-mini',
-      prompt: 0,
-      completion: 1000,
-      expected: 0.06,
     },
     { model: 'gpt-4-0613', prompt: 1000, completion: 1000, expected: 9 },
     { model: 'gpt-4-32k', prompt: 1000, completion: 1000, expected: 18 },

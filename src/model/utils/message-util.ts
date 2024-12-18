@@ -27,6 +27,24 @@ export class MsgUtil {
     };
   }
 
+  /** Create a developer message. Cleans indentation and newlines by default. */
+  static developer(
+    content: string,
+    opts?: {
+      /** Custom name for the message. */
+      name?: string;
+      /** Whether to clean extra newlines and indentation. Defaults to true. */
+      cleanContent?: boolean;
+    }
+  ): Msg.Developer {
+    const { name, cleanContent = true } = opts ?? {};
+    return {
+      role: 'developer',
+      content: cleanContent ? cleanString(content) : content,
+      ...(name ? { name } : {}),
+    };
+  }
+
   /** Create a user message. Cleans indentation and newlines by default. */
   static user(
     content: string,
@@ -124,6 +142,13 @@ export class MsgUtil {
     message: ChatMessage | ChatResponseMessage | Msg
   ): message is Msg.System {
     return message.role === 'system';
+  }
+
+  /** Check if a message is a developer message. */
+  static isDeveloper(
+    message: ChatMessage | ChatResponseMessage | Msg
+  ): message is Msg.Developer {
+    return message.role === 'developer';
   }
 
   /** Throw a RefusalError if a message is a refusal. */
